@@ -1,6 +1,6 @@
 # anreader
 
-ANReader - кросплатформенный GUI-клиент к высотнику-пищалке Atlas/Neptune.
+ANReader - кросcплатформенный GUI-клиент к высотнику-пищалке Atlas/Neptune.
 Приложение работает на следующих операционных системах: Windows 7, Windows 10 (отдельно собирается для Windows XP), Linux, FreeBSD, macOS.
 
 ## Ссылки
@@ -9,7 +9,7 @@ ANReader - кросплатформенный GUI-клиент к высотнику-пищалке Atlas/Neptune.
 
 [N3Reader](https://github.com/ffkirill/n3reader) - кое-какие идеи почерпнул отсюда.
 
-[Altimaster USB Driver](https://www.dropbox.com/s/2ju5dvbgn5kohc1/AltimasterUSBDrivers.msi?dl=0) - для Windows XP и Windows 7 надо будет установить драйвер. Для Windows 10, скорее всего, не понадобится, она все сделает сама.
+[Altimaster USB Driver](https://www.dropbox.com/s/2ju5dvbgn5kohc1/AltimasterUSBDrivers.msi?dl=0) - для Windows XP и Windows 7 будет установить драйвер. Для Windows 10, скорее всего, не понадобится, она все сделает сама.
 
 [VCP driver](https://ftdichip.com/drivers/vcp-drivers/) - для macOs надо скачать подходящий драйвер. На Big Sur драйвер пока не работает.
 
