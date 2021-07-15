@@ -18,6 +18,12 @@ ANReader - кросcплатформенный GUI-клиент к высотнику-пищалке Atlas/Neptune.
 При наличии в системе соответствующего драйвера (для Linux, FreeBSD ничего отдельно ставить не нужно) подключаем прибор к usb-порту, запускаем программу. Или сперва запускаем, потом подключаем. Прибор должен определиться сам.
 Можно подключать несколько приборов одновременно.
 
+## Сборки
+
+[Windows 7/10](https://disk.yandex.ru/d/VI6PF4EQvYed3A)
+[Windows XP](https://disk.yandex.ru/d/PqLyZfW_I1HRIw)
+[macOS](https://disk.yandex.ru/d/xMjYJIbbBNyS0w)
+
 ## Скриншоты
 
 ### Windows 10
