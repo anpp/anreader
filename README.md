@@ -30,13 +30,13 @@ ANReader - кросcплатформенный GUI-клиент к высотнику-пищалке Atlas/Neptune.
 
 ### Windows 10
 
-![alt text](screenshots\Win10.png "Windows")
+![alt text](screenshots/Win10.png "Windows")
 
 ### Windows XP
-![alt text](screenshots\anreader_xp.jpeg "Windows XP")
+![alt text](screenshots/anreader_xp.jpeg "Windows XP")
 
 ### macOS
-![alt text](screenshots\macOS.jpeg "macOS")
+![alt text](screenshots/macOS.jpeg "macOS")
 
 ## Лицензия
 [BSD](https://choosealicense.com/licenses/bsd-2-clause/)
