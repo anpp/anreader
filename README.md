@@ -1,7 +1,7 @@
 # anreader
 
 ANReader - кросcплатформенный GUI-клиент к высотнику-пищалке Atlas/Neptune.
-Приложение работает на следующих операционных системах: Windows 7, Windows 10 (отдельно собирается для Windows XP), Linux, FreeBSD, macOS.
+Приложение работает на операционных системах: Windows 7, Windows 10 (отдельно собирается для Windows XP), Linux, FreeBSD, macOS.
 
 ## Ссылки
 
