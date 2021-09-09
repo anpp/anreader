@@ -9,15 +9,10 @@
 
 class CustomJump;
 
-enum CustomJumpNames: uint {JumpNumber = 0,
-                        JumpDate = 1,
-                        ExitAlt = 2,
-                        DeplAlt = 3,
-                        FreefallTime = 4,
-                        CanopyTime = 5,
-                        Note = 6,
-                        Deleted = 7
-                       };
+enum CustomJumpNames: int {
+                            JumpNumber = 0,
+                            JumpDate = 1
+                           };
 
 
 typedef QVector<std::pair<QString, QVariant>> t_jump_attribute;
@@ -52,6 +47,7 @@ public:
     virtual void setNote(const QString& value) = 0;
 
     virtual t_jump_attribute getPairs() const;
+    virtual void setPairs(const t_jump_attribute& pairs);
 
 
 protected:

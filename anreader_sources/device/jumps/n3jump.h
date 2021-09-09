@@ -4,10 +4,17 @@
 #include "customjump.h"
 
 
-enum N3JumpNames: uint {Speed12K = 0,
-                        Speed9K = 1,
-                        Speed6K = 2,
-                        Speed3K = 3
+enum N3JumpNames: int {
+                        ExitAlt = 0,
+                        DeplAlt = 1,
+                        FreefallTime = 2,
+                        CanopyTime = 3,
+                        Speed12K = 4,
+                        Speed9K = 5,
+                        Speed6K = 6,
+                        Speed3K = 7,
+                        Deleted = 8,
+                        Note = 9
                        };
 
 
@@ -53,9 +60,10 @@ public:
     void setDeleted(bool value) override {m_is_deleted = value;}
 
     t_jump_attribute getPairs() const override;
+    virtual void setPairs(const t_jump_attribute& pairs) override;
 
 private:
-    virtual const QString& field_name(uint n_field) const override;
+    virtual const QString& field_name(uint n_field) const override;    
 
     uint m_exit_alt;
     uint m_depl_alt;
