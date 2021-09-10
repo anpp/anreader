@@ -255,7 +255,7 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
                     if(jm.data(jm.index(i, j), Qt::DisplayRole).canConvert(QMetaType::QDateTime))
                             csv_string << "\"" + jm.data(jm.index(i, j), Qt::DisplayRole).toDateTime().toString(dateFormat) + "\"";
                     break;
-                case 10: //deleted
+                case N3JumpNames::Deleted:
                     csv_field = "";
                     if(jm.data(jm.index(i, j), Qt::CheckStateRole).canConvert(QMetaType::Bool))
                         csv_field = jm.data(jm.index(i, j), Qt::CheckStateRole).toBool() ? "1": "0";

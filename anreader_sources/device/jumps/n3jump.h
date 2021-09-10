@@ -5,16 +5,16 @@
 
 
 enum N3JumpNames: int {
-                        ExitAlt = 0,
-                        DeplAlt = 1,
-                        FreefallTime = 2,
-                        CanopyTime = 3,
-                        Speed12K = 4,
-                        Speed9K = 5,
-                        Speed6K = 6,
-                        Speed3K = 7,
-                        Deleted = 8,
-                        Note = 9
+                        ExitAlt = 2,
+                        DeplAlt = 3,
+                        FreefallTime = 4,
+                        CanopyTime = 5,
+                        Speed12K = 6,
+                        Speed9K = 7,
+                        Speed6K = 8,
+                        Speed3K = 9,
+                        Deleted = 10,
+                        Note = 11
                        };
 
 
@@ -61,10 +61,9 @@ public:
 
     t_jump_attribute getPairs() const override;
     virtual void setPairs(const t_jump_attribute& pairs) override;
+    virtual const QString& field_name(const int n_field) const override;
 
-private:
-    virtual const QString& field_name(uint n_field) const override;    
-
+private:   
     uint m_exit_alt;
     uint m_depl_alt;
     uint m_freefall_time;

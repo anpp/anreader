@@ -36,8 +36,8 @@ void CustomJump::setPairs(const t_jump_attribute &pairs)
     }
 }
 
-const QString &CustomJump::field_name(uint n_field) const
+const QString &CustomJump::field_name(const int n_field) const
 {
-    return CustomJumpFieldNames[n_field <= CustomJumpNames::JumpDate ? n_field : 0];
+    return CustomJumpFieldNames[n_field >= CustomJumpNames::JumpNumber && n_field <= CustomJumpNames::JumpDate ? n_field : 0];
 }
 
