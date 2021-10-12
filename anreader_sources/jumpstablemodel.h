@@ -7,9 +7,9 @@
 #include <memory>
 
 
-#include "device/jumps/customjump.h"
+#include "device/jumps/n3jump.h"
 
-typedef QVector<t_jump_attribute>  t_rows;
+typedef t_jumps t_rows;
 
 
 class JumpsTableModel : public QAbstractItemModel
@@ -34,10 +34,10 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     int rowCount(const QModelIndex&) const override;
     int columnCount(const QModelIndex&) const override;    
-    bool addItem(const t_jump_attribute& jump);
+    bool addItem(const std::shared_ptr<CustomJump>& jump);
     bool addItems(const t_rows& jumps);
     bool moveItems(std::unique_ptr<t_rows>& jumps);
-    void removeItem(const int row);
+    void removeItem(const uint row);
     void clear();
 
 private:

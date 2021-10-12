@@ -313,6 +313,7 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
         {
             QString line = in.readLine();
             t_jump_attribute jump_data;
+            std::shared_ptr<CustomJump> jump = std::make_shared<N3Jump>();
 
             int index = 0;
             auto checkFormat { [&] (bool greater) -> bool
@@ -336,7 +337,8 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
             }
             if(!checkFormat(false))return;
 
-            jumps->push_back(jump_data);
+            jump->setPairs(jump_data);
+            jumps->push_back(jump);
         }
         if(!jm.moveItems(jumps))
         {
@@ -452,7 +454,7 @@ void MainWindow::finish(const DWidget& widget)
 {
     std::unique_ptr<t_rows> jumps = std::make_unique<t_rows>();
     foreach(auto& jump, widget.device().jumps())
-       jumps->push_back(jump->getPairs());
+       jumps->push_back(jump);
 
     if(jumps_model.rowCount(QModelIndex()) == 0)
         jumps_model.moveItems(jumps);

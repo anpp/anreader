@@ -19,12 +19,16 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
 {
     if(!m_rows) return QVariant();
 
-    QString ColumnName = "";
+    t_jump_attribute j_atr;
     if(index.isValid())
-        ColumnName = m_rows->at(0).at(index.column()).first;
+        j_atr = m_rows->at(index.row())->getPairs();
 
-    if(role == Qt::DisplayRole && index.isValid() and ColumnName != "Deleted")
-         return m_rows->at(index.row()).at(index.column()).second;
+    if(role == Qt::DisplayRole && index.isValid() && index.column() != N3JumpNames::Deleted)
+        return j_atr.at(index.column()).second;
+
+    if(role == Qt::CheckStateRole  && index.isValid() && index.column() == N3JumpNames::Deleted)
+        return m_rows->at(index.row())->isDeleted() ? Qt::Checked: Qt::Unchecked;
+
 
     if (role == Qt::BackgroundColorRole && index.isValid())
     {
@@ -35,9 +39,6 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
             return color_1;
         }
     }
-
-    if(role == Qt::CheckStateRole  && index.isValid() and ColumnName == "Deleted")
-        return m_rows->at(index.row()).at(index.column()).second.toBool() ? Qt::Checked: Qt::Unchecked;
 
     return QVariant();
 }
@@ -67,7 +68,7 @@ QVariant JumpsTableModel::headerData(int section, Qt::Orientation orientation, i
         return section + 1;
 
     if(role == Qt::DisplayRole && orientation == Qt::Horizontal && m_rows->size() > 0)
-        return m_rows->at(0).at(section).first;
+        return m_rows->at(0)->getPairs().at(section).first;
 
     return QVariant();
 }
@@ -119,13 +120,14 @@ void JumpsTableModel::takeLastJump(int &value)
     value = 0;
     if(!m_rows) return;
     if(m_rows->size())
-        value = m_rows->at(m_rows->count() - 1).at(0).second.toInt();
+        value = m_rows->at(m_rows->size() - 1).get()->getJumpNumber();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-bool JumpsTableModel::addItem(const t_jump_attribute& jump)
+bool JumpsTableModel::addItem(const std::shared_ptr<CustomJump>& jump)
 {
-    if(!checkColumns(jump.size()))
+    t_jump_attribute j_atr = jump.get()->getPairs();
+    if(!checkColumns(j_atr.size()))
         return false;
 
     this->beginInsertRows(QModelIndex(), m_rows->size(), m_rows->size());
@@ -140,7 +142,9 @@ bool JumpsTableModel::addItem(const t_jump_attribute& jump)
 bool JumpsTableModel::addItems(const t_rows& jumps)
 {
     if(!jumps.size()) return false;
-    if(!checkColumns(jumps.at(0).size()))
+
+    t_jump_attribute j_atr = jumps.at(0)->getPairs();
+    if(!checkColumns(j_atr.size()))
         return false;
 
     this->beginInsertRows(QModelIndex(), m_rows->size(), m_rows->size() + jumps.size() - 1);
@@ -158,7 +162,8 @@ bool JumpsTableModel::moveItems(std::unique_ptr<t_rows> &jumps)
     if(!jumps) return false;
     if(!jumps->size()) return false;
 
-    if(!checkColumns(jumps->at(0).size()))
+    t_jump_attribute j_atr = jumps->at(0)->getPairs();
+    if(!checkColumns(j_atr.size()))
         return false;
 
     if(m_rows->size() > 0)
@@ -173,7 +178,7 @@ bool JumpsTableModel::moveItems(std::unique_ptr<t_rows> &jumps)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void JumpsTableModel::removeItem(const int row)
+void JumpsTableModel::removeItem(const uint row)
 {
    if(!m_rows) return;
    if (m_rows->size() < row)
