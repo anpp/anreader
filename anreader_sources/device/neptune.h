@@ -9,6 +9,7 @@
 #include "n3_constants.h"
 #include "n3summaryinfo.h"
 #include "n3devicesettings.h"
+#include "n3dropzones.h"
 
 class Neptune;
 
@@ -112,6 +113,8 @@ private:
     QByteArray rawDataDetails;
     QByteArray rawDataSummary;
     QByteArray rawDataSettings;
+public:
+    QByteArray rawDZNames;
     mutable QByteArray* rawData = nullptr;
     int outBufferPosition{0};
     uint16_t memory_block_length{0};

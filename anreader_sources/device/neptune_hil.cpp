@@ -37,6 +37,11 @@ void Neptune_HiL::read_settings()
     executeCommand(N3Commands::ReadMemory, N3Addresses::DeviceSettings, N3Constants::DeviceSettingsSize);
 }
 
+void Neptune_HiL::read_dropzones()
+{
+    executeCommand(N3Commands::ReadMemory, N3Addresses::DropZones, N3Constants::DZNamesSize);
+}
+
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::end_communication()
 {

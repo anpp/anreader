@@ -5,16 +5,17 @@
 
 
 enum N3JumpNames: int {
-                        ExitAlt = 2,
-                        DeplAlt = 3,
-                        FreefallTime = 4,
-                        CanopyTime = 5,
-                        Speed12K = 6,
-                        Speed9K = 7,
-                        Speed6K = 8,
-                        Speed3K = 9,
-                        Deleted = 10,
-                        Note = 11
+                        DZ =2,
+                        ExitAlt = 3,
+                        DeplAlt = 4,
+                        FreefallTime = 5,
+                        CanopyTime = 6,
+                        Speed12K = 7,
+                        Speed9K = 8,
+                        Speed6K = 9,
+                        Speed3K = 10,
+                        Deleted = 11,
+                        Note = 12
                        };
 
 
@@ -22,8 +23,9 @@ class N3Jump : public CustomJump
 {
 public:
     explicit N3Jump();
-    explicit N3Jump(uint jump_number, QDateTime jump_date, uint exit_alt, uint depl_alt, uint freefall_time, uint canopy_time, uint speed12K, uint speed9K, uint speed6K, uint speed3K, bool is_deleted) :
+    explicit N3Jump(uint jump_number, QDateTime jump_date, QString dz, uint exit_alt, uint depl_alt, uint freefall_time, uint canopy_time, uint speed12K, uint speed9K, uint speed6K, uint speed3K, bool is_deleted) :
         CustomJump(jump_number, jump_date),
+        m_dz(dz),
         m_exit_alt(exit_alt),
         m_depl_alt(depl_alt),
         m_freefall_time(freefall_time),
@@ -35,7 +37,7 @@ public:
         m_note(""),
         m_is_deleted(is_deleted) { }
 
-    ~N3Jump() override { }
+    ~N3Jump() override {}
 
     uint getExitAlt() const override {return m_exit_alt;}
     uint getDeplAlt() const override {return m_depl_alt;}
@@ -59,11 +61,12 @@ public:
     void setNote(const QString& value) override {m_note = value;}
     void setDeleted(bool value) override {m_is_deleted = value;}
 
-    t_jump_attribute getPairs() const override;
+    std::unique_ptr<t_jump_attribute> getPairs() const override;
     virtual void setPairs(const t_jump_attribute& pairs) override;
     virtual const QString& field_name(const int n_field) const override;
 
 private:   
+    QString m_dz;
     uint m_exit_alt;
     uint m_depl_alt;
     uint m_freefall_time;

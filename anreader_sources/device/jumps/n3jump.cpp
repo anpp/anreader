@@ -2,6 +2,7 @@
 
 static QString N3JumpFieldNames[] =
                               {
+                                QObject::tr("DZ"),
                                 QObject::tr("Exit altitude"),
                                 QObject::tr("Deploy altitude"),
                                 QObject::tr("Freefall time"),
@@ -22,20 +23,21 @@ N3Jump::N3Jump()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-t_jump_attribute N3Jump::getPairs() const
+std::unique_ptr<t_jump_attribute> N3Jump::getPairs() const
 {
-    t_jump_attribute jump_attr = CustomJump::getPairs();        
+    std::unique_ptr<t_jump_attribute> jump_attr = CustomJump::getPairs();
 
-    jump_attr.push_back(std::make_pair(N3Jump::field_name(N3JumpNames::ExitAlt), m_exit_alt));
-    jump_attr.push_back(std::make_pair(N3Jump::field_name(N3JumpNames::DeplAlt), m_depl_alt));
-    jump_attr.push_back(std::make_pair(N3Jump::field_name(N3JumpNames::FreefallTime), m_freefall_time));
-    jump_attr.push_back(std::make_pair(N3Jump::field_name(N3JumpNames::CanopyTime), m_canopy_time));
-    jump_attr.push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed12K), m_speed12K));
-    jump_attr.push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed9K), m_speed9K));
-    jump_attr.push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed6K), m_speed6K));
-    jump_attr.push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed3K), m_speed3K));
-    jump_attr.push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Deleted), m_is_deleted));
-    jump_attr.push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Note), m_note));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::DZ), m_dz));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::ExitAlt), m_exit_alt));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::DeplAlt), m_depl_alt));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::FreefallTime), m_freefall_time));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::CanopyTime), m_canopy_time));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed12K), m_speed12K));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed9K), m_speed9K));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed6K), m_speed6K));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed3K), m_speed3K));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Deleted), m_is_deleted));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Note), m_note));
 
     return jump_attr;
 }
@@ -46,43 +48,58 @@ void N3Jump::setPairs(const t_jump_attribute &pairs)
 
 
     if(pairs.size() >= N3JumpNames::Note)
-    {
-        if((pairs.at(N3JumpNames::ExitAlt).second).canConvert(QMetaType::Int))
-           m_exit_alt = (pairs.at(N3JumpNames::ExitAlt).second).toUInt();
+    {        
 
-        if((pairs.at(N3JumpNames::DeplAlt).second).canConvert(QMetaType::Int))
-           m_depl_alt = (pairs.at(N3JumpNames::DeplAlt).second).toUInt();
+        for(int i = N3JumpNames::DZ; i <= N3JumpNames::Note; ++i)
+        {
+            auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
+             {
+                 return atr.first == N3JumpFieldNames[i - CustomJumpNames::JumpDate - 1];
+             });
 
-        if((pairs.at(N3JumpNames::FreefallTime).second).canConvert(QMetaType::Int))
-           m_freefall_time = (pairs.at(N3JumpNames::FreefallTime).second).toUInt();
+            if(found_atr != pairs.end())
+            {
+                if(N3JumpNames::DZ == i && found_atr->second.canConvert(QMetaType::QString))
+                    m_dz = found_atr->second.toString();
 
-        if((pairs.at(N3JumpNames::CanopyTime).second).canConvert(QMetaType::Int))
-           m_canopy_time = (pairs.at(N3JumpNames::CanopyTime).second).toUInt();
+                if(N3JumpNames::ExitAlt == i && found_atr->second.canConvert(QMetaType::Int))
+                    m_exit_alt = found_atr->second.toUInt();
 
-        if((pairs.at(N3JumpNames::Speed12K).second).canConvert(QMetaType::Int))
-           m_speed12K = (pairs.at(N3JumpNames::Speed12K).second).toUInt();
+                if(N3JumpNames::DeplAlt == i && found_atr->second.canConvert(QMetaType::Int))
+                    m_depl_alt = found_atr->second.toUInt();
 
-        if((pairs.at(N3JumpNames::Speed9K).second).canConvert(QMetaType::Int))
-           m_speed9K = (pairs.at(N3JumpNames::Speed9K).second).toUInt();
+                if(N3JumpNames::FreefallTime == i && found_atr->second.canConvert(QMetaType::Int))
+                    m_freefall_time = found_atr->second.toUInt();
 
-        if((pairs.at(N3JumpNames::Speed6K).second).canConvert(QMetaType::Int))
-           m_speed6K = (pairs.at(N3JumpNames::Speed6K).second).toUInt();
+                if(N3JumpNames::CanopyTime == i && found_atr->second.canConvert(QMetaType::Int))
+                    m_canopy_time = found_atr->second.toUInt();
 
-        if((pairs.at(N3JumpNames::Speed3K).second).canConvert(QMetaType::Int))
-           m_speed3K = (pairs.at(N3JumpNames::Speed3K).second).toUInt();
+                if(N3JumpNames::Speed12K == i && found_atr->second.canConvert(QMetaType::Int))
+                    m_speed12K = found_atr->second.toUInt();
 
-        if((pairs.at(N3JumpNames::Deleted).second).canConvert(QMetaType::Bool))
-           m_is_deleted = (pairs.at(N3JumpNames::Deleted).second).toBool();
+                if(N3JumpNames::Speed9K == i && found_atr->second.canConvert(QMetaType::Int))
+                    m_speed9K = found_atr->second.toUInt();
 
-        if((pairs.at(N3JumpNames::Note).second).canConvert(QMetaType::QString))
-           m_note = (pairs.at(N3JumpNames::Note).second).toString();
+                if(N3JumpNames::Speed6K == i && found_atr->second.canConvert(QMetaType::Int))
+                    m_speed6K = found_atr->second.toUInt();
+
+                if(N3JumpNames::Speed3K == i && found_atr->second.canConvert(QMetaType::Int))
+                    m_speed3K = found_atr->second.toUInt();
+
+                if(N3JumpNames::Deleted == i && found_atr->second.canConvert(QMetaType::Bool))
+                    m_is_deleted = found_atr->second.toBool();
+
+                if(N3JumpNames::Note == i && found_atr->second.canConvert(QMetaType::QString))
+                    m_note = found_atr->second.toString();
+
+            }
+        }
     }
-
 }
 
 const QString &N3Jump::field_name(const int n_field) const
 {
-    if(n_field < N3JumpNames::ExitAlt)
+    if(n_field < N3JumpNames::DZ)
         return CustomJump::field_name(n_field);
 
     int n_field_abs  = n_field - CustomJumpNames::JumpDate - 1; //parent offset

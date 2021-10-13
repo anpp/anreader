@@ -1,4 +1,5 @@
 HEADERS += \
+    device\adropzones.h \
     device\adevicesettings.h \
     device\n3_constants.h\
     device\abstractdevice.h \
@@ -10,9 +11,11 @@ HEADERS += \
     device\asummaryinfo.h \
     device\n3summaryinfo.h \
     device\bytes_operations.h \
-    device\n3devicesettings.h
+    device\n3devicesettings.h \
+    device\n3dropzones.h
 
 SOURCES += \
+    device\adropzones.cpp \
     device\adevicesettings.cpp \
     device\abstractdevice.cpp \
     device\neptune.cpp \
@@ -23,4 +26,5 @@ SOURCES += \
     device\asummaryinfo.cpp \
     device\n3summaryinfo.cpp \
     device\bytes_operations.cpp \
-    device\n3devicesettings.cpp
+    device\n3devicesettings.cpp \
+    device\n3dropzones.cpp

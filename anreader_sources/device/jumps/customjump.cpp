@@ -14,12 +14,12 @@ CustomJump::CustomJump()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-t_jump_attribute CustomJump::getPairs() const
+std::unique_ptr<t_jump_attribute> CustomJump::getPairs() const
 {
-    t_jump_attribute jump_attr;
+    std::unique_ptr<t_jump_attribute> jump_attr = std::make_unique<t_jump_attribute>();
 
-    jump_attr.push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpNumber), m_jump_number));
-    jump_attr.push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpDate), m_jump_date));
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpNumber), m_jump_number));
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpDate), m_jump_date));
 
     return jump_attr;
 }
@@ -28,11 +28,22 @@ void CustomJump::setPairs(const t_jump_attribute &pairs)
 {
     if(pairs.size() >= CustomJumpNames::JumpDate)
     {
-        if((pairs.at(CustomJumpNames::JumpNumber).second).canConvert(QMetaType::Int))
-           m_jump_number = (pairs.at(CustomJumpNames::JumpNumber).second).toUInt();
+        for(int i = 0; i <= CustomJumpNames::JumpDate; ++i)
+        {
+            auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
+             {
+                 return atr.first == CustomJumpFieldNames[i];
+             });
 
-        if((pairs.at(CustomJumpNames::JumpDate).second).canConvert(QMetaType::QDateTime))
-           m_jump_date = (pairs.at(CustomJumpNames::JumpDate).second).toDateTime();
+            if(found_atr != pairs.end())
+            {
+                if(CustomJumpNames::JumpNumber == i && found_atr->second.canConvert(QMetaType::Int))
+                    m_jump_number = found_atr->second.toUInt();
+
+                if(CustomJumpNames::JumpDate == i && found_atr->second.canConvert(QMetaType::QDateTime))
+                    m_jump_date = found_atr->second.toDateTime();
+            }
+        }
     }
 }
 

@@ -17,6 +17,7 @@ public:
     void read_details_jumps(unsigned int jump_index, unsigned int num_jumps) override;
     void read_summary_jumps() override;
     void read_settings() override;
+    void read_dropzones() override;
     void end_communication() override;
     uint n_iterations_by_jumps(const uint n_jumps) override;
 

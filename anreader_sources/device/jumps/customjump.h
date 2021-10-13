@@ -15,7 +15,7 @@ enum CustomJumpNames: int {
                            };
 
 
-typedef QVector<std::pair<QString, QVariant>> t_jump_attribute;
+typedef std::vector<std::pair<QString, QVariant>> t_jump_attribute;
 typedef std::vector<std::shared_ptr<CustomJump>> t_jumps;
 
 class CustomJump
@@ -46,7 +46,7 @@ public:
     virtual void setDeleted(bool value) = 0;
     virtual void setNote(const QString& value) = 0;
 
-    virtual t_jump_attribute getPairs() const;
+    virtual std::unique_ptr<t_jump_attribute> getPairs() const;
     virtual void setPairs(const t_jump_attribute& pairs);
     virtual const QString& field_name(const int n_field) const;
 

@@ -145,6 +145,11 @@ const ADeviceSettings &AbstractDevice::settings() const
     return *m_settings;
 }
 
+const ADropZones &AbstractDevice::dropzones() const
+{
+    return *m_dropzones;
+}
+
 //----------------------------------------------------------------------------------------------------------------------
 const QString &AbstractDevice::state_str() const
 {
