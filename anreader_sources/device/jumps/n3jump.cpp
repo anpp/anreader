@@ -91,7 +91,6 @@ void N3Jump::setPairs(const t_jump_attribute &pairs)
 
                 if(N3JumpNames::Note == i && found_atr->second.canConvert(QMetaType::QString))
                     m_note = found_atr->second.toString();
-
             }
         }
     }

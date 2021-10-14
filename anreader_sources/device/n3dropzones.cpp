@@ -1,9 +1,11 @@
 #include "n3dropzones.h"
 
-
 uint N3DropZones::count() const
 {
-   return static_cast<uint>(N3DZValues::count);
+    if(data.size() > 0)
+        return static_cast<uint>(N3DZValues::count);
+
+    return 0;
 }
 
 uint N3DropZones::filled() const
@@ -19,6 +21,7 @@ QString N3DropZones::byIndex(const uint index) const
     QString result = "";
 
     uint offset = index * static_cast<uint>(N3DZValues::length) + static_cast<uint>(N3DZValues::offset);
+
     if(index < count())
     {
         for(uint i = offset; i < offset + static_cast<uint>(N3DZValues::length); ++i)
