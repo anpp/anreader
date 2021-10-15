@@ -13,7 +13,8 @@ static QString N3JumpFieldNames[] =
                                 QObject::tr("Speed 6K"),
                                 QObject::tr("Speed 3K"),
                                 QObject::tr("Deleted"),
-                                QObject::tr("Note")
+                                QObject::tr("Note"),
+                                QObject::tr("Unknown"),
                               };
 
 
@@ -106,8 +107,9 @@ const QString &N3Jump::field_name(const int n_field) const
     if(n_field < N3JumpNames::DZ)
         return CustomJump::field_name(n_field);
 
-    int n_field_abs  = n_field - CustomJumpNames::JumpDate - 1; //parent offset
+    int offset = CustomJumpNames::JumpDate + 1; //parent offset
+    int n_field_abs  = n_field - offset;
     n_field_abs = (n_field_abs > 0 ? n_field_abs: 0);
 
-    return N3JumpFieldNames[n_field >= N3JumpNames::DZ && n_field <= N3JumpNames::Note ? n_field_abs : 0];
+    return N3JumpFieldNames[n_field >= N3JumpNames::DZ && n_field <= N3JumpNames::Note ? n_field_abs : N3JumpNames::Unk - offset];
 }

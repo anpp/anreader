@@ -2,8 +2,9 @@
 
 static QString CustomJumpFieldNames[] =
                               {
-                               QObject::tr("Number"),
-                               QObject::tr("Date")
+                                QObject::tr("Number"),
+                                QObject::tr("Date"),
+                                QObject::tr("Unknown")
                               };
 
 
@@ -49,6 +50,6 @@ void CustomJump::setPairs(const t_jump_attribute &pairs)
 
 const QString &CustomJump::field_name(const int n_field) const
 {
-    return CustomJumpFieldNames[n_field >= CustomJumpNames::JumpNumber && n_field <= CustomJumpNames::JumpDate ? n_field : 0];
+    return CustomJumpFieldNames[n_field >= CustomJumpNames::JumpNumber && n_field <= CustomJumpNames::JumpDate ? n_field : CustomJumpNames::CtUnk];
 }
 

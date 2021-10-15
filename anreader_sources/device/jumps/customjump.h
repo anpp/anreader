@@ -11,7 +11,8 @@ class CustomJump;
 
 enum CustomJumpNames: int {
                             JumpNumber = 0,
-                            JumpDate = 1
+                            JumpDate = 1,
+                            CtUnk = 2
                            };
 
 

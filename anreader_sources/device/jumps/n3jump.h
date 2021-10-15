@@ -16,7 +16,8 @@ enum N3JumpNames: int {
                         Speed6K = 10,
                         Speed3K = 11,
                         Deleted = 12,
-                        Note = 13
+                        Note = 13,
+                        Unk = 14
                        };
 
 
