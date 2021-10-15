@@ -1,5 +1,6 @@
 #include "n3names.h"
 
+//----------------------------------------------------------------------------------------------------------------------
 uint N3Names::count() const
 {
     if(data.size() > 0)
@@ -8,6 +9,7 @@ uint N3Names::count() const
     return 0;
 }
 
+//----------------------------------------------------------------------------------------------------------------------
 uint N3Names::filled() const
 {
     if(data.size() > static_cast<int>(N3DZValues::offset))
@@ -16,6 +18,7 @@ uint N3Names::filled() const
     return 0;
 }
 
+//----------------------------------------------------------------------------------------------------------------------
 QString N3Names::byIndex(const uint index) const
 {
     QString result = "";
@@ -33,3 +36,4 @@ QString N3Names::byIndex(const uint index) const
 
     return result;
 }
+

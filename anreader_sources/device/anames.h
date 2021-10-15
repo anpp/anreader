@@ -3,6 +3,8 @@
 
 #include <QByteArray>
 #include <QString>
+#include <vector>
+#include <memory>
 
 class ANames
 {    
@@ -11,11 +13,14 @@ public:
     virtual ~ANames() {}
 
     virtual uint count() const = 0;
-    virtual uint filled() const = 0;
-    virtual QString byIndex(const uint index) const = 0;
-protected:
-    const QByteArray& data;
+    virtual uint filled() const = 0;        
+    const std::vector<QString>& Names() const;
 
+protected:
+    virtual QString byIndex(const uint index) const = 0;
+
+    const QByteArray& data;
+    std::unique_ptr<std::vector<QString>> m_names = std::make_unique<std::vector<QString>>();
 };
 
 #endif // ANAMES_H

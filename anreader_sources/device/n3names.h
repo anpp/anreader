@@ -13,7 +13,10 @@ public:
 
     uint count() const override;
     uint filled() const override;
+
+private:
     QString byIndex(const uint index) const override;
+
 };
 
 #endif // N3NAMES_H
