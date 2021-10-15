@@ -27,7 +27,7 @@
 #include "bytes_operations.h"
 #include "asummaryinfo.h"
 #include "adevicesettings.h"
-#include "adropzones.h"
+#include "anames.h"
 
 
 
@@ -53,6 +53,7 @@ public:
     virtual void read_summary_jumps() = 0;
     virtual void read_settings() = 0;
     virtual void read_dropzones() = 0;
+    virtual void read_airplanes() = 0;
     virtual void end_communication() = 0;
     virtual uint n_iterations_by_jumps(const uint n_jumps) = 0;
     void clearJumps() { m_jumps.clear(); }
@@ -61,7 +62,8 @@ public:
 
     const ASummaryInfo& summary() const;
     const ADeviceSettings& settings() const;
-    const ADropZones& dropzones() const;
+    const ANames& dropzones() const;
+    const ANames& airplanes() const;
     const QString& state_str() const;
 
 protected:    
@@ -74,7 +76,8 @@ protected:
 
     std::unique_ptr<ASummaryInfo> m_summary;
     std::unique_ptr<ADeviceSettings> m_settings;
-    std::unique_ptr<ADropZones> m_dropzones;
+    std::unique_ptr<ANames> m_dropzones;
+    std::unique_ptr<ANames> m_airplanes;
 
     QStateMachine sm;
     QState *commonState = new QState();

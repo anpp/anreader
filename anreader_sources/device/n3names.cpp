@@ -1,6 +1,6 @@
-#include "n3dropzones.h"
+#include "n3names.h"
 
-uint N3DropZones::count() const
+uint N3Names::count() const
 {
     if(data.size() > 0)
         return static_cast<uint>(N3DZValues::count);
@@ -8,7 +8,7 @@ uint N3DropZones::count() const
     return 0;
 }
 
-uint N3DropZones::filled() const
+uint N3Names::filled() const
 {
     if(data.size() > static_cast<int>(N3DZValues::offset))
         return data[1];
@@ -16,7 +16,7 @@ uint N3DropZones::filled() const
     return 0;
 }
 
-QString N3DropZones::byIndex(const uint index) const
+QString N3Names::byIndex(const uint index) const
 {
     QString result = "";
 

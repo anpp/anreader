@@ -150,6 +150,7 @@ void N3Widget::read_summary_settings()
     m_device->read_summary_jumps();
     m_device->read_settings();
     m_device->read_dropzones();
+    m_device->read_airplanes();
 }
 
 //----------------------------------------------------------------------------------------------------------------------

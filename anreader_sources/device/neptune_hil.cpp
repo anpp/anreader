@@ -42,6 +42,11 @@ void Neptune_HiL::read_dropzones()
     executeCommand(N3Commands::ReadMemory, N3Addresses::DropZones, N3Constants::DZNamesSize);
 }
 
+void Neptune_HiL::read_airplanes()
+{
+    executeCommand(N3Commands::ReadMemory, N3Addresses::Airplanes, N3Constants::APNamesSize);
+}
+
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::end_communication()
 {

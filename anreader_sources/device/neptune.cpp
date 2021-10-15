@@ -76,7 +76,8 @@ Neptune::Neptune(QString portName, QObject *parent) : AbstractDevice(portName, p
 
     m_summary = std::make_unique<N3SummaryInfo>(rawDataSummary);
     m_settings = std::make_unique<N3DeviceSettings>(rawDataSettings);
-    m_dropzones = std::make_unique<N3DropZones>(rawDZNames);
+    m_dropzones = std::make_unique<N3Names>(rawDZNames);
+    m_airplanes = std::make_unique<N3Names>(rawAPNames);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -194,8 +195,9 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
     bool is_deleted = (raw_jump->at(2) >> 7) & 1;
 
     QString dz = dropzones().byIndex(((BytesOperations::bytesToUInt16(*raw_jump, 15) >> 2) & 0b11111));
+    QString ap = airplanes().byIndex(((BytesOperations::bytesToUInt16(*raw_jump, 11) >> 4) & 0b1111));
 
-    return std::make_unique<N3Jump>(jump_number, jump_date, dz, exit_alt, delp_alt, freefall_time, canopy_time, speed12K, speed9K, speed6K, speed3K, is_deleted);
+    return std::make_unique<N3Jump>(jump_number, jump_date, dz, ap, exit_alt, delp_alt, freefall_time, canopy_time, speed12K, speed9K, speed6K, speed3K, is_deleted);
 }
 
 
@@ -484,6 +486,9 @@ QByteArray *Neptune::getRawData(const unsigned int address)
 
     if((address >= N3Addresses::DropZones) && (address < N3Addresses::DropZones + N3Constants::DZNamesSize))
         result = &rawDZNames;
+
+    if((address >= N3Addresses::Airplanes) && (address < N3Addresses::Airplanes + N3Constants::APNamesSize))
+        result = &rawAPNames;
 
     return result;
 }

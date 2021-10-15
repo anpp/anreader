@@ -1,14 +1,14 @@
-#ifndef ADROPZONES_H
-#define ADROPZONES_H
+#ifndef ANAMES_H
+#define ANAMES_H
 
 #include <QByteArray>
 #include <QString>
 
-class ADropZones
+class ANames
 {    
 public:
-    explicit ADropZones(const QByteArray& adata): data(adata) {};
-    virtual ~ADropZones() {}
+    explicit ANames(const QByteArray& adata): data(adata) {};
+    virtual ~ANames() {}
 
     virtual uint count() const = 0;
     virtual uint filled() const = 0;
@@ -18,4 +18,4 @@ protected:
 
 };
 
-#endif // ADROPZONES_H
+#endif // ANAMES_H

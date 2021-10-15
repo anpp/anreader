@@ -145,9 +145,14 @@ const ADeviceSettings &AbstractDevice::settings() const
     return *m_settings;
 }
 
-const ADropZones &AbstractDevice::dropzones() const
+const ANames &AbstractDevice::dropzones() const
 {
     return *m_dropzones;
+}
+
+const ANames &AbstractDevice::airplanes() const
+{
+    return *m_airplanes;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
