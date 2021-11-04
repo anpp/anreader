@@ -210,9 +210,12 @@ void JumpsTableModel::clear()
 
 
 //----------------------------------------------------------------------------------------------------------------------
-CustomJump* JumpsTableModel::getItem(const uint row) const
+std::shared_ptr<CustomJump> JumpsTableModel::getItem(const uint row) const
 {
-    if (m_rows->size() == 0 || m_rows->size() < row)
-        return nullptr;
-    return m_rows->at(row).get();
+    std::shared_ptr<CustomJump> result;
+
+    if (m_rows->size() > row)
+        result = m_rows->at(row);
+
+    return result;
 }

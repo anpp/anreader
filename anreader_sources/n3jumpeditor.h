@@ -2,6 +2,7 @@
 #define N3JUMPEDITOR_H
 
 #include <QDialog>
+#include <memory>
 
 #include "device/jumps/n3jump.h"
 
@@ -14,7 +15,7 @@ class N3JumpEditor : public QDialog
     Q_OBJECT
 
 public:
-    explicit N3JumpEditor(QWidget *parent, const N3Jump *jump);
+    explicit N3JumpEditor(QWidget *parent, N3Jump& jump);
     ~N3JumpEditor();
 
 private:

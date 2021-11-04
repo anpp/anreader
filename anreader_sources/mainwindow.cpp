@@ -142,7 +142,8 @@ void MainWindow::createActions()
     const QIcon copyIcon = QIcon(":/images/icons/toolbar/copy.png");
     m_copyAct = new QAction(copyIcon, tr("&Copy"), this);
     m_copyAct->setShortcuts(QKeySequence::Copy);
-    m_copyAct->setToolTip(tr("Copy selected jumps..."));
+    m_copyAct->setToolTip(tr("Copy selected jumps"));
+    //m_copyAct->setShortcutVisibleInContextMenu(true);
     connect(m_copyAct, &QAction::triggered, this, &MainWindow::copy_selected);
     editMenu->addAction(m_copyAct);
 
@@ -623,10 +624,10 @@ void MainWindow::edit_selected()
     {
         if(jtable->selectionModel()->selectedRows().count() == 1)
         {
-            N3Jump *edit_jump = (N3Jump*)jumps_model.getItem(jtable->selectionModel()->selectedRows().at(0).row());
-            if(edit_jump != nullptr)
+            std::shared_ptr<N3Jump> edit_jump = std::dynamic_pointer_cast<N3Jump>(jumps_model.getItem(jtable->selectionModel()->selectedRows().at(0).row()));
+            if(edit_jump)
             {
-                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, edit_jump);
+                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump);
                 //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
                 n3_jump_editor->exec();
             }
