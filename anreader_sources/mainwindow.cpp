@@ -612,13 +612,26 @@ void MainWindow::copy_selected()
             }
         }
     }
-    clipboard->setText(rows);
+    if(!rows.isEmpty())
+        clipboard->setText(rows);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::edit_selected()
 {
-
+    if(jtable)
+    {
+        if(jtable->selectionModel()->selectedRows().count() == 1)
+        {
+            N3Jump *edit_jump = (N3Jump*)jumps_model.getItem(jtable->selectionModel()->selectedRows().at(0).row());
+            if(edit_jump != nullptr)
+            {
+                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, edit_jump);
+                //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
+                n3_jump_editor->exec();
+            }
+        }
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------------------

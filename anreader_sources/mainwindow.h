@@ -29,6 +29,7 @@
 #include "devices_list_widget.h"
 #include "settings.h"
 #include "log_widget.h"
+#include "n3jumpeditor.h"
 
 enum MainWindow_defs: int {BaseWidht = 1100, BaseHeight = 500, StatusStateLabelWidth = 250};
 
@@ -90,8 +91,7 @@ private:
     JumpsTableModel jumps_model;
     QPointer<JumpsTable> jtable = nullptr;
     QPointer<DevicesWidget> devices_window;
-    QPointer<LogWidget> log_widget;
-
+    QPointer<LogWidget> log_widget;    
 
     QMap<int, QPointer<StatusFrame>> map_status_frames;
 

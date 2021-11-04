@@ -24,6 +24,7 @@ SOURCES += \
     jumpstable.cpp \
     jumpstablemodel.cpp \
     dwidget.cpp \
+    n3jumpeditor.cpp \
     n3widget.cpp \
     settings.cpp
 
@@ -35,6 +36,7 @@ HEADERS += \
     jumpstable.h \
     jumpstablemodel.h \
     dwidget.h \
+    n3jumpeditor.h \
     n3widget.h \
     settings.h
 
@@ -60,4 +62,7 @@ win32:{
     QMAKE_TARGET_DESCRIPTION = Atlas and Neptune reader utility
     QMAKE_TARGET_COPYRIGHT = Andrey Ponomarenko
 }
+
+FORMS += \
+    n3jumpeditor.ui
 

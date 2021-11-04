@@ -207,3 +207,12 @@ void JumpsTableModel::clear()
         this->endRemoveColumns();
     }
 }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+CustomJump* JumpsTableModel::getItem(const uint row) const
+{
+    if (m_rows->size() == 0 || m_rows->size() < row)
+        return nullptr;
+    return m_rows->at(row).get();
+}

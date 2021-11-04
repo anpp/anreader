@@ -39,6 +39,7 @@ public:
     bool moveItems(std::unique_ptr<t_rows>& jumps);
     void removeItem(const uint row);
     void clear();
+    CustomJump* getItem(const uint row) const;
 
 private:
     void setColumnCount(const int value);
