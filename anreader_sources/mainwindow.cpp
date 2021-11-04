@@ -139,6 +139,15 @@ void MainWindow::createActions()
     connect(m_saveAsAct, &QAction::triggered, this, &MainWindow::saveAs);
     fileMenu->addAction(m_saveAsAct);
 
+    const QIcon copyIcon = QIcon(":/images/icons/toolbar/copy.png");
+    m_copyAct = new QAction(copyIcon, tr("&Copy"), this);
+    m_copyAct->setShortcuts(QKeySequence::Copy);
+    m_copyAct->setToolTip(tr("Copy selected jumps..."));
+    connect(m_copyAct, &QAction::triggered, this, &MainWindow::copy_selected);
+    editMenu->addAction(m_copyAct);
+
+    editMenu->addSeparator();
+
     const QIcon editIcon = QIcon(":/images/icons/toolbar/edit.png");
     m_editAct = new QAction(editIcon, tr("&Edit"), this);
     m_editAct->setShortcuts(QKeySequence::UnknownKey);
@@ -160,6 +169,8 @@ void MainWindow::createActions()
     mainToolBar->addAction(m_newAct);
     mainToolBar->addAction(m_openAct);
     mainToolBar->addAction(m_saveAct);
+    mainToolBar->addSeparator();
+    mainToolBar->addAction(m_copyAct);
     mainToolBar->addSeparator();
     mainToolBar->addAction(m_editAct);
     mainToolBar->addAction(m_deleteAct);
@@ -573,6 +584,38 @@ void MainWindow::delete_selected()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void MainWindow::copy_selected()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    QString rows = "";
+    int selection_size = (jtable ? jtable->selectionModel()->selectedRows().size() : 0);
+    for(int i = 0; i < selection_size; ++i)
+    {
+        rows += (i > 0)? "\n": "";
+        for(int j = 0; j < jtable->model()->columnCount(); ++j)
+        {
+            rows += (j > 0)? "\t": "";
+
+            switch(j)
+            {
+            case CustomJumpNames::JumpDate:
+                if(jtable->selectionModel()->selectedRows(j).at(i).data().canConvert(QMetaType::QDateTime))
+                    rows += jtable->selectionModel()->selectedRows(j).at(i).data().toDateTime().toString(dateFormat);
+                break;
+            case N3JumpNames::Deleted:
+                if(jtable->selectionModel()->selectedRows(j).at(i).data(Qt::CheckStateRole).canConvert(QMetaType::Bool))
+                    rows += (jtable->selectionModel()->selectedRows(j).at(i).data(Qt::CheckStateRole).toBool()) ? "1": "0";
+                break;
+            default:
+                rows += jtable->selectionModel()->selectedRows(j).at(i).data().toString();
+                break;
+            }
+        }
+    }
+    clipboard->setText(rows);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 void MainWindow::edit_selected()
 {
 
@@ -600,6 +643,7 @@ void MainWindow::enableActions(const bool enable)
     int selection_size = (jtable ? jtable->selectionModel()->selectedRows().size() : 0);
     m_editAct->setEnabled(enable && selection_size == 1);
     m_deleteAct->setEnabled(enable && selection_size > 0);
+    m_copyAct->setEnabled(enable && selection_size > 0);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -616,6 +660,7 @@ void MainWindow::selectionChanged()
     int selection_size = (jtable ? jtable->selectionModel()->selectedRows().size() : 0);    
     m_editAct->setEnabled(selection_size == 1);
     m_deleteAct->setEnabled(selection_size > 0);
+    m_copyAct->setEnabled(selection_size > 0);
 }
 
 

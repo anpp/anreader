@@ -19,6 +19,8 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <QClipboard>
+#include <QApplication>
 
 
 #include "device/neptune_hil.h"
@@ -101,6 +103,8 @@ private:
     QPointer<QAction> m_saveAsAct;
     QPointer<QAction> m_toggleDevices;
     QPointer<QAction> m_toggleLog;
+    QPointer<QAction> m_copyAct;
+    //QPointer<QAction> m_pasteAct;
     QPointer<QAction> m_editAct;
     QPointer<QAction> m_deleteAct;
 
@@ -128,6 +132,7 @@ public slots:
     bool save();
     bool saveAs();
     void delete_selected();
+    void copy_selected();
     void edit_selected();
     void about();
     void documentWasModified();

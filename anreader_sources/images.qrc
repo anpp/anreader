@@ -16,5 +16,7 @@
         <file>images/icons/toolbar/save.png</file>
         <file>images/icons/toolbar/delete.png</file>
         <file>images/icons/toolbar/edit.png</file>
+        <file>images/icons/toolbar/copy.png</file>
+        <file>images/icons/toolbar/paste.png</file>
     </qresource>
 </RCC>
