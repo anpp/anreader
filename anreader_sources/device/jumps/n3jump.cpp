@@ -2,8 +2,6 @@
 
 static QString N3JumpFieldNames[] =
                               {
-                                QObject::tr("DZ"),
-                                QObject::tr("Airplane"),
                                 QObject::tr("Exit altitude"),
                                 QObject::tr("Deploy altitude"),
                                 QObject::tr("Freefall time"),
@@ -29,8 +27,6 @@ std::unique_ptr<t_jump_attribute> N3Jump::getPairs() const
 {
     std::unique_ptr<t_jump_attribute> jump_attr = CustomJump::getPairs();
 
-    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::DZ), m_dz));
-    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::AP), m_ap));
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::ExitAlt), m_exit_alt));
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::DeplAlt), m_depl_alt));
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::FreefallTime), m_freefall_time));
@@ -53,20 +49,15 @@ void N3Jump::setPairs(const t_jump_attribute &pairs)
     if(pairs.size() >= N3JumpNames::Note)
     {        
 
-        for(int i = N3JumpNames::DZ; i <= N3JumpNames::Note; ++i)
+        for(int i = N3JumpNames::ExitAlt; i <= N3JumpNames::Note; ++i)
         {
             auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
              {
-                 return atr.first == N3JumpFieldNames[i - CustomJumpNames::JumpDate - 1];
+                 return atr.first == N3JumpFieldNames[i - CustomJumpNames::Canopy - 1];
              });
 
             if(found_atr != pairs.end())
             {
-                if(N3JumpNames::DZ == i && found_atr->second.canConvert(QMetaType::QString))
-                    m_dz = found_atr->second.toString();
-
-                if(N3JumpNames::AP == i && found_atr->second.canConvert(QMetaType::QString))
-                    m_ap = found_atr->second.toString();
 
                 if(N3JumpNames::ExitAlt == i && found_atr->second.canConvert(QMetaType::Int))
                     m_exit_alt = found_atr->second.toUInt();
@@ -104,12 +95,12 @@ void N3Jump::setPairs(const t_jump_attribute &pairs)
 
 const QString &N3Jump::field_name(const int n_field) const
 {
-    if(n_field < N3JumpNames::DZ)
+    if(n_field < N3JumpNames::ExitAlt)
         return CustomJump::field_name(n_field);
 
-    int offset = CustomJumpNames::JumpDate + 1; //parent offset
+    int offset = CustomJumpNames::Canopy + 1; //parent offset
     int n_field_abs  = n_field - offset;
     n_field_abs = (n_field_abs > 0 ? n_field_abs: 0);
 
-    return N3JumpFieldNames[n_field >= N3JumpNames::DZ && n_field <= N3JumpNames::Note ? n_field_abs : N3JumpNames::Unk - offset];
+    return N3JumpFieldNames[n_field >= N3JumpNames::ExitAlt && n_field <= N3JumpNames::Note ? n_field_abs : N3JumpNames::Unk - offset];
 }

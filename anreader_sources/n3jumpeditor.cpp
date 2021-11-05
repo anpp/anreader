@@ -13,6 +13,12 @@ N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump) :
     ui->spnNumber->setValue(jump.getJumpNumber());
     ui->deDate->setDateTime(jump.getJumpDate());
     ui->cbxDeleted->setChecked(jump.isDeleted());
+
+    ui->cbDZ->addItem(jump.getDZ());
+    ui->cbAirplane->addItem(jump.getAP());
+
+    ui->cbDZ->setCurrentText(jump.getDZ());
+    ui->cbAirplane->setCurrentText(jump.getAP());
 }
 
 N3JumpEditor::~N3JumpEditor()

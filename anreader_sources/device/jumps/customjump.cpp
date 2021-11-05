@@ -4,6 +4,9 @@ static QString CustomJumpFieldNames[] =
                               {
                                 QObject::tr("Number"),
                                 QObject::tr("Date"),
+                                QObject::tr("DZ"),
+                                QObject::tr("Airplane"),
+                                QObject::tr("Canopy"),
                                 QObject::tr("Unknown")
                               };
 
@@ -21,15 +24,18 @@ std::unique_ptr<t_jump_attribute> CustomJump::getPairs() const
 
     (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpNumber), m_jump_number));
     (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpDate), m_jump_date));
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::DZ), m_dz));
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::AP), m_ap));
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::Canopy), ""));
 
     return jump_attr;
 }
 
 void CustomJump::setPairs(const t_jump_attribute &pairs)
 {
-    if(pairs.size() >= CustomJumpNames::JumpDate)
+    if(pairs.size() >= CustomJumpNames::Canopy)
     {
-        for(int i = 0; i <= CustomJumpNames::JumpDate; ++i)
+        for(int i = 0; i <= CustomJumpNames::Canopy; ++i)
         {
             auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
              {
@@ -43,6 +49,13 @@ void CustomJump::setPairs(const t_jump_attribute &pairs)
 
                 if(CustomJumpNames::JumpDate == i && found_atr->second.canConvert(QMetaType::QDateTime))
                     m_jump_date = found_atr->second.toDateTime();
+
+                if(CustomJumpNames::DZ == i && found_atr->second.canConvert(QMetaType::QString))
+                    m_dz = found_atr->second.toString();
+
+                if(CustomJumpNames::AP == i && found_atr->second.canConvert(QMetaType::QString))
+                    m_ap = found_atr->second.toString();
+
             }
         }
     }
@@ -50,6 +63,6 @@ void CustomJump::setPairs(const t_jump_attribute &pairs)
 
 const QString &CustomJump::field_name(const int n_field) const
 {
-    return CustomJumpFieldNames[n_field >= CustomJumpNames::JumpNumber && n_field <= CustomJumpNames::JumpDate ? n_field : CustomJumpNames::CtUnk];
+    return CustomJumpFieldNames[n_field >= CustomJumpNames::JumpNumber && n_field <= CustomJumpNames::Canopy ? n_field : CustomJumpNames::CtUnk];
 }
 
