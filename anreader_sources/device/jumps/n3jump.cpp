@@ -45,47 +45,47 @@ void N3Jump::setPairs(const t_jump_attribute &pairs)
 {
     CustomJump::setPairs(pairs);
 
-        for(int i = N3JumpNames::ExitAlt; i <= N3JumpNames::Note; ++i)
+    for(int i = N3JumpNames::ExitAlt; i <= N3JumpNames::Note; ++i)
+    {
+        auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
         {
-            auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
-             {
-                 return atr.first == N3JumpFieldNames[i - CustomJumpNames::Canopy - 1];
-             });
+            return atr.first == N3JumpFieldNames[i - CustomJumpNames::Canopy - 1];
+        });
 
-            if(found_atr != pairs.end())
-            {
+        if(found_atr != pairs.end())
+        {
 
-                if(N3JumpNames::ExitAlt == i && found_atr->second.canConvert(QMetaType::Int))
-                    m_exit_alt = found_atr->second.toUInt();
+            if(N3JumpNames::ExitAlt == i && found_atr->second.canConvert(QMetaType::Int))
+                m_exit_alt = found_atr->second.toUInt();
 
-                if(N3JumpNames::DeplAlt == i && found_atr->second.canConvert(QMetaType::Int))
-                    m_depl_alt = found_atr->second.toUInt();
+            if(N3JumpNames::DeplAlt == i && found_atr->second.canConvert(QMetaType::Int))
+                m_depl_alt = found_atr->second.toUInt();
 
-                if(N3JumpNames::FreefallTime == i && found_atr->second.canConvert(QMetaType::Int))
-                    m_freefall_time = found_atr->second.toUInt();
+            if(N3JumpNames::FreefallTime == i && found_atr->second.canConvert(QMetaType::Int))
+                m_freefall_time = found_atr->second.toUInt();
 
-                if(N3JumpNames::CanopyTime == i && found_atr->second.canConvert(QMetaType::Int))
-                    m_canopy_time = found_atr->second.toUInt();
+            if(N3JumpNames::CanopyTime == i && found_atr->second.canConvert(QMetaType::Int))
+                m_canopy_time = found_atr->second.toUInt();
 
-                if(N3JumpNames::Speed12K == i && found_atr->second.canConvert(QMetaType::Int))
-                    m_speed12K = found_atr->second.toUInt();
+            if(N3JumpNames::Speed12K == i && found_atr->second.canConvert(QMetaType::Int))
+                m_speed12K = found_atr->second.toUInt();
 
-                if(N3JumpNames::Speed9K == i && found_atr->second.canConvert(QMetaType::Int))
-                    m_speed9K = found_atr->second.toUInt();
+            if(N3JumpNames::Speed9K == i && found_atr->second.canConvert(QMetaType::Int))
+                m_speed9K = found_atr->second.toUInt();
 
-                if(N3JumpNames::Speed6K == i && found_atr->second.canConvert(QMetaType::Int))
-                    m_speed6K = found_atr->second.toUInt();
+            if(N3JumpNames::Speed6K == i && found_atr->second.canConvert(QMetaType::Int))
+                m_speed6K = found_atr->second.toUInt();
 
-                if(N3JumpNames::Speed3K == i && found_atr->second.canConvert(QMetaType::Int))
-                    m_speed3K = found_atr->second.toUInt();
+            if(N3JumpNames::Speed3K == i && found_atr->second.canConvert(QMetaType::Int))
+                m_speed3K = found_atr->second.toUInt();
 
-                if(N3JumpNames::Deleted == i && found_atr->second.canConvert(QMetaType::Bool))
-                    m_is_deleted = found_atr->second.toBool();
+            if(N3JumpNames::Deleted == i && found_atr->second.canConvert(QMetaType::Bool))
+                m_is_deleted = found_atr->second.toBool();
 
-                if(N3JumpNames::Note == i && found_atr->second.canConvert(QMetaType::QString))
-                    m_note = found_atr->second.toString();
-            }
+            if(N3JumpNames::Note == i && found_atr->second.canConvert(QMetaType::QString))
+                m_note = found_atr->second.toString();
         }
+    }
 }
 
 const QString &N3Jump::field_name(const int n_field) const

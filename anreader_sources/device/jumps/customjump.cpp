@@ -33,28 +33,28 @@ std::unique_ptr<t_jump_attribute> CustomJump::getPairs() const
 
 void CustomJump::setPairs(const t_jump_attribute &pairs)
 {
-        for(int i = 0; i <= CustomJumpNames::Canopy; ++i)
+    for(int i = 0; i <= CustomJumpNames::Canopy; ++i)
+    {
+        auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
         {
-            auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
-             {
-                 return atr.first == CustomJumpFieldNames[i];
-             });
+            return atr.first == CustomJumpFieldNames[i];
+        });
 
-            if(found_atr != pairs.end())
-            {
-                if(CustomJumpNames::JumpNumber == i && found_atr->second.canConvert(QMetaType::Int))
-                    m_jump_number = found_atr->second.toUInt();
+        if(found_atr != pairs.end())
+        {
+            if(CustomJumpNames::JumpNumber == i && found_atr->second.canConvert(QMetaType::Int))
+                m_jump_number = found_atr->second.toUInt();
 
-                if(CustomJumpNames::JumpDate == i && found_atr->second.canConvert(QMetaType::QDateTime))
-                    m_jump_date = found_atr->second.toDateTime();
+            if(CustomJumpNames::JumpDate == i && found_atr->second.canConvert(QMetaType::QDateTime))
+                m_jump_date = found_atr->second.toDateTime();
 
-                if(CustomJumpNames::DZ == i && found_atr->second.canConvert(QMetaType::QString))
-                    m_dz = found_atr->second.toString();
+            if(CustomJumpNames::DZ == i && found_atr->second.canConvert(QMetaType::QString))
+                m_dz = found_atr->second.toString();
 
-                if(CustomJumpNames::AP == i && found_atr->second.canConvert(QMetaType::QString))
-                    m_ap = found_atr->second.toString();
-            }
+            if(CustomJumpNames::AP == i && found_atr->second.canConvert(QMetaType::QString))
+                m_ap = found_atr->second.toString();
         }
+    }
 }
 
 const QString &CustomJump::field_name(const int n_field) const
