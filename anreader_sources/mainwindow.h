@@ -94,9 +94,7 @@ private:
     QPointer<DevicesWidget> devices_window;
     QPointer<LogWidget> log_widget;    
 
-    QMap<int, QPointer<StatusFrame>> map_status_frames;
-
-    Settings settings{this, "anreader", "anreader"};
+    QMap<int, QPointer<StatusFrame>> map_status_frames;    
 
     QPointer<QAction> m_newAct;
     QPointer<QAction> m_openAct;
@@ -121,6 +119,7 @@ private:
     map_APs m_Aircrafts;
     map_DZs m_Dropzones;
 
+    Settings settings{this, "anreader", "anreader", m_Aircrafts};
 //signals:
 
 public slots:

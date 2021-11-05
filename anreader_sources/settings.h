@@ -12,9 +12,10 @@
 #include <QDebug>
 #include <memory>
 
+#include "common.h"
 
 
-enum class kindset: int {appearance = 0, misc, screen, environment};
+enum class kindset: int {appearance = 0, misc, screen, environment, aircrafts};
 
 class Settings;
 
@@ -43,10 +44,11 @@ class Settings {
     QSettings qsettings;
     QVector<ptrSetting> vec_settings;
     QMap<QString, Setting*> mapset;
+    map_APs& map_aircrafts;
     QVariant default_return;
 
 public:
-    Settings(QMainWindow* widget_owner, const QString &organization, const QString &application);
+    Settings(QMainWindow* widget_owner, const QString &organization, const QString &application, map_APs& aps);
     ~Settings();
 
     bool loadSettingsByKind(kindset ks);
@@ -54,6 +56,8 @@ public:
 
     void loadSettingsScreen();
     void saveSettingsScreen();
+    void loadSettingsAircrafts();
+    void saveSettingsAircrafts();
 
     const QVariant& getSetting(const QString& title);
     bool isChanged(const QString& title);
@@ -64,6 +68,7 @@ public:
         loadSettingsByKind(kindset::appearance);
         loadSettingsByKind(kindset::misc);
         loadSettingsByKind(kindset::environment);
+        loadSettingsAircrafts();
         loadSettingsScreen();
     }
 
@@ -71,6 +76,7 @@ public:
         saveSettingsByKind(kindset::appearance);
         saveSettingsByKind(kindset::misc);
         saveSettingsByKind(kindset::environment);
+        saveSettingsAircrafts();
         saveSettingsScreen();
     }
 

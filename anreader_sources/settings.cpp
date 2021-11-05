@@ -2,12 +2,12 @@
 #include <QDebug>
 #include <QDir>
 
-static QString sSettingKind[] = {"appearance", "misc", "screen", "environment"};
+static QString sSettingKind[] = {"appearance", "misc", "screen", "environment", "aircrafts"};
 
 
 //----------------------------------------------------------------------------------------------------------------------
-Settings::Settings(QMainWindow* widget_owner, const QString& organization, const QString& application) :
-    owner(widget_owner), qsettings(organization, application), default_return(false)
+Settings::Settings(QMainWindow* widget_owner, const QString& organization, const QString& application, map_APs& aps) :
+    owner(widget_owner), qsettings(organization, application), map_aircrafts(aps), default_return(false)
 {
     vec_settings = {
                     std::make_shared<Setting>("geometry", kindset::screen, 0, QVariant(QVariant::Int), false),
@@ -41,7 +41,7 @@ bool Settings::loadSettingsByKind(kindset ks)
         }
     }
     qsettings.endGroup();
-    return result;;
+    return result;
 }
 
 
@@ -82,6 +82,26 @@ void Settings::saveSettingsScreen()
 
         saveSettingsByKind(kindset::screen);
     }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void Settings::loadSettingsAircrafts()
+{
+    qsettings.beginGroup("/" + sSettingKind[static_cast<int>(kindset::aircrafts)]);
+    foreach(auto& k, qsettings.allKeys())
+        if(k != ".")
+            map_aircrafts[k] = k;
+    qsettings.endGroup();
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+void Settings::saveSettingsAircrafts()
+{
+    qsettings.beginGroup("/" + sSettingKind[static_cast<int>(kindset::aircrafts)]);
+    for(auto it = map_aircrafts.begin(); it != map_aircrafts.end(); ++it)
+        qsettings.setValue("/" + (*it).first, (*it).second);
+    qsettings.endGroup();
 }
 
 
