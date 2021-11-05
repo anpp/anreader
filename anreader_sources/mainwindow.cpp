@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     createActions();    
 
     settings.load();
+    dl.load();
 
     timer_open_file.setInterval(100);
     connect(&timer_open_file, &QTimer::timeout, this, &MainWindow::onCreate);
@@ -355,8 +356,8 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
 
             jump->setPairs(jump_data);
             jumps->push_back(jump);            
-            m_Aircrafts[jump->getAP()] = jump->getAP();
-            m_Dropzones[jump->getDZ()] = jump->getDZ();
+            dl.aircrafts()[jump->getAP()] = jump->getAP();
+            dl.dropzones()[jump->getDZ()] = jump->getDZ();
         }
         if(!jm.moveItems(jumps))
         {
@@ -366,6 +367,7 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
 
         file.close();
         log("File loaded: " + filename);
+        dl.save();
     }
     else
         log(file.errorString() + " Error - cannot read file: " + filename);
@@ -474,8 +476,6 @@ void MainWindow::finish(const DWidget& widget)
     foreach(auto& jump, widget.device().jumps())
     {
        jumps->push_back(jump);
-       m_Aircrafts[jump->getAP()] = jump->getAP();
-       m_Dropzones[jump->getDZ()] = jump->getDZ();
     }
 
     if(jumps_model.rowCount(QModelIndex()) == 0)
@@ -490,10 +490,12 @@ void MainWindow::finish(const DWidget& widget)
 void MainWindow::afterConnect(const DWidget &widget)
 {
     foreach(auto& ap, widget.device().airplanes().Names())
-        m_Aircrafts[ap] = ap;
+        dl.aircrafts()[ap] = ap;
 
     foreach(auto& dz, widget.device().dropzones().Names())
-        m_Dropzones[dz] = dz;
+        dl.dropzones()[dz] = dz;
+
+    dl.save();
 }
 
 
@@ -647,7 +649,7 @@ void MainWindow::edit_selected()
             std::shared_ptr<N3Jump> edit_jump = std::dynamic_pointer_cast<N3Jump>(jumps_model.getItem(jtable->selectionModel()->selectedRows().at(0).row()));
             if(edit_jump)
             {
-                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump, m_Aircrafts, m_Dropzones);
+                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump, dl.aircrafts(), dl.dropzones());
                 //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
                 n3_jump_editor->exec();
             }

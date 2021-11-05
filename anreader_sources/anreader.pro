@@ -17,6 +17,7 @@ QMAKE_LFLAGS_RELEASE += -static -static-libgcc
 
 SOURCES += \
     csvparser.cpp \
+    datalists.cpp \
     devices_list_widget.cpp \
     log_widget.cpp \
     main.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
 HEADERS += \
     common.h \
     csvparser.h \
+    datalists.h \
     devices_list_widget.h \
     log_widget.h \
     mainwindow.h \

@@ -31,6 +31,7 @@
 #include "settings.h"
 #include "log_widget.h"
 #include "n3jumpeditor.h"
+#include "datalists.h"
 
 enum MainWindow_defs: int {BaseWidht = 1100, BaseHeight = 500, StatusStateLabelWidth = 250};
 
@@ -116,10 +117,8 @@ private:
     bool file_was_modified = false;
     QTimer timer_open_file;
 
-    map_APs m_Aircrafts;
-    map_DZs m_Dropzones;
-
-    Settings settings{this, "anreader", "anreader", m_Aircrafts};
+    Settings settings{this, "anreader", "anreader"};
+    DataLists dl{"anreader", "anreader"};
 //signals:
 
 public slots:

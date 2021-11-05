@@ -15,7 +15,7 @@
 #include "common.h"
 
 
-enum class kindset: int {appearance = 0, misc, screen, environment, aircrafts};
+enum class kindset: int {appearance = 0, misc, screen, environment};
 
 class Settings;
 
@@ -41,14 +41,13 @@ typedef std::shared_ptr<Setting> ptrSetting;
 
 class Settings {    
     QMainWindow* owner;
-    QSettings qsettings;
+    mutable QSettings qsettings;
     QVector<ptrSetting> vec_settings;
     QMap<QString, Setting*> mapset;
-    map_APs& map_aircrafts;
     QVariant default_return;
 
 public:
-    Settings(QMainWindow* widget_owner, const QString &organization, const QString &application, map_APs& aps);
+    Settings(QMainWindow* widget_owner, const QString &organization, const QString &application);
     ~Settings();
 
     bool loadSettingsByKind(kindset ks);
@@ -56,11 +55,9 @@ public:
 
     void loadSettingsScreen();
     void saveSettingsScreen();
-    void loadSettingsAircrafts();
-    void saveSettingsAircrafts();
 
-    const QVariant& getSetting(const QString& title);
-    bool isChanged(const QString& title);
+    const QVariant& getSetting(const QString& title) const;
+    bool isChanged(const QString& title) const;
     void setSetting(const QString& title, QVariant value);
 
 
@@ -68,22 +65,20 @@ public:
         loadSettingsByKind(kindset::appearance);
         loadSettingsByKind(kindset::misc);
         loadSettingsByKind(kindset::environment);
-        loadSettingsAircrafts();
         loadSettingsScreen();
     }
 
-    void save(){
+    void save() {
         saveSettingsByKind(kindset::appearance);
         saveSettingsByKind(kindset::misc);
         saveSettingsByKind(kindset::environment);
-        saveSettingsAircrafts();
         saveSettingsScreen();
     }
 
     //const QVector<ptrSetting>& getListSettings() {return vec_settings;}
     //const QMap<QString, ptrSetting>& getMapSettings() {return mapset;}
 
-    const QString& getSettingsName(kindset ks);
+    const QString& getSettingsName(kindset ks) const;
 };
 
 #endif // SETTINGS
