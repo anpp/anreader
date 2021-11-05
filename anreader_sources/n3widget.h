@@ -68,6 +68,7 @@ private:
 
     DeviceFrame *device_frame = nullptr;
 
+
 public slots:
     virtual void stateChanged() override;
     void read_summary_settings();

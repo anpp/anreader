@@ -175,7 +175,7 @@ void DWidget::clear()
     connect_button.disconnect();
 
     port_info.reset();
-   m_device.reset();
+    m_device.reset();
 
     lblPort.setText(getPortName());
     stateChanged();

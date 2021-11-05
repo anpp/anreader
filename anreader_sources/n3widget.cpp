@@ -244,6 +244,7 @@ void N3Widget::readed_summary_settings()
     {
 
         const ADeviceSettings &settings = m_device->settings();
+        emit afterConnect(*this);
 /*
         qDebug() << settings.altitudeMeasure();
         qDebug() << settings.speedMeasure();

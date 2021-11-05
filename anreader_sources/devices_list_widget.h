@@ -76,6 +76,7 @@ signals:
     void setProgress(const int id, unsigned int value);
     void stepProgress(const int id);
     void receivedData(const DWidget& widget);
+    void afterConnect(const DWidget& widget);
     void createStatusFrame(const int id);
     void controls_is_enabled(const bool);
     void giveLastJump(int &value);

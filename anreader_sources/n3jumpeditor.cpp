@@ -1,7 +1,7 @@
 #include "n3jumpeditor.h"
 #include "ui_n3jumpeditor.h"
 
-N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump) :
+N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const map_APs& aircrafts, const map_DZs& dropzones) :
     QDialog(parent),
     ui(new Ui::N3JumpEditor)
 {
@@ -14,8 +14,12 @@ N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump) :
     ui->deDate->setDateTime(jump.getJumpDate());
     ui->cbxDeleted->setChecked(jump.isDeleted());
 
-    ui->cbDZ->addItem(jump.getDZ());
-    ui->cbAirplane->addItem(jump.getAP());
+    for(auto it = aircrafts.begin(); it != aircrafts.end(); ++it)
+        ui->cbAirplane->addItem((*it).first);
+
+    for(auto it = dropzones.begin(); it != dropzones.end(); ++it)
+        ui->cbDZ->addItem((*it).first);
+
 
     ui->cbDZ->setCurrentText(jump.getDZ());
     ui->cbAirplane->setCurrentText(jump.getAP());

@@ -23,6 +23,7 @@
 #include <QApplication>
 
 
+#include "common.h"
 #include "device/neptune_hil.h"
 #include "jumpstable.h"
 #include "jumpstablemodel.h"
@@ -116,6 +117,9 @@ private:
     bool file_was_modified = false;
     QTimer timer_open_file;
 
+    map_APs m_Aircrafts;
+    map_DZs m_Dropzones;
+
 //signals:
 
 public slots:
@@ -124,6 +128,7 @@ public slots:
     void setStatusText(const int id, const QString& text);
     void stepProgress(const int id);
     void finish(const DWidget& widget);
+    void afterConnect(const DWidget& widget);
     void prepareTableAfterLoad(JumpsTable& table);
     void onCreate();
 

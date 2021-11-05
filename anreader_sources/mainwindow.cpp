@@ -206,6 +206,7 @@ void MainWindow::createDevicesWidget()
     connect(devices_window, &DevicesWidget::setProgress, this, &MainWindow::initProgress);
     connect(devices_window, &DevicesWidget::stepProgress, this, &MainWindow::stepProgress);
     connect(devices_window, &DevicesWidget::receivedData, this, &MainWindow::finish);
+    connect(devices_window, &DevicesWidget::afterConnect, this, &MainWindow::afterConnect);
     connect(devices_window, &DevicesWidget::controls_is_enabled, this, &MainWindow::enableActions);
     connect(devices_window, &DevicesWidget::log, this, &MainWindow::log);
     connect(devices_window, &DevicesWidget::giveLastJump, &jumps_model, &JumpsTableModel::takeLastJump);
@@ -350,7 +351,9 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
             if(!checkFormat(false))return;
 
             jump->setPairs(jump_data);
-            jumps->push_back(jump);
+            jumps->push_back(jump);            
+            m_Aircrafts[jump->getAP()] = jump->getAP();
+            m_Dropzones[jump->getDZ()] = jump->getDZ();
         }
         if(!jm.moveItems(jumps))
         {
@@ -466,7 +469,11 @@ void MainWindow::finish(const DWidget& widget)
 {
     std::unique_ptr<t_rows> jumps = std::make_unique<t_rows>();
     foreach(auto& jump, widget.device().jumps())
+    {
        jumps->push_back(jump);
+       m_Aircrafts[jump->getAP()] = jump->getAP();
+       m_Dropzones[jump->getDZ()] = jump->getDZ();
+    }
 
     if(jumps_model.rowCount(QModelIndex()) == 0)
         jumps_model.moveItems(jumps);
@@ -474,6 +481,16 @@ void MainWindow::finish(const DWidget& widget)
         jumps_model.addItems(*jumps);
 
     prepareTableAfterLoad(*jtable);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void MainWindow::afterConnect(const DWidget &widget)
+{
+    foreach(auto& ap, widget.device().airplanes().Names())
+        m_Aircrafts[ap] = ap;
+
+    foreach(auto& dz, widget.device().dropzones().Names())
+        m_Dropzones[dz] = dz;
 }
 
 
@@ -627,7 +644,7 @@ void MainWindow::edit_selected()
             std::shared_ptr<N3Jump> edit_jump = std::dynamic_pointer_cast<N3Jump>(jumps_model.getItem(jtable->selectionModel()->selectedRows().at(0).row()));
             if(edit_jump)
             {
-                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump);
+                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump, m_Aircrafts, m_Dropzones);
                 //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
                 n3_jump_editor->exec();
             }

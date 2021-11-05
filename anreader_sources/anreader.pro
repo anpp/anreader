@@ -29,6 +29,7 @@ SOURCES += \
     settings.cpp
 
 HEADERS += \
+    common.h \
     csvparser.h \
     devices_list_widget.h \
     log_widget.h \

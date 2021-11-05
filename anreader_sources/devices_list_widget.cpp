@@ -135,6 +135,7 @@ void DevicesWidget::createDevice(DWidget *device_widget)
     connect(device_widget, &DWidget::stepProgress, this, &DevicesWidget::stepProgress);
     connect(device_widget, &DWidget::setHeight, this, &DevicesWidget::setHeightRow);
     connect(device_widget, &DWidget::receivedData, this, &DevicesWidget::receivedData);
+    connect(device_widget, &DWidget::afterConnect, this, &DevicesWidget::afterConnect);
     connect(device_widget, &DWidget::controls_is_enabled, this, &DevicesWidget::controls_is_enabled);
     connect(device_widget, &DWidget::log, this, &DevicesWidget::log);
     connect(device_widget, &DWidget::giveLastJump, this, &DevicesWidget::giveLastJump);

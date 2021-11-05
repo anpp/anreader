@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <memory>
 
+#include "common.h"
 #include "device/jumps/n3jump.h"
 
 namespace Ui {
@@ -15,7 +16,7 @@ class N3JumpEditor : public QDialog
     Q_OBJECT
 
 public:
-    explicit N3JumpEditor(QWidget *parent, N3Jump& jump);
+    explicit N3JumpEditor(QWidget *parent, N3Jump& jump, const map_APs& aircrafts, const map_DZs& dropzones);
     ~N3JumpEditor();
 
 private:
