@@ -649,7 +649,7 @@ void MainWindow::edit_selected()
             std::shared_ptr<N3Jump> edit_jump = std::dynamic_pointer_cast<N3Jump>(jumps_model.getItem(jtable->selectionModel()->selectedRows().at(0).row()));
             if(edit_jump)
             {
-                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump, dl.aircrafts(), dl.dropzones());
+                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump, dl.const_aircrafts(), dl.const_dropzones());
                 //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
                 n3_jump_editor->exec();
             }

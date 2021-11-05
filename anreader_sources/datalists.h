@@ -25,7 +25,11 @@ public:
     void saveDataAircrafts() const;
 
     map_APs& aircrafts() { return m_aircrafts; }
-    map_APs& dropzones() { return m_dropzones; }
+    map_DZs& dropzones() { return m_dropzones; }
+
+    const map_APs& const_aircrafts() const { return m_aircrafts; }
+    const map_DZs& const_dropzones() const { return m_dropzones; }
+
 };
 
 #endif // DATALISTS_H
