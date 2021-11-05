@@ -112,6 +112,7 @@ private:
     QString defaultFilter = QObject::tr("CSV file with semicolon delimiters (*.csv)");
     QString commaFilter = QObject::tr("CSV file with comma delimiters (*.csv)");
     QString dateFormat = "dd.MM.yyyy hh:mm";
+    QString dateFormat_excel = "dd.MM.yyyy h:mm";
 
     QString current_file;
     bool file_was_modified = false;

@@ -45,10 +45,6 @@ void N3Jump::setPairs(const t_jump_attribute &pairs)
 {
     CustomJump::setPairs(pairs);
 
-
-    if(pairs.size() >= N3JumpNames::Note)
-    {        
-
         for(int i = N3JumpNames::ExitAlt; i <= N3JumpNames::Note; ++i)
         {
             auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
@@ -90,7 +86,6 @@ void N3Jump::setPairs(const t_jump_attribute &pairs)
                     m_note = found_atr->second.toString();
             }
         }
-    }
 }
 
 const QString &N3Jump::field_name(const int n_field) const

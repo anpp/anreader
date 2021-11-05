@@ -343,6 +343,9 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
 
                 if(CustomJumpNames::JumpDate == index){
                     QDateTime dt = QDateTime::fromString(item, dateFormat);
+                    if(dt.isNull() || !dt.isValid())
+                        dt = QDateTime::fromString(item, dateFormat_excel);
+
                     jump_data.push_back(std::make_pair(field_names[index++], dt));
                 }
                 else

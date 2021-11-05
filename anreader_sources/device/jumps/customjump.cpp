@@ -33,8 +33,6 @@ std::unique_ptr<t_jump_attribute> CustomJump::getPairs() const
 
 void CustomJump::setPairs(const t_jump_attribute &pairs)
 {
-    if(pairs.size() >= CustomJumpNames::Canopy)
-    {
         for(int i = 0; i <= CustomJumpNames::Canopy; ++i)
         {
             auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
@@ -55,10 +53,8 @@ void CustomJump::setPairs(const t_jump_attribute &pairs)
 
                 if(CustomJumpNames::AP == i && found_atr->second.canConvert(QMetaType::QString))
                     m_ap = found_atr->second.toString();
-
             }
         }
-    }
 }
 
 const QString &CustomJump::field_name(const int n_field) const
