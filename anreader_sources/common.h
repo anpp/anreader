@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <QString>
 
-typedef std::unordered_map<QString, QString> map_APs;
-typedef std::unordered_map<QString, QString> map_DZs;
+typedef std::unordered_map<QString, QString> map_DataList;
 
 #endif // COMMON_H

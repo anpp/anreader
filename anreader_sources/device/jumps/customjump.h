@@ -44,6 +44,7 @@ public:
     virtual QString getNote() const = 0;
     virtual QString getDZ() const = 0;
     virtual QString getAP() const = 0;
+    virtual QString getCanopy() const = 0;
 
 
     void setJumpNumber(uint value) {m_jump_number = value;}
@@ -56,6 +57,7 @@ public:
     virtual void setNote(const QString& value) = 0;
     virtual void setDZ(const QString& value) = 0;
     virtual void setAP(const QString& value) = 0;
+    virtual void setCanopy(const QString& value) = 0;
 
 
     virtual std::unique_ptr<t_jump_attribute> getPairs() const;

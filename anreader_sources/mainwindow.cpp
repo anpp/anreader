@@ -358,6 +358,7 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
             jumps->push_back(jump);            
             dl.aircrafts()[jump->getAP()] = jump->getAP();
             dl.dropzones()[jump->getDZ()] = jump->getDZ();
+            dl.canopies()[jump->getCanopy()] = jump->getCanopy();
         }
         if(!jm.moveItems(jumps))
         {
@@ -649,7 +650,7 @@ void MainWindow::edit_selected()
             std::shared_ptr<N3Jump> edit_jump = std::dynamic_pointer_cast<N3Jump>(jumps_model.getItem(jtable->selectionModel()->selectedRows().at(0).row()));
             if(edit_jump)
             {
-                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump, dl.const_aircrafts(), dl.const_dropzones());
+                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump, dl.const_aircrafts(), dl.const_dropzones(), dl.const_canopies());
                 //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
                 n3_jump_editor->exec();
             }

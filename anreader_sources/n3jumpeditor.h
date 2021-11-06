@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <memory>
+#include <QComboBox>
 
 #include "common.h"
 #include "device/jumps/n3jump.h"
@@ -16,11 +17,13 @@ class N3JumpEditor : public QDialog
     Q_OBJECT
 
 public:
-    explicit N3JumpEditor(QWidget *parent, N3Jump& jump, const map_APs& aircrafts, const map_DZs& dropzones);
+    explicit N3JumpEditor(QWidget *parent, N3Jump& jump, const map_DataList& aircrafts, const map_DataList& dropzonesconst, const map_DataList& canopies);
     ~N3JumpEditor();
 
 private:
     Ui::N3JumpEditor *ui;
+
+    void setComboValues(QComboBox& combo, const map_DataList& data_list) const;
 };
 
 #endif // N3JUMPEDITOR_H
