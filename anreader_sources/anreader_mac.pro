@@ -17,6 +17,7 @@ QMAKE_CXXFLAGS += -std=c++14
 
 SOURCES += \
     csvparser.cpp \
+    datalists.cpp\
     devices_list_widget.cpp \
     log_widget.cpp \
     main.cpp \
@@ -24,17 +25,21 @@ SOURCES += \
     jumpstable.cpp \
     jumpstablemodel.cpp \
     dwidget.cpp \
+    n3jumpeditor.cpp\
     n3widget.cpp \
     settings.cpp
 
 HEADERS += \
+    common.h \
     csvparser.h \
+    datalists.h \
     devices_list_widget.h \
     log_widget.h \
     mainwindow.h \
     jumpstable.h \
     jumpstablemodel.h \
     dwidget.h \
+    n3jumpeditor.h \
     n3widget.h \
     settings.h
 
@@ -51,4 +56,5 @@ include(device/device.pro)
 RESOURCES += \
     images.qrc
 
-
+FORMS += \
+    n3jumpeditor.ui

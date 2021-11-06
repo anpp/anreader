@@ -5,6 +5,11 @@
 #include <unordered_map>
 #include <QString>
 
-typedef std::unordered_map<QString, QString> map_DataList;
+#ifdef Q_OS_MACOS
+    typedef std::map<QString, QString> map_DataList;
+#else
+    typedef std::unordered_map<QString, QString> map_DataList;
+#endif
+
 
 #endif // COMMON_H
