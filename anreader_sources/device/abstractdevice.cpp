@@ -94,9 +94,11 @@ void AbstractDevice::setupComPort()
     connect(sp.get(), &SerialPortThread::errorSignal, this, &AbstractDevice::errorSignal);
     connect(this, &AbstractDevice::sopen, sp.get(), &SerialPortThread::sopen);
     connect(sp.get(), &SerialPortThread::connected, this, &AbstractDevice::connected);
-    connect(sp.get(), &SerialPortThread::errorOccurred, this, &AbstractDevice::slotSerialPortError); //Для XP (Qt 5.6) закомментировать
-
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &AbstractDevice::disconnectStateSignal);
+
+    #ifdef Q_OS_WIN64
+        connect(sp.get(), &SerialPortThread::errorOccurred, this, &AbstractDevice::slotSerialPortError); //Для XP (Qt 5.6) закомментировать
+    #endif
 }
 
 //----------------------------------------------------------------------------------------------------------------------

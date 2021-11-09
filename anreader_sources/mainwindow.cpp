@@ -647,7 +647,7 @@ void MainWindow::copy_selected()
                     rows += (jtable->selectionModel()->selectedRows(j).at(i).data(Qt::CheckStateRole).toBool()) ? "1": "0";
                 break;
             default:
-                rows += jtable->selectionModel()->selectedRows(j).at(i).data().toString();
+                rows += "\"" + jtable->selectionModel()->selectedRows(j).at(i).data().toString() + "\"";
                 break;
             }
         }
