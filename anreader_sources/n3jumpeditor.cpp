@@ -1,6 +1,7 @@
 #include "n3jumpeditor.h"
 #include "ui_n3jumpeditor.h"
 
+//-------------------------------------------------------------------------------------------------------------------------------------
 N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const map_DataList& aircrafts, const map_DataList& dropzones, const map_DataList& canopies) :
     QDialog(parent),
     ui(new Ui::N3JumpEditor)
@@ -20,13 +21,20 @@ N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const map_DataList& ai
 
     ui->cbDZ->setCurrentText(jump.getDZ());
     ui->cbAirplane->setCurrentText(jump.getAP());
+    ui->teNote->setPlainText(jump.getNote());
+
+    ptrJump = &jump;
 }
 
+
+//-------------------------------------------------------------------------------------------------------------------------------------
 N3JumpEditor::~N3JumpEditor()
 {
     delete ui;
 }
 
+
+//-------------------------------------------------------------------------------------------------------------------------------------
 void N3JumpEditor::setComboValues(QComboBox &combo, const map_DataList &data_list) const
 {
     std::map<QString, QString> tmp_map; //for sorting
@@ -36,4 +44,45 @@ void N3JumpEditor::setComboValues(QComboBox &combo, const map_DataList &data_lis
 
     for(auto it = tmp_map.begin(); it != tmp_map.end(); ++it)
         combo.addItem((*it).first);
+}
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------
+void N3JumpEditor::on_buttonBox_rejected()
+{
+    reject();
+}
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------
+void N3JumpEditor::on_buttonBox_accepted()
+{
+    if(nullptr != ptrJump)
+    {
+        if(ptrJump->getAP() != ui->cbAirplane->currentText())
+        {
+            ptrJump->setAP(ui->cbAirplane->currentText());
+            m_modified = true;
+        }
+
+        if(ptrJump->getDZ() != ui->cbDZ->currentText())
+        {
+            ptrJump->setDZ(ui->cbDZ->currentText());
+            m_modified = true;
+        }
+
+        if(ptrJump->getCanopy() != ui->cbCanopy->currentText())
+        {
+            ptrJump->setCanopy(ui->cbCanopy->currentText());
+            m_modified = true;
+        }
+
+        if(ptrJump->getNote() != ui->teNote->toPlainText())
+        {
+            ptrJump->setNote(ui->teNote->toPlainText());
+            m_modified = true;
+        }
+
+    }
+    accept();
 }

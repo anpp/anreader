@@ -278,6 +278,7 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
                 default:
                     csv_field = jm.data(jm.index(i, j), Qt::DisplayRole).toString();
                     csv_field = csv_field.replace("\"", "\"\"");
+                    csv_field = csv_field.replace("\n", "\t"); //переводы строк заменяются на табы
                     csv_string << "\"" + csv_field + "\"";
                     break;
                 }
@@ -326,6 +327,11 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
         while (!in.atEnd())
         {
             QString line = in.readLine();
+
+            //чтение ячеек с переводами строк. Пока не нужно, вместо переводов табы
+            //while(line.size() > 0 && '"' != line[line.size() - 1])
+            //    line += '\n' + in.readLine();
+
             t_jump_attribute jump_data;
             std::shared_ptr<CustomJump> jump = std::make_shared<N3Jump>();
 
@@ -342,16 +348,26 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
             foreach(const QString& item, *CSVParser::csvToken(line, delimiter)){
                 if(!checkFormat(true))return;
 
-                if(CustomJumpNames::JumpDate == index){
-                    QDateTime dt = QDateTime::fromString(item, dateFormat);
+                QDateTime dt;
+                QString note;
+
+                switch (index)
+                {
+                case CustomJumpNames::JumpDate:
+                    dt = QDateTime::fromString(item, dateFormat);
                     if(dt.isNull() || !dt.isValid())
                         dt = QDateTime::fromString(item, dateFormat_excel);
-
                     jump_data.push_back(std::make_pair(field_names[index++], dt));
-                }
-                else
+                    break;
+                case N3JumpNames::Note:
+                    note = item;
+                    jump_data.push_back(std::make_pair(field_names[index++], note.replace("\t", "\n")));
+                    break;
+                default:
                     jump_data.push_back(std::make_pair(field_names[index++], item));
-            }
+                    break;
+                }
+                                            }
             if(!checkFormat(false))return;
 
             jump->setPairs(jump_data);
@@ -652,7 +668,8 @@ void MainWindow::edit_selected()
             {
                 QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump, dl.const_aircrafts(), dl.const_dropzones(), dl.const_canopies());
                 //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
-                n3_jump_editor->exec();
+                if(n3_jump_editor->exec() == QDialog::Accepted && n3_jump_editor->isModified())
+                    documentWasModified();
             }
         }
     }
