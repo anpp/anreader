@@ -52,9 +52,11 @@ void MainWindow::onCreate()
 
     //для некоторых оконных систем
     #ifndef Q_OS_WIN64
-      #ifndef Q_OS_MACOS
-       settings.loadSettingsScreen();
-      #endif
+        #ifndef Q_OS_WIN32
+            #ifndef Q_OS_MACOS
+                settings.loadSettingsScreen();
+            #endif
+        #endif
     #endif
 
     setCurrentFile(settings.getSetting("current_file").toString());
