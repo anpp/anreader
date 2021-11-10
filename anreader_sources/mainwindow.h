@@ -82,7 +82,7 @@ private:
     void createDevicesWidget();
     void createLogWidget();
     bool saveAsCSV(const QString& filename, const JumpsTableModel& jm, const QString delimiter = ";");
-    void openFromCSV(const QString& filename, JumpsTableModel& jm, const QString delimiter = ";");
+    bool openFromCSV(const QString& filename, JumpsTableModel& jm, const QString delimiter = ";");
     void setCurrentFile(const QString &fileName);
     bool saveQuestion();
     void fileWasModified(bool value);

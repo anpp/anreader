@@ -40,6 +40,7 @@ public:
     void removeItem(const uint row);
     void clear();
     std::shared_ptr<CustomJump> getItem(const uint row) const;
+    const t_rows& items() const {return *m_rows; }
 
 private:
     void setColumnCount(const int value);

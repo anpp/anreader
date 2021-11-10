@@ -62,10 +62,14 @@ void MainWindow::onCreate()
     setCurrentFile(settings.getSetting("current_file").toString());
     if(!settings.getSetting("current_file").toString().isEmpty())
     {
-        openFromCSV(settings.getSetting("current_file").toString(), jumps_model, delimiterCSV());
-        prepareTableAfterLoad(*jtable);
-    }    
-    setCurrentFile(current_file);    
+        if(openFromCSV(settings.getSetting("current_file").toString(), jumps_model, delimiterCSV()))
+        {
+            prepareTableAfterLoad(*jtable);
+            setCurrentFile(current_file);
+        }
+        else
+            setCurrentFile("");
+    }
     selectionChanged();
 }
 
@@ -258,37 +262,40 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
             csv_string << "\"" + jm.headerData(i, Qt::Horizontal).toString()+ "\"";
         ts << csv_string.join(delimiter) + "\n";
 
-        for(auto i = 0; i < jm.rowCount(QModelIndex()); ++i )
+        std::unique_ptr<t_jump_attribute> j_atr;
+
+        for(const auto& jump: jm.items())
         {
             csv_string.clear();
-            //csv_string << "\"" + tv.model()->headerData(i, Qt::Vertical).toString()+ "\"";
-            for(auto j = 0; j < jm.columnCount(QModelIndex()); ++j)
-            {                
+            j_atr = jump->getPairs();
+
+            for(uint i = 0; i < j_atr->size(); ++i)
+            {
                 QString csv_field;
-                switch(j)
+                switch(i)
                 {
                 case CustomJumpNames::JumpDate:
-                    if(jm.data(jm.index(i, j), Qt::DisplayRole).canConvert(QMetaType::QDateTime))
-                            csv_string << "\"" + jm.data(jm.index(i, j), Qt::DisplayRole).toDateTime().toString(dateFormat) + "\"";
+                    if(j_atr->at(i).second.canConvert(QMetaType::QDateTime))
+                            csv_string << "\"" + j_atr->at(i).second.toDateTime().toString(dateFormat) + "\"";
                     break;
                 case N3JumpNames::Deleted:
                     csv_field = "";
-                    if(jm.data(jm.index(i, j), Qt::CheckStateRole).canConvert(QMetaType::Bool))
-                        csv_field = jm.data(jm.index(i, j), Qt::CheckStateRole).toBool() ? "1": "0";
+                    if(j_atr->at(i).second.canConvert(QMetaType::Bool))
+                        csv_field = j_atr->at(i).second.toBool() ? "1": "0";
                      csv_string << ("\"" + csv_field + "\"");
                     break;
                 default:
-                    csv_field = jm.data(jm.index(i, j), Qt::DisplayRole).toString();
+                    csv_field = j_atr->at(i).second.toString();
                     csv_field = csv_field.replace("\"", "\"\"");
                     csv_field = csv_field.replace("\n", "\t"); //переводы строк заменяются на табы
                     csv_string << "\"" + csv_field + "\"";
                     break;
                 }
-
             }
             ts << csv_string.join(delimiter) + "\n";
         }
         f.close();
+        log("File saved: " + filename);
         return true;
     }
     else
@@ -300,7 +307,7 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
 
 
 //----------------------------------------------------------------------------------------------------------------------
-void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const QString delimiter)
+bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const QString delimiter)
 {
     settings.setSetting("current_file_delimiter", delimiter);
 
@@ -311,7 +318,7 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
         QString header = in.readLine();
         if(header == ""){
             log("Error - file format: " + filename);
-            return;
+            return false;
         }
 
         QStringList field_names;
@@ -321,7 +328,7 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
 
         if(field_names.count() < 3){
             log("Error - file format: " + filename);
-            return;
+            return false;
         }
 
 
@@ -348,7 +355,7 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
                 }};
 
             foreach(const QString& item, *CSVParser::csvToken(line, delimiter)){
-                if(!checkFormat(true))return;
+                if(!checkFormat(true)) return false;
 
                 QDateTime dt;
                 QString note;
@@ -370,7 +377,7 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
                     break;
                 }
                                             }
-            if(!checkFormat(false))return;
+            if(!checkFormat(false)) return false;
 
             jump->setPairs(jump_data);
             jumps->push_back(jump);            
@@ -381,15 +388,17 @@ void MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
         if(!jm.moveItems(jumps))
         {
             log("Error - cannot read file: " + filename);
-            return;
+            return false;
         }
 
         file.close();
         log("File loaded: " + filename);
         dl.save();
+        return true;
     }
     else
         log(file.errorString() + " Error - cannot read file: " + filename);
+    return false;
 }
 
 
@@ -560,9 +569,13 @@ void MainWindow::open()
     {
         filename = fd.selectedFiles().at(0);
         jumps_model.clear();
-        openFromCSV(filename, jumps_model, selectedFilter == defaultFilter ? ";" : ",");
-        prepareTableAfterLoad(*jtable);
-        setCurrentFile(filename);
+        if(openFromCSV(filename, jumps_model, selectedFilter == defaultFilter ? ";" : ","))
+        {
+            prepareTableAfterLoad(*jtable);
+            setCurrentFile(filename);
+        }
+        else
+            setCurrentFile("");
     }
 }
 
