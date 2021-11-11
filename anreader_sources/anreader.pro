@@ -18,6 +18,7 @@ QMAKE_LFLAGS_RELEASE += -static -static-libgcc
 SOURCES += \
     csvparser.cpp \
     datalist_dialog/datalist_dialog.cpp \
+    datalist_dialog/datalistmodel.cpp \
     datalist_dialog/listwidget.cpp \
     datalists.cpp \
     devices_list_widget.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     common.h \
     csvparser.h \
     datalist_dialog/datalist_dialog.h \
+    datalist_dialog/datalistmodel.h \
     datalist_dialog/listwidget.h \
     datalists.h \
     devices_list_widget.h \

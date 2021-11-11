@@ -23,8 +23,6 @@ public:
     bool isModified() const {return m_modified; }
 
 private slots:
-    void on_buttonBox_rejected();
-
     void on_buttonBox_accepted();
 
 private:

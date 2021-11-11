@@ -134,7 +134,8 @@ public slots:
     void stepProgress(const int id);
     void finish(const DWidget& widget);
     void afterConnect(const DWidget& widget);
-    void prepareTableAfterLoad(JumpsTable& table);
+    void prepareTableAfterEdit(JumpsTable& table) const;
+    void prepareTableAfterLoad(JumpsTable& table) const;
     void onCreate();
 
     void newFile();

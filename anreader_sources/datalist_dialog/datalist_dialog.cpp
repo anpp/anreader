@@ -17,5 +17,5 @@ DataList_Dialog::~DataList_Dialog()
 
 void DataList_Dialog::on_buttonBox_accepted()
 {
-
+    accept();
 }

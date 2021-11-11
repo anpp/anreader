@@ -7,4 +7,8 @@ ListWidget::ListWidget(QWidget *parent) : QWidget(parent)
     this->setLayout(layout);
 
     layout->setMargin(0);
+
+    m_listTable->resizeColumnsToContents();
+    m_listTable->horizontalHeader()->setStretchLastSection(true);
+    m_listTable->setModel(&m_model);
 }

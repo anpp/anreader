@@ -553,17 +553,24 @@ void MainWindow::afterConnect(const DWidget &widget)
         dl.aircrafts()[ap] = ap;
 
     foreach(auto& dz, widget.device().dropzones().Names())
-        dl.dropzones()[dz] = dz;    
+        dl.dropzones()[dz] = dz;
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
-void MainWindow::prepareTableAfterLoad(JumpsTable &table)
+void MainWindow::prepareTableAfterEdit(JumpsTable &table) const
 {
     table.horizontalHeader()->setStretchLastSection(false);
     table.resizeColumnsToContents();
     table.resizeRowsToContents();
     table.horizontalHeader()->setStretchLastSection(true);
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+void MainWindow::prepareTableAfterLoad(JumpsTable &table) const
+{
+    prepareTableAfterEdit(table);
     table.scrollToBottom();
 }
 
@@ -714,7 +721,10 @@ void MainWindow::edit_selected()
                 QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump, dl.const_aircrafts(), dl.const_dropzones(), dl.const_canopies());
                 //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
                 if(n3_jump_editor->exec() == QDialog::Accepted && n3_jump_editor->isModified())
+                {
+                    prepareTableAfterEdit(*jtable);
                     documentWasModified();
+                }
             }
         }
     }

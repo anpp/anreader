@@ -6,6 +6,9 @@
 #include <QPointer>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QHeaderView>
+
+#include "datalistmodel.h"
 
 class ListWidget : public QWidget
 {
@@ -15,6 +18,7 @@ public:
 
 private:
     QPointer<QTableView> m_listTable = new QTableView(this);
+    DataListModel m_model;
 signals:
 
 };
