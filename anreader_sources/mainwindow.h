@@ -32,8 +32,10 @@
 #include "log_widget.h"
 #include "n3jumpeditor.h"
 #include "datalists.h"
+#include "datalist_dialog/datalist_dialog.h"
 
 enum MainWindow_defs: int {BaseWidht = 1100, BaseHeight = 500, StatusStateLabelWidth = 250};
+enum DataList_Kind: int {dlk_Aircrafrs = 0, dlk_Dropzones, dlk_Canopies};
 
 
 
@@ -87,6 +89,7 @@ private:
     bool saveQuestion();
     void fileWasModified(bool value);
     QString delimiterCSV() { return settings.getSetting("current_file_delimiter").toString(); }
+    void open_DataListDialog(const DataList_Kind dlk, map_DataList& data);
 
     QPointer<StatusFrame> getStatusFrame(const int id);
 
@@ -107,6 +110,9 @@ private:
     //QPointer<QAction> m_pasteAct;
     QPointer<QAction> m_editAct;
     QPointer<QAction> m_deleteAct;
+    QPointer<QAction> m_registerAicrafts;
+    QPointer<QAction> m_registerDropZones;
+    QPointer<QAction> m_registerCanopies;
 
     QString defaultFilter = QObject::tr("CSV file with semicolon delimiters (*.csv)");
     QString commaFilter = QObject::tr("CSV file with comma delimiters (*.csv)");
@@ -138,6 +144,9 @@ public slots:
     void delete_selected();
     void copy_selected();
     void edit_selected();
+    void aicrafts_list()  {open_DataListDialog(DataList_Kind::dlk_Aircrafrs, dl.aircrafts()); }
+    void dropzones_list() {open_DataListDialog(DataList_Kind::dlk_Dropzones, dl.dropzones()); }
+    void canopies_list()  {open_DataListDialog(DataList_Kind::dlk_Canopies, dl.canopies()); }
     void about();
     void documentWasModified();
     void enableActions(const bool enable);

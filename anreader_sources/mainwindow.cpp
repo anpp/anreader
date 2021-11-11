@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "csvparser.h"
 
+static QString sDataList_Titles[] = {QObject::tr("Aircrafts"), QObject::tr("Dropzones"), QObject::tr("Canopies")};
+
 //----------------------------------------------------------------------------------------------------------------------
 StatusFrame::StatusFrame(QWidget *parent) : QWidget (parent)
 {
@@ -79,6 +81,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if(saveQuestion())
     {
         settings.save();
+        dl.save();
         event->accept();
     } else
     {
@@ -117,6 +120,7 @@ void MainWindow::createActions()
 {
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
+    QMenu *registerMenu = menuBar()->addMenu(tr("&Register"));
     QMenu *windowsMenu = menuBar()->addMenu(tr("&Windows"));
 
     const QIcon newIcon = QIcon(":/images/icons/toolbar/new.png");
@@ -170,6 +174,21 @@ void MainWindow::createActions()
     connect(m_deleteAct, &QAction::triggered, this, &MainWindow::delete_selected);
     editMenu->addAction(m_deleteAct);
 
+    m_registerAicrafts = new QAction(tr("Aircrafts"), this);
+    m_registerAicrafts->setToolTip(tr("Aircrafts..."));
+    connect(m_registerAicrafts, &QAction::triggered, this, &MainWindow::aicrafts_list);
+    registerMenu->addAction(m_registerAicrafts);
+
+    m_registerDropZones = new QAction(tr("Dropzones"), this);
+    m_registerDropZones->setToolTip(tr("Dropzones..."));
+    connect(m_registerDropZones, &QAction::triggered, this, &MainWindow::dropzones_list);
+    registerMenu->addAction(m_registerDropZones);
+
+    m_registerCanopies = new QAction(tr("Canopies"), this);
+    m_registerCanopies->setToolTip(tr("Canopies..."));
+    connect(m_registerCanopies, &QAction::triggered, this, &MainWindow::canopies_list);
+    registerMenu->addAction(m_registerCanopies);
+
 
     QToolBar *mainToolBar = addToolBar(tr("File"));
     mainToolBar->setIconSize(QSize(40, 40));
@@ -182,6 +201,10 @@ void MainWindow::createActions()
     mainToolBar->addSeparator();
     mainToolBar->addAction(m_editAct);
     mainToolBar->addAction(m_deleteAct);
+
+    registerMenu->addAction(m_registerAicrafts);
+    registerMenu->addAction(m_registerDropZones);
+    registerMenu->addAction(m_registerCanopies);
 
     if(m_toggleDevices)
         windowsMenu->addAction(m_toggleDevices);
@@ -392,8 +415,7 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
         }
 
         file.close();
-        log("File loaded: " + filename);
-        dl.save();
+        log("File loaded: " + filename);        
         return true;
     }
     else
@@ -445,6 +467,16 @@ void MainWindow::fileWasModified(bool value)
     file_was_modified = value;
     setWindowModified(file_was_modified);
 }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+void MainWindow::open_DataListDialog(const DataList_Kind dlk, map_DataList &data)
+{
+    QPointer<DataList_Dialog> dl_dialog = new DataList_Dialog(sDataList_Titles[dlk], this);
+    dl_dialog->exec();
+
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 QPointer<StatusFrame> MainWindow::getStatusFrame(const int id)
@@ -521,9 +553,7 @@ void MainWindow::afterConnect(const DWidget &widget)
         dl.aircrafts()[ap] = ap;
 
     foreach(auto& dz, widget.device().dropzones().Names())
-        dl.dropzones()[dz] = dz;
-
-    dl.save();
+        dl.dropzones()[dz] = dz;    
 }
 
 

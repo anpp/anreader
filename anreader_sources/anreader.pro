@@ -17,6 +17,8 @@ QMAKE_LFLAGS_RELEASE += -static -static-libgcc
 
 SOURCES += \
     csvparser.cpp \
+    datalist_dialog/datalist_dialog.cpp \
+    datalist_dialog/listwidget.cpp \
     datalists.cpp \
     devices_list_widget.cpp \
     log_widget.cpp \
@@ -32,6 +34,8 @@ SOURCES += \
 HEADERS += \
     common.h \
     csvparser.h \
+    datalist_dialog/datalist_dialog.h \
+    datalist_dialog/listwidget.h \
     datalists.h \
     devices_list_widget.h \
     log_widget.h \
@@ -67,5 +71,6 @@ win32:{
 }
 
 FORMS += \
+    datalist_dialog/datalist_dialog.ui \
     n3jumpeditor.ui
 
