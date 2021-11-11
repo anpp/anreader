@@ -5,22 +5,26 @@
 QVariant DataListModel::data(const QModelIndex &index, int role) const
 {
 
-    if(role == Qt::DisplayRole && index.isValid())
+    if(index.isValid())
     {
-        switch(index.column())
+        QString key, value;
+        bool used;
+
+        std::tie(used, key, value) = m_datalist[index.row()];
+
+        if(role == Qt::DisplayRole && index.column() > 0)
         {
-        case 1:
-            return std::get<1>(m_datalist[index.row()]);
-            break;
-        case 2:
-            return std::get<2>(m_datalist[index.row()]);
-            break;
-        default:
-            break;
+            switch(index.column())
+            {
+            case 1: return key;
+            case 2: return value;
+            default: break;
+            }
+
         }
+        if(role == Qt::CheckStateRole && index.isValid() && index.column() == 0)
+            return used ? Qt::Checked: Qt::Unchecked;
     }
-    if(role == Qt::CheckStateRole && index.isValid() && index.row() == 0)
-        return std::get<0>(m_datalist[index.row()]) ? Qt::Checked: Qt::Unchecked;
 
 /*
     if (role == Qt::BackgroundColorRole && index.isValid())
