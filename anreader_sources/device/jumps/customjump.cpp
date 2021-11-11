@@ -1,6 +1,6 @@
 #include "customjump.h"
 
-static QString CustomJumpFieldNames[] =
+const static QString CustomJumpFieldNames[] =
                               {
                                 QObject::tr("Number"),
                                 QObject::tr("Date"),

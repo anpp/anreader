@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QDir>
 
-static QString sSettingKind[] = {"appearance", "misc", "screen", "environment"};
+const static QString sSettingKind[] = {"appearance", "misc", "screen", "environment"};
 
 
 //----------------------------------------------------------------------------------------------------------------------

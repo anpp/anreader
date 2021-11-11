@@ -1,5 +1,6 @@
 #include "datalistmodel.h"
 
+const static QString sHorzHeader[] = {QObject::tr("Used"), QObject::tr("Key"), QObject::tr("Value")};
 
 //---------------------------------------------------------------------------------------------------------------
 QVariant DataListModel::data(const QModelIndex &index, int role) const
@@ -64,7 +65,7 @@ QVariant DataListModel::headerData(int section, Qt::Orientation orientation, int
         return section + 1;
 
     if(role == Qt::DisplayRole && orientation == Qt::Horizontal)
-        return (section == 0? tr("Used") : (section == 1? tr("Key") : tr("Value")));
+        return (section >= num_columns ? "" : tr(sHorzHeader[section].toStdString().c_str()));
 
     return QVariant();
 }

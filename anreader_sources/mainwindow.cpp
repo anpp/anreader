@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "csvparser.h"
 
-static QString sDataList_Titles[] = {QObject::tr("Aircrafts"), QObject::tr("Dropzones"), QObject::tr("Canopies")};
+const static QString sDataList_Titles[] = {QObject::tr("Aircrafts"), QObject::tr("Dropzones"), QObject::tr("Canopies")};
 
 //----------------------------------------------------------------------------------------------------------------------
 StatusFrame::StatusFrame(QWidget *parent) : QWidget (parent)

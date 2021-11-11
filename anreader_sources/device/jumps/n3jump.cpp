@@ -1,6 +1,6 @@
 #include "n3jump.h"
 
-static QString N3JumpFieldNames[] =
+const static QString N3JumpFieldNames[] =
                               {
                                 QObject::tr("Exit altitude"),
                                 QObject::tr("Deploy altitude"),
