@@ -14,7 +14,7 @@ class ListWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ListWidget(QWidget *parent = nullptr);
+    explicit ListWidget(t_datalist& datalist, QWidget *parent = nullptr);
 
 private:
     QPointer<QTableView> m_listTable = new QTableView(this);

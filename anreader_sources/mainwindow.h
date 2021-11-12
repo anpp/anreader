@@ -90,6 +90,7 @@ private:
     void fileWasModified(bool value);
     QString delimiterCSV() { return settings.getSetting("current_file_delimiter").toString(); }
     void open_DataListDialog(const DataList_Kind dlk, map_DataList& data);
+    void selection_changed(bool enable = true);
 
     QPointer<StatusFrame> getStatusFrame(const int id);
 

@@ -1,9 +1,10 @@
 #include "datalist_dialog.h"
 #include "ui_datalist_dialog.h"
 
-DataList_Dialog::DataList_Dialog(const QString& Title, QWidget *parent) :
+DataList_Dialog::DataList_Dialog(const QString& Title, t_datalist& datalist, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::DataList_Dialog)
+    ui(new Ui::DataList_Dialog),
+    m_listWidget(datalist)
 {
     ui->setupUi(this);
     this->setWindowTitle(Title);

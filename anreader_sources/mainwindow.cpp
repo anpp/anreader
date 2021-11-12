@@ -484,7 +484,12 @@ void MainWindow::fileWasModified(bool value)
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::open_DataListDialog(const DataList_Kind dlk, map_DataList &data)
 {    
-    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[dlk], this);
+    t_datalist datalist;
+
+    for(auto& item: data)
+        datalist.push_back(std::make_tuple(false, item.first, item.second));
+
+    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[dlk], datalist, this);
     dl_dialog->exec();
 
 }
@@ -756,14 +761,10 @@ void MainWindow::documentWasModified()
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::enableActions(const bool enable)
 {
-    m_newAct->setEnabled(enable);
-    m_saveAct->setEnabled(enable);
-    m_openAct->setEnabled(enable);
+    for(auto& action: m_actions)
+        action->setEnabled(enable);
 
-    int selection_size = (jtable ? jtable->selectionModel()->selectedRows().size() : 0);
-    m_editAct->setEnabled(enable && selection_size == 1);
-    m_deleteAct->setEnabled(enable && selection_size > 0);
-    m_copyAct->setEnabled(enable && selection_size > 0);
+    if(jtable) jtable->setEnabled(enable);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -775,12 +776,19 @@ void MainWindow::log(const QString& value)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void MainWindow::selection_changed(bool enable)
+{
+    int selection_size = (jtable ? jtable->selectionModel()->selectedRows().size() : 0);
+    m_editAct->setEnabled(enable && selection_size == 1);
+    m_deleteAct->setEnabled(enable && selection_size > 0);
+    m_copyAct->setEnabled(enable && selection_size > 0);
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
 void MainWindow::selectionChanged()
 {
-    int selection_size = (jtable ? jtable->selectionModel()->selectedRows().size() : 0);    
-    m_editAct->setEnabled(selection_size == 1);
-    m_deleteAct->setEnabled(selection_size > 0);
-    m_copyAct->setEnabled(selection_size > 0);
+    selection_changed(true);
 }
 
 

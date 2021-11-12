@@ -7,6 +7,7 @@
 #include <tuple>
 #include <map>
 #include <vector>
+#include <memory>
 
 typedef std::tuple<bool, QString, QString> t_datalist_item;
 typedef std::vector<t_datalist_item> t_datalist;
@@ -14,10 +15,10 @@ typedef std::vector<t_datalist_item> t_datalist;
 class DataListModel : public QAbstractItemModel
 {
     const int num_columns = 3;
-    t_datalist m_datalist;
+    t_datalist &m_datalist;
 public:
-    explicit DataListModel(QObject *parent = nullptr):
-        QAbstractItemModel(parent) {};
+    explicit DataListModel(t_datalist& datalist, QObject *parent = nullptr):
+        QAbstractItemModel(parent), m_datalist(datalist) {};
 
     QModelIndex index(int row, int column, const QModelIndex & = QModelIndex()) const override { return createIndex(row, column);}
     QModelIndex parent(const QModelIndex &) const override { return QModelIndex(); }

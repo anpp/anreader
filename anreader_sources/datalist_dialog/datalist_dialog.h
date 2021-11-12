@@ -13,7 +13,7 @@ class DataList_Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit DataList_Dialog(const QString& Title, QWidget *parent = nullptr);
+    explicit DataList_Dialog(const QString& Title, t_datalist& datalist, QWidget *parent = nullptr);
     ~DataList_Dialog();
 
 private slots:
