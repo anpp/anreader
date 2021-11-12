@@ -30,7 +30,7 @@ N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const map_DataList& ai
 //-------------------------------------------------------------------------------------------------------------------------------------
 N3JumpEditor::~N3JumpEditor()
 {
-    delete ui;
+    delete ui;    
 }
 
 

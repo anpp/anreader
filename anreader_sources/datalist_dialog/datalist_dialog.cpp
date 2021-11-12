@@ -7,7 +7,7 @@ DataList_Dialog::DataList_Dialog(const QString& Title, QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle(Title);
-    ui->centralLayout->addWidget(m_listWidget);
+    ui->centralLayout->addWidget(&m_listWidget);
 }
 
 DataList_Dialog::~DataList_Dialog()

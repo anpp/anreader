@@ -94,11 +94,11 @@ private:
     QPointer<StatusFrame> getStatusFrame(const int id);
 
     JumpsTableModel jumps_model;
-    QPointer<JumpsTable> jtable = nullptr;
-    QPointer<DevicesWidget> devices_window;
-    QPointer<LogWidget> log_widget;    
+    std::unique_ptr<JumpsTable> jtable;
+    std::unique_ptr<DevicesWidget> devices_window;
+    std::unique_ptr<LogWidget> log_widget;
 
-    QMap<int, QPointer<StatusFrame>> map_status_frames;    
+    std::map<int, std::unique_ptr<StatusFrame>> map_status_frames;
 
     QPointer<QAction> m_newAct;
     QPointer<QAction> m_openAct;
@@ -110,9 +110,10 @@ private:
     //QPointer<QAction> m_pasteAct;
     QPointer<QAction> m_editAct;
     QPointer<QAction> m_deleteAct;
-    QPointer<QAction> m_registerAicrafts;
-    QPointer<QAction> m_registerDropZones;
-    QPointer<QAction> m_registerCanopies;
+    QPointer<QAction> m_registerAicraftsAct;
+    QPointer<QAction> m_registerDropZonesAct;
+    QPointer<QAction> m_registerCanopiesAct;
+    QVector<QPointer<QAction>> m_actions;
 
     QString defaultFilter = QObject::tr("CSV file with semicolon delimiters (*.csv)");
     QString commaFilter = QObject::tr("CSV file with comma delimiters (*.csv)");

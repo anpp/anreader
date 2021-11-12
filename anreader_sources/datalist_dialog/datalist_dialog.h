@@ -21,7 +21,7 @@ private slots:
 
 private:
     Ui::DataList_Dialog *ui;
-    QPointer<ListWidget> m_listWidget = new ListWidget(this);
+    ListWidget m_listWidget;
 };
 
 #endif // DATALIST_DIALOG_H

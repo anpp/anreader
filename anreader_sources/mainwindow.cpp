@@ -44,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent)
 //----------------------------------------------------------------------------------------------------------------------
 MainWindow::~MainWindow()
 {    
+    for(auto& act: m_actions)
+        delete act;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -95,7 +97,7 @@ void MainWindow::initMainWindow()
     auto layout = new QHBoxLayout;
     auto *center = new QWidget(this);
 
-    jtable = new JumpsTable();
+    jtable = std::make_unique<JumpsTable>();
     jtable->setModel(&jumps_model);
 
     connect(&jumps_model, &JumpsTableModel::dataChanged, this, &MainWindow::documentWasModified);
@@ -107,7 +109,7 @@ void MainWindow::initMainWindow()
     createLogWidget();
 
     //layout->addWidget(devices_window);
-    layout->addWidget(jtable);
+    layout->addWidget(jtable.get());
 
     layout->setMargin(0);
     layout->setSpacing(0);
@@ -125,6 +127,7 @@ void MainWindow::createActions()
 
     const QIcon newIcon = QIcon(":/images/icons/toolbar/new.png");
     m_newAct = new QAction(newIcon, tr("&New"), this);
+    m_actions.push_back(m_newAct);
     m_newAct->setShortcuts(QKeySequence::New);
     m_newAct->setToolTip(tr("Create a new file"));
     connect(m_newAct, &QAction::triggered, this, &MainWindow::newFile);
@@ -132,6 +135,7 @@ void MainWindow::createActions()
 
     const QIcon openIcon = QIcon(":/images/icons/toolbar/open.png");
     m_openAct = new QAction(openIcon, tr("&Open..."), this);
+    m_actions.push_back(m_openAct);
     m_openAct->setShortcuts(QKeySequence::Open);
     m_openAct->setToolTip(tr("Open an existing file"));
     connect(m_openAct, &QAction::triggered, this, &MainWindow::open);
@@ -139,12 +143,14 @@ void MainWindow::createActions()
 
     const QIcon saveIcon = QIcon(":/images/icons/toolbar/save.png");
     m_saveAct = new QAction(saveIcon, tr("&Save..."), this);
+    m_actions.push_back(m_saveAct);
     m_saveAct->setShortcuts(QKeySequence::Save);
     m_saveAct->setToolTip(tr("Save the document to disk"));
     connect(m_saveAct, &QAction::triggered, this, &MainWindow::save);
     fileMenu->addAction(m_saveAct);
 
     m_saveAsAct = new QAction(saveIcon, tr("Save &As..."), this);
+    m_actions.push_back(m_saveAsAct);
     m_saveAsAct->setShortcuts(QKeySequence::SaveAs);
     m_saveAsAct->setToolTip(tr("Save the document under a new name"));
     connect(m_saveAsAct, &QAction::triggered, this, &MainWindow::saveAs);
@@ -152,6 +158,7 @@ void MainWindow::createActions()
 
     const QIcon copyIcon = QIcon(":/images/icons/toolbar/copy.png");
     m_copyAct = new QAction(copyIcon, tr("&Copy"), this);
+    m_actions.push_back(m_copyAct);
     m_copyAct->setShortcuts(QKeySequence::Copy);
     m_copyAct->setToolTip(tr("Copy selected jumps"));
     //m_copyAct->setShortcutVisibleInContextMenu(true);
@@ -162,6 +169,7 @@ void MainWindow::createActions()
 
     const QIcon editIcon = QIcon(":/images/icons/toolbar/edit.png");
     m_editAct = new QAction(editIcon, tr("&Edit"), this);
+    m_actions.push_back(m_editAct);
     m_editAct->setShortcuts(QKeySequence::UnknownKey);
     m_editAct->setToolTip(tr("Edit selected jump..."));
     connect(m_editAct, &QAction::triggered, this, &MainWindow::edit_selected);
@@ -169,25 +177,29 @@ void MainWindow::createActions()
 
     const QIcon deleteIcon = QIcon(":/images/icons/toolbar/delete.png");
     m_deleteAct = new QAction(deleteIcon, tr("&Delete"), this);
+    m_actions.push_back(m_deleteAct);
     m_deleteAct->setShortcuts(QKeySequence::Delete);
     m_deleteAct->setToolTip(tr("Delete selected jumps"));
     connect(m_deleteAct, &QAction::triggered, this, &MainWindow::delete_selected);
     editMenu->addAction(m_deleteAct);
 
-    m_registerAicrafts = new QAction(tr("Aircrafts"), this);
-    m_registerAicrafts->setToolTip(tr("Aircrafts..."));
-    connect(m_registerAicrafts, &QAction::triggered, this, &MainWindow::aicrafts_list);
-    registerMenu->addAction(m_registerAicrafts);
+    m_registerAicraftsAct = new QAction(tr("Aircrafts"), this);
+    m_actions.push_back(m_registerAicraftsAct);
+    m_registerAicraftsAct->setToolTip(tr("Aircrafts..."));
+    connect(m_registerAicraftsAct, &QAction::triggered, this, &MainWindow::aicrafts_list);
+    registerMenu->addAction(m_registerAicraftsAct);
 
-    m_registerDropZones = new QAction(tr("Dropzones"), this);
-    m_registerDropZones->setToolTip(tr("Dropzones..."));
-    connect(m_registerDropZones, &QAction::triggered, this, &MainWindow::dropzones_list);
-    registerMenu->addAction(m_registerDropZones);
+    m_registerDropZonesAct = new QAction(tr("Dropzones"), this);
+    m_actions.push_back(m_registerDropZonesAct);
+    m_registerDropZonesAct->setToolTip(tr("Dropzones..."));
+    connect(m_registerDropZonesAct, &QAction::triggered, this, &MainWindow::dropzones_list);
+    registerMenu->addAction(m_registerDropZonesAct);
 
-    m_registerCanopies = new QAction(tr("Canopies"), this);
-    m_registerCanopies->setToolTip(tr("Canopies..."));
-    connect(m_registerCanopies, &QAction::triggered, this, &MainWindow::canopies_list);
-    registerMenu->addAction(m_registerCanopies);
+    m_registerCanopiesAct = new QAction(tr("Canopies"), this);
+    m_actions.push_back(m_registerCanopiesAct);
+    m_registerCanopiesAct->setToolTip(tr("Canopies..."));
+    connect(m_registerCanopiesAct, &QAction::triggered, this, &MainWindow::canopies_list);
+    registerMenu->addAction(m_registerCanopiesAct);
 
 
     QToolBar *mainToolBar = addToolBar(tr("File"));
@@ -202,9 +214,9 @@ void MainWindow::createActions()
     mainToolBar->addAction(m_editAct);
     mainToolBar->addAction(m_deleteAct);
 
-    registerMenu->addAction(m_registerAicrafts);
-    registerMenu->addAction(m_registerDropZones);
-    registerMenu->addAction(m_registerCanopies);
+    registerMenu->addAction(m_registerAicraftsAct);
+    registerMenu->addAction(m_registerDropZonesAct);
+    registerMenu->addAction(m_registerCanopiesAct);
 
     if(m_toggleDevices)
         windowsMenu->addAction(m_toggleDevices);
@@ -227,19 +239,19 @@ void MainWindow::createDevicesWidget()
     m_toggleDevices = dock->toggleViewAction();
     m_toggleDevices->setShortcut(QKeySequence("F11"));
 
-    devices_window = new DevicesWidget(dock);
-    dock->setWidget(devices_window);
+    devices_window = std::make_unique<DevicesWidget>(dock);
+    dock->setWidget(devices_window.get());
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 
-    connect(devices_window, &DevicesWidget::createStatusFrame, this, &MainWindow::createStatusFrame);
-    connect(devices_window, &DevicesWidget::newTextOfState, this, &MainWindow::setStatusText);
-    connect(devices_window, &DevicesWidget::setProgress, this, &MainWindow::initProgress);
-    connect(devices_window, &DevicesWidget::stepProgress, this, &MainWindow::stepProgress);
-    connect(devices_window, &DevicesWidget::receivedData, this, &MainWindow::finish);
-    connect(devices_window, &DevicesWidget::afterConnect, this, &MainWindow::afterConnect);
-    connect(devices_window, &DevicesWidget::controls_is_enabled, this, &MainWindow::enableActions);
-    connect(devices_window, &DevicesWidget::log, this, &MainWindow::log);
-    connect(devices_window, &DevicesWidget::giveLastJump, &jumps_model, &JumpsTableModel::takeLastJump);
+    connect(devices_window.get(), &DevicesWidget::createStatusFrame, this, &MainWindow::createStatusFrame);
+    connect(devices_window.get(), &DevicesWidget::newTextOfState, this, &MainWindow::setStatusText);
+    connect(devices_window.get(), &DevicesWidget::setProgress, this, &MainWindow::initProgress);
+    connect(devices_window.get(), &DevicesWidget::stepProgress, this, &MainWindow::stepProgress);
+    connect(devices_window.get(), &DevicesWidget::receivedData, this, &MainWindow::finish);
+    connect(devices_window.get(), &DevicesWidget::afterConnect, this, &MainWindow::afterConnect);
+    connect(devices_window.get(), &DevicesWidget::controls_is_enabled, this, &MainWindow::enableActions);
+    connect(devices_window.get(), &DevicesWidget::log, this, &MainWindow::log);
+    connect(devices_window.get(), &DevicesWidget::giveLastJump, &jumps_model, &JumpsTableModel::takeLastJump);
 
     devices_window->createDefaults();
 }
@@ -255,9 +267,9 @@ void MainWindow::createLogWidget()
     m_toggleLog = dock->toggleViewAction();
     m_toggleLog->setShortcut(QKeySequence("F12"));
 
-    log_widget = new LogWidget(dock);
+    log_widget = std::make_unique<LogWidget>(dock);
     log_widget->setMinimumHeight(LogWidget_defs::MinimumHeight);
-    dock->setWidget(log_widget);
+    dock->setWidget(log_widget.get());
 
     addDockWidget(Qt::BottomDockWidgetArea, dock);
 }
@@ -471,8 +483,8 @@ void MainWindow::fileWasModified(bool value)
 
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::open_DataListDialog(const DataList_Kind dlk, map_DataList &data)
-{
-    QPointer<DataList_Dialog> dl_dialog = new DataList_Dialog(sDataList_Titles[dlk], this);
+{    
+    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[dlk], this);
     dl_dialog->exec();
 
 }
@@ -481,21 +493,20 @@ void MainWindow::open_DataListDialog(const DataList_Kind dlk, map_DataList &data
 //----------------------------------------------------------------------------------------------------------------------
 QPointer<StatusFrame> MainWindow::getStatusFrame(const int id)
 {
-    if(map_status_frames.contains(id))
-        return map_status_frames[id];
+    if(map_status_frames.find(id) != map_status_frames.end())
+        return map_status_frames[id].get();
     return nullptr;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::createStatusFrame(const int id)
 {
-    StatusFrame *status_frame;
-    if(!map_status_frames.contains(id))
+    std::unique_ptr<StatusFrame> status_frame;
+    if(map_status_frames.find(id) == map_status_frames.end())
     {
-        status_frame = new StatusFrame(this);
-
-        statusBar()->addWidget(status_frame);
-        map_status_frames[id] = status_frame;
+        status_frame = std::make_unique<StatusFrame>(this);
+        statusBar()->addWidget(status_frame.get());
+        map_status_frames[id] = std::move(status_frame);
     }
 }
 
@@ -718,7 +729,7 @@ void MainWindow::edit_selected()
             std::shared_ptr<N3Jump> edit_jump = std::dynamic_pointer_cast<N3Jump>(jumps_model.getItem(jtable->selectionModel()->selectedRows().at(0).row()));
             if(edit_jump)
             {
-                QPointer<N3JumpEditor> n3_jump_editor = new N3JumpEditor(this, *edit_jump, dl.const_aircrafts(), dl.const_dropzones(), dl.const_canopies());
+                std::unique_ptr<N3JumpEditor> n3_jump_editor = std::make_unique<N3JumpEditor>(this, *edit_jump, dl.const_aircrafts(), dl.const_dropzones(), dl.const_canopies());
                 //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
                 if(n3_jump_editor->exec() == QDialog::Accepted && n3_jump_editor->isModified())
                 {
