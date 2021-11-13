@@ -50,7 +50,7 @@ public:
     bool isDeleted() const override {return m_is_deleted;}
     QString getDZ() const override {return m_dz;}
     QString getAP() const override {return m_ap;}
-    QString getCanopy() const override {return "";}
+    QString getCanopy() const override {return m_canopy;}
 
     void setExitAlt(uint value) override {m_exit_alt = value;}
     void setDeplAlt(uint value) override {m_depl_alt = value;}
@@ -64,7 +64,7 @@ public:
     void setDeleted(bool value) override {m_is_deleted = value;}
     void setDZ(const QString& value) override {m_dz = value;}
     void setAP(const QString& value) override {m_ap = value;}
-    void setCanopy(const QString& value) override {}
+    void setCanopy(const QString& value) override {m_canopy = value; }
 
     std::unique_ptr<t_jump_attribute> getPairs() const override;
     virtual void setPairs(const t_jump_attribute& pairs) override;

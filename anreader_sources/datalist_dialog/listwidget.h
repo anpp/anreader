@@ -7,6 +7,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QHeaderView>
+#include <memory>
 
 #include "datalistmodel.h"
 
@@ -16,8 +17,12 @@ class ListWidget : public QWidget
 public:
     explicit ListWidget(t_datalist& datalist, QWidget *parent = nullptr);
 
+    void addItem(const t_datalist_item& item);
+    void removeItem(const uint row);
+    const QTableView& listTable() const { return *m_listTable; }
+
 private:
-    QPointer<QTableView> m_listTable = new QTableView(this);
+    std::unique_ptr<QTableView> m_listTable = std::make_unique<QTableView>(this);
     DataListModel m_model;
 signals:
 

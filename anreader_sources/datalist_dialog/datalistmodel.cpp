@@ -77,3 +77,22 @@ Qt::ItemFlags DataListModel::flags(const QModelIndex &index) const
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
     return flags;
 }
+
+//---------------------------------------------------------------------------------------------------------------
+void DataListModel::addItem(const t_datalist_item &item)
+{
+    this->beginInsertRows(QModelIndex(), m_datalist.size(), m_datalist.size());
+    m_datalist.push_back(item);
+    this->endInsertRows();
+}
+
+//---------------------------------------------------------------------------------------------------------------
+void DataListModel::removeItem(const uint row)
+{
+    if(m_datalist.size() <= row)
+        return;
+
+    this->beginRemoveRows(QModelIndex(), row, row);
+    m_datalist.erase(m_datalist.begin() + row);
+    this->endRemoveRows();
+}

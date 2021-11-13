@@ -65,7 +65,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QToolButton" name="toolButton">
+         <widget class="QToolButton" name="btnAdd">
           <property name="minimumSize">
            <size>
             <width>32</width>
@@ -78,7 +78,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="toolButton_2">
+         <widget class="QToolButton" name="btnRemove">
           <property name="minimumSize">
            <size>
             <width>32</width>

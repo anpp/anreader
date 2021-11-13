@@ -181,7 +181,7 @@ bool JumpsTableModel::moveItems(std::unique_ptr<t_rows> &jumps)
 void JumpsTableModel::removeItem(const uint row)
 {
    if(!m_rows) return;
-   if (m_rows->size() < row)
+   if (m_rows->size() <= row)
            return;
 
    this->beginRemoveRows(QModelIndex(), row, row);

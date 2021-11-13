@@ -30,6 +30,9 @@ public:
     int rowCount(const QModelIndex&) const override { return m_datalist.size(); }
     int columnCount(const QModelIndex&) const override {return num_columns; }
 
+    void addItem(const t_datalist_item& item);
+    void removeItem(const uint row);
+
 
 };
 

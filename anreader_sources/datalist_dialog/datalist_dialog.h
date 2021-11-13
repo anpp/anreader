@@ -19,6 +19,10 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
+    void on_btnAdd_clicked();
+
+    void on_btnRemove_clicked();
+
 private:
     Ui::DataList_Dialog *ui;
     ListWidget m_listWidget;

@@ -105,8 +105,6 @@ private:
     QPointer<QAction> m_openAct;
     QPointer<QAction> m_saveAct;
     QPointer<QAction> m_saveAsAct;
-    QPointer<QAction> m_toggleDevices;
-    QPointer<QAction> m_toggleLog;
     QPointer<QAction> m_copyAct;
     //QPointer<QAction> m_pasteAct;
     QPointer<QAction> m_editAct;
@@ -115,6 +113,9 @@ private:
     QPointer<QAction> m_registerDropZonesAct;
     QPointer<QAction> m_registerCanopiesAct;
     QVector<QPointer<QAction>> m_actions;
+
+    QPointer<QAction> m_toggleDevices;
+    QPointer<QAction> m_toggleLog;
 
     QString defaultFilter = QObject::tr("CSV file with semicolon delimiters (*.csv)");
     QString commaFilter = QObject::tr("CSV file with comma delimiters (*.csv)");

@@ -70,6 +70,7 @@ protected:
     QDateTime m_jump_date;
     QString m_dz;
     QString m_ap;
+    QString m_canopy;
 };
 
 #endif // CUSTOMJUMP_H

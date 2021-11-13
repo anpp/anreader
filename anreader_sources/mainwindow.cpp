@@ -731,7 +731,8 @@ void MainWindow::edit_selected()
     {
         if(jtable->selectionModel()->selectedRows().count() == 1)
         {
-            std::shared_ptr<N3Jump> edit_jump = std::dynamic_pointer_cast<N3Jump>(jumps_model.getItem(jtable->selectionModel()->selectedRows().at(0).row()));
+            auto currentRow  = jtable->currentIndex().row();
+            std::shared_ptr<N3Jump> edit_jump = std::dynamic_pointer_cast<N3Jump>(jumps_model.getItem(currentRow));
             if(edit_jump)
             {
                 std::unique_ptr<N3JumpEditor> n3_jump_editor = std::make_unique<N3JumpEditor>(this, *edit_jump, dl.const_aircrafts(), dl.const_dropzones(), dl.const_canopies());
