@@ -63,4 +63,5 @@ RESOURCES += \
     images.qrc
 
 FORMS += \
+    datalist_dialog/datalist_dialog.ui \
     n3jumpeditor.ui

@@ -71,8 +71,8 @@ win32:{
     QMAKE_TARGET_DESCRIPTION = Atlas and Neptune reader utility
     QMAKE_TARGET_COPYRIGHT = Andrey Ponomarenko
 }
-
 FORMS += \
     datalist_dialog/datalist_dialog.ui \
     n3jumpeditor.ui
+
 
