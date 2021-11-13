@@ -18,7 +18,8 @@ void ListWidget::addItem(const t_datalist_item &item)
     m_model.addItem(item);
 }
 
-void ListWidget::removeItem(const uint row)
+void ListWidget::removeFocusedItem()
 {
-    m_model.removeItem(row);
+    auto currentRow  = m_listTable->currentIndex().row();
+    m_model.removeItem(currentRow);
 }

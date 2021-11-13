@@ -18,7 +18,7 @@ public:
     explicit ListWidget(t_datalist& datalist, QWidget *parent = nullptr);
 
     void addItem(const t_datalist_item& item);
-    void removeItem(const uint row);
+    void removeFocusedItem();
     const QTableView& listTable() const { return *m_listTable; }
 
 private:

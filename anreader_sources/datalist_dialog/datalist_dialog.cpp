@@ -37,6 +37,5 @@ void DataList_Dialog::on_btnAdd_clicked()
 //---------------------------------------------------------------------------------------------------------------
 void DataList_Dialog::on_btnRemove_clicked()
 {
-    QModelIndex currentIndex  = m_listWidget.listTable().currentIndex();
-    m_listWidget.removeItem(currentIndex.row());
+    m_listWidget.removeFocusedItem();
 }

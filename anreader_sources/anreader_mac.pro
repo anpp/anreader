@@ -17,7 +17,10 @@ QMAKE_CXXFLAGS += -std=c++14
 
 SOURCES += \
     csvparser.cpp \
-    datalists.cpp\
+    datalist_dialog/datalist_dialog.cpp \
+    datalist_dialog/datalistmodel.cpp \
+    datalist_dialog/listwidget.cpp \
+    datalists.cpp \
     devices_list_widget.cpp \
     log_widget.cpp \
     main.cpp \
@@ -25,13 +28,16 @@ SOURCES += \
     jumpstable.cpp \
     jumpstablemodel.cpp \
     dwidget.cpp \
-    n3jumpeditor.cpp\
+    n3jumpeditor.cpp \
     n3widget.cpp \
     settings.cpp
 
 HEADERS += \
     common.h \
     csvparser.h \
+    datalist_dialog/datalist_dialog.h \
+    datalist_dialog/datalistmodel.h \
+    datalist_dialog/listwidget.h \
     datalists.h \
     devices_list_widget.h \
     log_widget.h \
