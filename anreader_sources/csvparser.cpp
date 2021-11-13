@@ -14,29 +14,28 @@ std::unique_ptr<QStringList> CSVParser::csvToken(const QString &line, const QStr
     QString token = "";
     QChar quote = '"';
     CSVState state = CSVState::outQuote;
-    QChar c;
 
-    auto outQuote { [&] () -> void
+    auto outQuote { [&] (QChar ch) -> void
         {
-            if(c == delimiter)
+            if(ch == delimiter)
             {
                 *tokens << token;
                 token = "";
             }
             else
             {
-                if(c == quote)
+                if(ch == quote)
                     state = CSVState::inQuote;
                 else
-                    token += c;
+                    token += ch;
             }
         }};
 
-    foreach(c, line){
+    for(const auto& c: line){
         switch(state)
         {
         case CSVState::outQuote:
-            outQuote();
+            outQuote(c);
             break;
         case CSVState::inQuote:
             if(c == quote)
@@ -53,7 +52,7 @@ std::unique_ptr<QStringList> CSVParser::csvToken(const QString &line, const QStr
             else
             {
                 state = CSVState::outQuote;
-                outQuote();
+                outQuote(c);
             }
             break;
         default:

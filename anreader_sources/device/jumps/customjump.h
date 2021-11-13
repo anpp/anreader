@@ -30,7 +30,8 @@ public:
         m_jump_number(jump_number),
         m_jump_date(jump_date),
         m_dz(dz),
-        m_ap(ap) {}
+        m_ap(ap),
+        m_canopy("") {}
 
     virtual ~CustomJump(){}
 

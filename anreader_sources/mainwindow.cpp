@@ -104,11 +104,11 @@ void MainWindow::initMainWindow()
     connect(&jumps_model, &JumpsTableModel::rowsInserted, this, &MainWindow::documentWasModified);
     connect(&jumps_model, &JumpsTableModel::rowsRemoved, this, &MainWindow::documentWasModified);    
     connect(jtable->selectionModel(), &QItemSelectionModel::selectionChanged,  this, &MainWindow::selectionChanged);
+    connect(jtable.get(), &QTableView::doubleClicked, this, &MainWindow::table_doubleClicked);
 
     createDevicesWidget();    
     createLogWidget();
 
-    //layout->addWidget(devices_window);
     layout->addWidget(jtable.get());
 
     layout->setMargin(0);
@@ -344,6 +344,8 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
 //----------------------------------------------------------------------------------------------------------------------
 bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const QString delimiter)
 {
+    std::unique_ptr<QStringList> tokens;
+
     settings.setSetting("current_file_delimiter", delimiter);
 
     QFile file(filename);
@@ -357,7 +359,8 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
         }
 
         QStringList field_names;
-        foreach(const QString& item, *CSVParser::csvToken(header, delimiter)){
+        tokens = CSVParser::csvToken(header, delimiter);
+        for(const auto& item: qAsConst(*tokens)){
             field_names << item;
         }
 
@@ -389,7 +392,8 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
                     return true;
                 }};
 
-            foreach(const QString& item, *CSVParser::csvToken(line, delimiter)){
+            tokens = CSVParser::csvToken(line, delimiter);
+            for(const auto& item: qAsConst(*tokens)){
                 if(!checkFormat(true)) return false;
 
                 QDateTime dt;
@@ -549,7 +553,7 @@ void MainWindow::stepProgress(const int id)
 void MainWindow::finish(const DWidget& widget)
 {
     std::unique_ptr<t_rows> jumps = std::make_unique<t_rows>();
-    foreach(auto& jump, widget.device().jumps())
+    for(const auto& jump: widget.device().jumps())
     {
        jumps->push_back(jump);
     }
@@ -565,17 +569,17 @@ void MainWindow::finish(const DWidget& widget)
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::afterConnect(const DWidget &widget)
 {
-    foreach(auto& ap, widget.device().airplanes().Names())
+    for(auto& ap: widget.device().airplanes().Names())
         dl.aircrafts()[ap] = ap;
 
-    foreach(auto& dz, widget.device().dropzones().Names())
+    for(auto& dz: widget.device().dropzones().Names())
         dl.dropzones()[dz] = dz;
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::prepareTableAfterEdit(JumpsTable &table) const
-{
+{ 
     table.horizontalHeader()->setStretchLastSection(false);
     table.resizeColumnsToContents();
     table.resizeRowsToContents();
@@ -727,23 +731,12 @@ void MainWindow::copy_selected()
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::edit_selected()
 {
-    if(jtable)
+    if(!jtable) return;
+
+    if(jtable->selectionModel()->selectedRows().count() == 1)
     {
-        if(jtable->selectionModel()->selectedRows().count() == 1)
-        {
-            auto currentRow  = jtable->currentIndex().row();
-            std::shared_ptr<N3Jump> edit_jump = std::dynamic_pointer_cast<N3Jump>(jumps_model.getItem(currentRow));
-            if(edit_jump)
-            {
-                std::unique_ptr<N3JumpEditor> n3_jump_editor = std::make_unique<N3JumpEditor>(this, *edit_jump, dl.const_aircrafts(), dl.const_dropzones(), dl.const_canopies());
-                //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
-                if(n3_jump_editor->exec() == QDialog::Accepted && n3_jump_editor->isModified())
-                {
-                    prepareTableAfterEdit(*jtable);
-                    documentWasModified();
-                }
-            }
-        }
+        auto currentRow  = jtable->currentIndex().row();
+        editJump(currentRow);
     }
 }
 
@@ -785,11 +778,34 @@ void MainWindow::selection_changed(bool enable)
     m_copyAct->setEnabled(enable && selection_size > 0);
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+void MainWindow::editJump(uint row_index)
+{
+    std::shared_ptr<N3Jump> edit_jump = std::dynamic_pointer_cast<N3Jump>(jumps_model.getItem(row_index));
+    if(edit_jump)
+    {
+        std::unique_ptr<N3JumpEditor> n3_jump_editor = std::make_unique<N3JumpEditor>(this, *edit_jump, dl.const_aircrafts(), dl.const_dropzones(), dl.const_canopies());
+        //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
+        if(n3_jump_editor->exec() == QDialog::Accepted && n3_jump_editor->isModified())
+        {
+            prepareTableAfterEdit(*jtable);
+            documentWasModified();
+        }
+    }
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::selectionChanged()
 {
     selection_changed(true);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void MainWindow::table_doubleClicked(const QModelIndex& index)
+{
+    if(index.isValid())
+        editJump(index.row());
 }
 
 

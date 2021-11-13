@@ -17,7 +17,7 @@ Settings::Settings(QMainWindow* widget_owner, const QString& organization, const
                     std::make_shared<Setting>("current_file_delimiter", kindset::environment, QString(";"), QVariant(QVariant::String), false)
                    };
 
-    foreach(auto& s, vec_settings) {mapset[s.get()->title] = s.get();}
+    for(auto& s: vec_settings) {mapset[s.get()->title] = s.get();}
 }
 
 
@@ -33,7 +33,7 @@ bool Settings::loadSettingsByKind(kindset ks)
 {
     bool result = false;
     qsettings.beginGroup("/" + sSettingKind[static_cast<int>(ks)]);
-    foreach(auto& s, vec_settings){
+    for(auto& s: vec_settings){
         if (s->kind == ks)
         {
             s->value = qsettings.value("/" + s->title, s->default_value);
@@ -49,7 +49,7 @@ bool Settings::loadSettingsByKind(kindset ks)
 void Settings::saveSettingsByKind(kindset ks)
 {
     qsettings.beginGroup("/" + sSettingKind[static_cast<int>(ks)]);
-    foreach(auto& s, vec_settings){
+    for(auto& s: vec_settings){
         if (s->kind == ks)
             qsettings.setValue("/" + s->title, s->value);
     }
@@ -116,7 +116,7 @@ bool Settings::isChanged(const QString &title) const
 //----------------------------------------------------------------------------------------------------------------------
 void Settings::setSetting(const QString& title, QVariant value)
 {
-    QMap<QString, Setting*>::const_iterator mit = mapset.find(title);
+    QMap<QString, Setting*>::iterator mit = mapset.find(title);
     if(mit != mapset.end())
     {
         auto s = *mit;

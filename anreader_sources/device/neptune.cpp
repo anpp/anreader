@@ -1,7 +1,7 @@
 #include "neptune.h"
 #include <QThread>
 
-static QString N3TypeNames[] =
+const static QString N3TypeNames[] =
                               {QObject::tr("Unknown"),
                                QObject::tr("Neptune"),
                                QObject::tr("Wave"),

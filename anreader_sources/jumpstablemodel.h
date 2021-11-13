@@ -28,8 +28,7 @@ public:
 
     QModelIndex index(int row, int column, const QModelIndex & = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &) const override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;    
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     int rowCount(const QModelIndex&) const override;

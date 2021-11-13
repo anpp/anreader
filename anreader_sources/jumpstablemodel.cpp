@@ -43,21 +43,6 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-//----------------------------------------------------------------------------------------------------------------------
-bool JumpsTableModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    if(!m_rows)
-        return false;
-    if (!index.isValid())
-        return false;
-
-    if (role == Qt::EditRole)
-        {
-            emit dataChanged(index, index);
-            return true;
-        }
-        return false;
-}
 
 //----------------------------------------------------------------------------------------------------------------------
 QVariant JumpsTableModel::headerData(int section, Qt::Orientation orientation, int role) const

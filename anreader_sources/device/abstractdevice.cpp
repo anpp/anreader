@@ -1,6 +1,6 @@
 #include "abstractdevice.h"
 
-static QString StateNames[] = {QObject::tr("Disconnected"),
+const static QString StateNames[] = {QObject::tr("Disconnected"),
                                QObject::tr("Connected"),
                                QObject::tr("Initializing..."),
                                QObject::tr("Ready"),

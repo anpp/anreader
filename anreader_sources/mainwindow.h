@@ -91,6 +91,7 @@ private:
     QString delimiterCSV() { return settings.getSetting("current_file_delimiter").toString(); }
     void open_DataListDialog(const DataList_Kind dlk, map_DataList& data);
     void selection_changed(bool enable = true);
+    void editJump(uint row_index);
 
     QPointer<StatusFrame> getStatusFrame(const int id);
 
@@ -156,5 +157,6 @@ public slots:
     void enableActions(const bool enable);
     void log(const QString& value);
     void selectionChanged();
+    void table_doubleClicked(const QModelIndex& index);
 };
 #endif // MAINWINDOW_H
