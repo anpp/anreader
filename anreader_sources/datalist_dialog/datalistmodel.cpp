@@ -17,13 +17,13 @@ QVariant DataListModel::data(const QModelIndex &index, int role) const
         {
             switch(index.column())
             {
-            case 1: return key;
-            case 2: return value;
+            case DataListModel_defs::Key: return key;
+            case DataListModel_defs::Value: return value;
             default: break;
             }
 
         }
-        if(role == Qt::CheckStateRole && index.isValid() && index.column() == 0)
+        if(role == Qt::CheckStateRole && index.isValid() && index.column() == DataListModel_defs::Used)
             return used ? Qt::Checked: Qt::Unchecked;
     }
 

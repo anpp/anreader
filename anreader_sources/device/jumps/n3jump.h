@@ -5,17 +5,17 @@
 
 
 enum N3JumpNames: int {
-                        ExitAlt = 5,
-                        DeplAlt = 6,
-                        FreefallTime = 7,
-                        CanopyTime = 8,
-                        Speed12K = 9,
-                        Speed9K = 10,
-                        Speed6K = 11,
-                        Speed3K = 12,
-                        Deleted = 13,
-                        Note = 14,
-                        Unk = 15
+                        ExitAlt = CustomJumpNames::Canopy + 1,
+                        DeplAlt,
+                        FreefallTime,
+                        CanopyTime,
+                        Speed12K,
+                        Speed9K,
+                        Speed6K,
+                        Speed3K,
+                        Deleted,
+                        Note,
+                        Unk
                        };
 
 

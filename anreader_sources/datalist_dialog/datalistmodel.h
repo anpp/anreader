@@ -14,7 +14,9 @@ typedef std::vector<t_datalist_item> t_datalist;
 
 class DataListModel : public QAbstractItemModel
 {
-    const int num_columns = 3;
+    enum DataListModel_defs: int {NumColumns = 3, Used = 0, Key = 1, Value = 2};
+
+    const int num_columns = DataListModel_defs::NumColumns;
     t_datalist &m_datalist;
 public:
     explicit DataListModel(t_datalist& datalist, QObject *parent = nullptr):

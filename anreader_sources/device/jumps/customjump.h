@@ -11,11 +11,11 @@ class CustomJump;
 
 enum CustomJumpNames: int {
                             JumpNumber = 0,
-                            JumpDate = 1,
-                            DZ =2,
-                            AP = 3,
-                            Canopy = 4,
-                            CtUnk = 5
+                            JumpDate,
+                            DZ,
+                            AP,
+                            Canopy,
+                            CtUnk
                            };
 
 
