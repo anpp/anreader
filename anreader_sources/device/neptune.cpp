@@ -550,6 +550,8 @@ std::unique_ptr<QByteArray> Neptune::cryptPacket(const QByteArray &packet, bool 
 
         #ifdef Q_OS_WIN64
             local_packet.append('\0', packet_size - packet.size());
+        #elif Q_OS_MACOS
+            local_packet.append('\0', packet_size - packet.size());
         #else
             local_packet.append(0, packet_size - packet.size()); //для XP
         #endif
