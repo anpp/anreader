@@ -12,8 +12,14 @@
         typedef std::unordered_map<QString, QString> map_DataList;
     #else
         typedef std::map<QString, QString> map_DataList;
+        #ifdef Q_OS_WIN32
+            template <typename T>
+            typename std::add_const<T>::type &qAsConst(T &t) {return t;}
+        #endif
     #endif
 #endif
+
+
 
 
 #endif // COMMON_H

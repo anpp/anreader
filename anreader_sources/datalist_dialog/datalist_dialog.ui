@@ -35,7 +35,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QFrame" name="frame_2">
+      <widget class="QFrame" name="topFrame">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -43,14 +43,17 @@
         </size>
        </property>
        <property name="frameShape">
-        <enum>QFrame::Box</enum>
+        <enum>QFrame::Panel</enum>
        </property>
        <property name="frameShadow">
         <enum>QFrame::Sunken</enum>
        </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <property name="spacing">
-         <number>0</number>
+         <number>2</number>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -133,7 +136,19 @@
         <item>
          <layout class="QVBoxLayout" name="centralLayout">
           <property name="spacing">
+           <number>4</number>
+          </property>
+          <property name="leftMargin">
            <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>4</number>
           </property>
          </layout>
         </item>

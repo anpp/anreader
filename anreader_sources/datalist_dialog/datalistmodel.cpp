@@ -45,10 +45,11 @@ QVariant DataListModel::data(const QModelIndex &index, int role) const
 
 //---------------------------------------------------------------------------------------------------------------
 bool DataListModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
+{    
     if (!index.isValid())
         return false;
 
+    QAbstractItemModel::setData(index, value, role);
     if (role == Qt::EditRole)
         {
             emit dataChanged(index, index);
