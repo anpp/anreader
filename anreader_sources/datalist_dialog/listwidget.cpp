@@ -10,6 +10,7 @@ ListWidget::ListWidget(t_datalist& datalist, QWidget *parent) : QWidget(parent),
 
     m_listTable->setModel(&m_model);
     m_listTable->resizeColumnsToContents();
+    m_listTable->verticalHeader()->hide();
     m_listTable->horizontalHeader()->setStretchLastSection(true);
 }
 

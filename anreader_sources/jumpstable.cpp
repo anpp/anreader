@@ -16,5 +16,6 @@ JumpsTable::JumpsTable()
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     horizontalHeader()->setStretchLastSection(true);
+    verticalHeader()->hide();
     this->setSelectionBehavior(QAbstractItemView::SelectRows);
 }
