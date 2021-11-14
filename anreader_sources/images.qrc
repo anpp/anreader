@@ -20,5 +20,8 @@
         <file>images/icons/toolbar/paste.png</file>
         <file>images/icons/buttons/Button_Add.png</file>
         <file>images/icons/buttons/Button_Delete.png</file>
+        <file>images/icons/menu/airplane.png</file>
+        <file>images/icons/menu/canopy.png</file>
+        <file>images/icons/menu/dz.png</file>
     </qresource>
 </RCC>

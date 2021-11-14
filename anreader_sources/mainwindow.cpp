@@ -183,19 +183,22 @@ void MainWindow::createActions()
     connect(m_deleteAct, &QAction::triggered, this, &MainWindow::delete_selected);
     editMenu->addAction(m_deleteAct);
 
-    m_registerAicraftsAct = new QAction(tr("Aircrafts"), this);
+    const QIcon aircraftsIcon = QIcon(":/images/icons/menu/airplane.png");
+    m_registerAicraftsAct = new QAction(aircraftsIcon, tr("Aircrafts"), this);
     m_actions.push_back(m_registerAicraftsAct);
     m_registerAicraftsAct->setToolTip(tr("Aircrafts..."));
     connect(m_registerAicraftsAct, &QAction::triggered, this, &MainWindow::aicrafts_list);
     registerMenu->addAction(m_registerAicraftsAct);
 
-    m_registerDropZonesAct = new QAction(tr("Dropzones"), this);
+    const QIcon dropzonesIcon = QIcon(":/images/icons/menu/dz.png");
+    m_registerDropZonesAct = new QAction(dropzonesIcon, tr("Dropzones"), this);
     m_actions.push_back(m_registerDropZonesAct);
     m_registerDropZonesAct->setToolTip(tr("Dropzones..."));
     connect(m_registerDropZonesAct, &QAction::triggered, this, &MainWindow::dropzones_list);
     registerMenu->addAction(m_registerDropZonesAct);
 
-    m_registerCanopiesAct = new QAction(tr("Canopies"), this);
+    const QIcon canopiesIcon = QIcon(":/images/icons/menu/canopy.png");
+    m_registerCanopiesAct = new QAction(canopiesIcon, tr("Canopies"), this);
     m_actions.push_back(m_registerCanopiesAct);
     m_registerCanopiesAct->setToolTip(tr("Canopies..."));
     connect(m_registerCanopiesAct, &QAction::triggered, this, &MainWindow::canopies_list);
