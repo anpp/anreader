@@ -13,7 +13,7 @@ QVariant DataListModel::data(const QModelIndex &index, int role) const
 
         std::tie(used, key, value) = m_datalist[index.row()];
 
-        if(role == Qt::DisplayRole && index.column() > 0)
+        if(role == Qt::DisplayRole && index.column() != DataListModel_defs::Used)
         {
             switch(index.column())
             {
@@ -23,7 +23,7 @@ QVariant DataListModel::data(const QModelIndex &index, int role) const
             }
 
         }
-        if(role == Qt::CheckStateRole && index.isValid() && index.column() == DataListModel_defs::Used)
+        if(role == Qt::CheckStateRole && index.column() == DataListModel_defs::Used)
             return used ? Qt::Checked: Qt::Unchecked;
     }
 
@@ -91,7 +91,7 @@ Qt::ItemFlags DataListModel::flags(const QModelIndex &index) const
         if(DataListModel_defs::Value == index.column())
             flags |= Qt::ItemIsEditable;
 
-        if(DataListModel_defs::Key == index.column() and !std::get<DataListModel_defs::Used>(m_datalist[index.row()]))
+        if(DataListModel_defs::Key == index.column() and !isUsed(index.row()))
             flags |= Qt::ItemIsEditable;
 
     }
@@ -115,4 +115,12 @@ void DataListModel::removeItem(const uint row)
     this->beginRemoveRows(QModelIndex(), row, row);
     m_datalist.erase(m_datalist.begin() + row);
     this->endRemoveRows();
+}
+
+//---------------------------------------------------------------------------------------------------------------
+bool DataListModel::isUsed(const uint row) const
+{
+    if(m_datalist.size() <= row)
+        return false;
+    return std::get<DataListModel_defs::Used>(m_datalist[row]);
 }
