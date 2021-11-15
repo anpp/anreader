@@ -85,8 +85,16 @@ Qt::ItemFlags DataListModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
 
-    if(index.isValid() && index.column() != DataListModel_defs::Used)
-        flags |= Qt::ItemIsEditable;
+    flags &= ~Qt::ItemIsEditable;
+    if(index.isValid())
+    {
+        if(DataListModel_defs::Value == index.column())
+            flags |= Qt::ItemIsEditable;
+
+        if(DataListModel_defs::Key == index.column() and !std::get<DataListModel_defs::Used>(m_datalist[index.row()]))
+            flags |= Qt::ItemIsEditable;
+
+    }
     return flags;
 }
 
