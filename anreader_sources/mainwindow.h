@@ -21,6 +21,7 @@
 #include <QCloseEvent>
 #include <QClipboard>
 #include <QApplication>
+#include <tuple>
 
 
 #include "common.h"

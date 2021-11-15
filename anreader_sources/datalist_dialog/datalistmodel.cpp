@@ -49,13 +49,21 @@ bool DataListModel::setData(const QModelIndex &index, const QVariant &value, int
     if (!index.isValid())
         return false;
 
-    QAbstractItemModel::setData(index, value, role);
     if (role == Qt::EditRole)
+    {
+        switch(index.column())
         {
-            emit dataChanged(index, index);
-            return true;
+        case DataListModel_defs::Key: std::get<DataListModel_defs::Key>(m_datalist[index.row()]) = value.toString();
+            break;
+        case DataListModel_defs::Value: std::get<DataListModel_defs::Value>(m_datalist[index.row()]) = value.toString();
+            break;
+        default: break;
         }
-        return false;
+
+        emit dataChanged(index, index);
+        return true;
+    }
+    return false;
 }
 
 
@@ -76,6 +84,9 @@ QVariant DataListModel::headerData(int section, Qt::Orientation orientation, int
 Qt::ItemFlags DataListModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+
+    if(index.isValid() && index.column() != DataListModel_defs::Used)
+        flags |= Qt::ItemIsEditable;
     return flags;
 }
 

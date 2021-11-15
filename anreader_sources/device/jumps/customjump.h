@@ -20,7 +20,9 @@ enum CustomJumpNames: int {
 
 
 typedef std::vector<std::pair<QString, QVariant>> t_jump_attribute;
-typedef std::vector<std::shared_ptr<CustomJump>> t_jumps;
+
+typedef std::shared_ptr<CustomJump> ptr_jump;
+typedef std::vector<ptr_jump> t_jumps;
 
 class CustomJump
 {

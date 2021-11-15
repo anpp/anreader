@@ -12,10 +12,10 @@
 typedef std::tuple<bool, QString, QString> t_datalist_item;
 typedef std::vector<t_datalist_item> t_datalist;
 
-class DataListModel : public QAbstractItemModel
-{
-    enum DataListModel_defs: int {NumColumns = 3, Used = 0, Key = 1, Value = 2};
+enum DataListModel_defs: int {NumColumns = 3, Used = 0, Key = 1, Value = 2};
 
+class DataListModel : public QAbstractItemModel
+{    
     const int num_columns = DataListModel_defs::NumColumns;
     t_datalist &m_datalist;
 public:
