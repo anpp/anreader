@@ -26,7 +26,7 @@ std::unique_ptr<t_jump_attribute> CustomJump::getPairs() const
     (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpDate), m_jump_date));
     (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::DZ), m_dz));
     (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::AP), m_ap));
-    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::Canopy), ""));
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::Canopy), m_canopy));
 
     return jump_attr;
 }
@@ -53,6 +53,10 @@ void CustomJump::setPairs(const t_jump_attribute &pairs)
 
             if(CustomJumpNames::AP == i && found_atr->second.canConvert(QMetaType::QString))
                 m_ap = found_atr->second.toString();
+
+            if(CustomJumpNames::Canopy == i && found_atr->second.canConvert(QMetaType::QString))
+                m_canopy = found_atr->second.toString();
+
         }
     }
 }

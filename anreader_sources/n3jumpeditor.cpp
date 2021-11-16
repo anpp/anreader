@@ -21,6 +21,7 @@ N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const map_DataList& ai
 
     ui->cbDZ->setCurrentText(jump.getDZ());
     ui->cbAirplane->setCurrentText(jump.getAP());
+    ui->cbCanopy->setCurrentText(jump.getCanopy());
     ui->teNote->setPlainText(jump.getNote());
 
     ptrJump = &jump;
