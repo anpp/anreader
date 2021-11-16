@@ -516,7 +516,7 @@ void MainWindow::open_DataListDialog(const DataList_Kind dlk, map_DataList &data
     if(dl_dialog->exec())
     {
         data.clear();
-        for(const auto& item: dl_dialog->datalist())
+        for(const auto& item: datalist)
             data[std::get<DataListModel_defs::Key>(item)] = std::get<DataListModel_defs::Value>(item);
         dl.save();
     }
