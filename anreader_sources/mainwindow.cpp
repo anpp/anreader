@@ -422,10 +422,8 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
             if(!checkFormat(false)) return false;
 
             jump->setPairs(jump_data);
-            jumps->push_back(jump);            
-            dl.aircrafts()[jump->getAP()] = jump->getAP();
-            dl.dropzones()[jump->getDZ()] = jump->getDZ();
-            dl.canopies()[jump->getCanopy()] = jump->getCanopy();
+            jumps->push_back(jump);
+            initDataInLists(jump->getAP(), jump->getDZ(), jump->getCanopy());
         }
         if(!jm.moveItems(jumps))
         {
@@ -513,8 +511,15 @@ void MainWindow::open_DataListDialog(const DataList_Kind dlk, map_DataList &data
 
 
     std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[dlk], datalist, this);
-    dl_dialog->exec();
 
+
+    if(dl_dialog->exec())
+    {
+        data.clear();
+        for(const auto& item: dl_dialog->datalist())
+            data[std::get<DataListModel_defs::Key>(item)] = std::get<DataListModel_defs::Value>(item);
+        dl.save();
+    }
 }
 
 
@@ -589,10 +594,10 @@ void MainWindow::finish(const DWidget& widget)
 void MainWindow::afterConnect(const DWidget &widget)
 {
     for(auto& ap: widget.device().airplanes().Names())
-        dl.aircrafts()[ap] = ap;
+        initDataInLists(ap, "", "");
 
     for(auto& dz: widget.device().dropzones().Names())
-        dl.dropzones()[dz] = dz;
+        initDataInLists("", dz, "");
 }
 
 
@@ -811,6 +816,21 @@ void MainWindow::editJump(uint row_index)
             documentWasModified();
         }
     }
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+void MainWindow::initDataInLists(const QString &aircraft, const QString &dropzone, const QString &canopy)
+{
+    if(aircraft != "" && dl.aircrafts().find(aircraft) == dl.aircrafts().end())
+        dl.aircrafts()[aircraft] = "";
+
+    if(dropzone != "" && dl.dropzones().find(dropzone) == dl.dropzones().end())
+        dl.dropzones()[dropzone] = "";
+
+    if(canopy != "" && dl.canopies().find(canopy) == dl.canopies().end())
+        dl.canopies()[canopy] = "";
+
 }
 
 

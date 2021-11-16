@@ -16,6 +16,8 @@ public:
     explicit DataList_Dialog(const QString& Title, t_datalist& datalist, QWidget *parent = nullptr);
     ~DataList_Dialog();
 
+    const t_datalist& datalist() const {return m_datalist; }
+
 private slots:
     void on_buttonBox_accepted();
 
@@ -23,9 +25,12 @@ private slots:
 
     void on_btnRemove_clicked();
 
+    void selectedItemUsed(bool value);
+
 private:
     Ui::DataList_Dialog *ui;
     ListWidget m_listWidget;
+    const t_datalist& m_datalist;
 };
 
 #endif // DATALIST_DIALOG_H

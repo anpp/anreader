@@ -93,6 +93,7 @@ private:
     void open_DataListDialog(const DataList_Kind dlk, map_DataList& data);
     void selection_changed(bool enable = true);
     void editJump(uint row_index);
+    void initDataInLists(const QString& aircraft, const QString& dropzone, const QString& canopy);
 
     QPointer<StatusFrame> getStatusFrame(const int id);
 

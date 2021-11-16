@@ -6,11 +6,13 @@
 DataList_Dialog::DataList_Dialog(const QString& Title, t_datalist& datalist, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DataList_Dialog),
-    m_listWidget(datalist)
+    m_listWidget(datalist),
+    m_datalist(datalist)
 {
     ui->setupUi(this);
     this->setWindowTitle(Title);
     ui->centralLayout->addWidget(&m_listWidget);
+    connect(&m_listWidget, &ListWidget::selectedItemUsed,  this, &DataList_Dialog::selectedItemUsed);
 }
 
 
@@ -38,4 +40,11 @@ void DataList_Dialog::on_btnAdd_clicked()
 void DataList_Dialog::on_btnRemove_clicked()
 {
     m_listWidget.removeFocusedItem();
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+void DataList_Dialog::selectedItemUsed(bool value)
+{
+    ui->btnRemove->setEnabled(!value);
 }

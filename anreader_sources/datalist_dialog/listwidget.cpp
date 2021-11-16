@@ -1,5 +1,7 @@
 #include "listwidget.h"
 
+
+//-----------------------------------------------------------------------------------------------------------------------------
 ListWidget::ListWidget(t_datalist& datalist, QWidget *parent) : QWidget(parent), m_model(datalist)
 {
     auto layout = new QVBoxLayout;
@@ -17,15 +19,27 @@ ListWidget::ListWidget(t_datalist& datalist, QWidget *parent) : QWidget(parent),
     m_listTable->verticalHeader()->hide();
     m_listTable->horizontalHeader()->setStretchLastSection(true);
     m_listTable->setSelectionMode(QAbstractItemView::SingleSelection);
+    connect(m_listTable->selectionModel(), &QItemSelectionModel::selectionChanged,  this, &ListWidget::selectionChanged);
 }
 
+
+//-----------------------------------------------------------------------------------------------------------------------------
 void ListWidget::addItem(const t_datalist_item &item)
 {
     m_model.addItem(item);
 }
 
+
+//-----------------------------------------------------------------------------------------------------------------------------
 void ListWidget::removeFocusedItem()
 {
     auto currentRow  = m_listTable->currentIndex().row();
     m_model.removeItem(currentRow);
+}
+
+
+//-----------------------------------------------------------------------------------------------------------------------------
+void ListWidget::selectionChanged()
+{
+    emit selectedItemUsed(m_model.isUsed(m_listTable->selectionModel()->currentIndex().row()));
 }

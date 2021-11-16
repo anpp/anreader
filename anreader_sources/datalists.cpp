@@ -71,9 +71,9 @@ void DataLists::loadDataByKind(const datakind dk)
     if(nullptr == ptr_mdl) return;
 
     qsettings.beginGroup("/" + sDataKind[static_cast<int>(dk)]);
-    foreach(auto& k, qsettings.allKeys())
+    for(auto& k: qsettings.allKeys())
         if(k != ".")
-            (*ptr_mdl)[k] = k;
+            (*ptr_mdl)[k] = qsettings.value(k, "").toString();
     qsettings.endGroup();
 }
 
@@ -86,7 +86,18 @@ void DataLists::saveDataByKind(const datakind dk) const
     if(nullptr == ptr_mdl) return;
 
     qsettings.beginGroup("/" + sDataKind[static_cast<int>(dk)]);
+
+    //--удаление
+    QStringList sl;
+    for(auto& k: qsettings.allKeys())
+        if(ptr_mdl->find(k) == ptr_mdl->end())
+            sl << k;
+    for(auto& key: sl)
+        qsettings.remove(key);
+    //--
+
     for(auto it = (*ptr_mdl).begin(); it != (*ptr_mdl).end(); ++it)
         qsettings.setValue("/" + (*it).first, (*it).second);
+
     qsettings.endGroup();
 }

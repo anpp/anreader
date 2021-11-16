@@ -26,6 +26,10 @@ private:
     std::unique_ptr<QTableView> m_listTable = std::make_unique<QTableView>(this);
     DataListModel m_model;
 signals:
+    void selectedItemUsed(bool value);
+
+public slots:
+    void selectionChanged();
 
 };
 
