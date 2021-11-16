@@ -487,30 +487,30 @@ void MainWindow::fileWasModified(bool value)
 
 
 //----------------------------------------------------------------------------------------------------------------------
-void MainWindow::open_DataListDialog(const DataList_Kind dlk, map_DataList &data)
+void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
 {    
     t_datalist datalist;
 
     for(const auto& item: data)
         datalist.push_back(std::make_tuple(false, item.first, item.second));
 
-    if(DataList_Kind::dlk_Aircrafrs == dlk)
+    if(datakind::aircrafts == dlk)
         for(auto& item: datalist)
             std::get<DataListModel_defs::Used>(item) =  std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
             { return jump->getAP() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end();
 
-    if(DataList_Kind::dlk_Dropzones == dlk)
+    if(datakind::dropzones == dlk)
         for(auto& item: datalist)
             std::get<DataListModel_defs::Used>(item) =  std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
             { return jump->getDZ() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end();
 
-    if(DataList_Kind::dlk_Canopies == dlk)
+    if(datakind::canopies == dlk)
         for(auto& item: datalist)
             std::get<DataListModel_defs::Used>(item) =  std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
             { return jump->getCanopy() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end();
 
 
-    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[dlk], datalist, this);
+    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[static_cast<uint>(dlk)], datalist, this);
 
 
     if(dl_dialog->exec())

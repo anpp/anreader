@@ -36,8 +36,6 @@
 #include "datalist_dialog/datalist_dialog.h"
 
 enum MainWindow_defs: int {BaseWidht = 1100, BaseHeight = 500, StatusStateLabelWidth = 250};
-enum DataList_Kind: int {dlk_Aircrafrs = 0, dlk_Dropzones, dlk_Canopies};
-
 
 
 class StatusFrame : public QWidget
@@ -90,7 +88,7 @@ private:
     bool saveQuestion();
     void fileWasModified(bool value);
     QString delimiterCSV() { return settings.getSetting("current_file_delimiter").toString(); }
-    void open_DataListDialog(const DataList_Kind dlk, map_DataList& data);
+    void open_DataListDialog(const datakind dlk, map_DataList& data);
     void selection_changed(bool enable = true);
     void editJump(uint row_index);
     void initDataInLists(const QString& aircraft, const QString& dropzone, const QString& canopy);
@@ -151,9 +149,9 @@ public slots:
     void delete_selected();
     void copy_selected();
     void edit_selected();
-    void aicrafts_list()  {open_DataListDialog(DataList_Kind::dlk_Aircrafrs, dl.aircrafts()); }
-    void dropzones_list() {open_DataListDialog(DataList_Kind::dlk_Dropzones, dl.dropzones()); }
-    void canopies_list()  {open_DataListDialog(DataList_Kind::dlk_Canopies, dl.canopies()); }
+    void aicrafts_list()  {open_DataListDialog(datakind::aircrafts, dl.aircrafts()); }
+    void dropzones_list() {open_DataListDialog(datakind::dropzones, dl.dropzones()); }
+    void canopies_list()  {open_DataListDialog(datakind::canopies, dl.canopies()); }
     void about();
     void documentWasModified();
     void enableActions(const bool enable);
