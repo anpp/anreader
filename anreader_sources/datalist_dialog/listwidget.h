@@ -29,7 +29,7 @@ signals:
     void selectedItemUsed(bool value);
 
 public slots:
-    void selectionChanged();
+    void rowChanged();
 
 };
 

@@ -129,6 +129,7 @@ private:
 
     Settings settings{this, "anreader", "anreader"};
     DataLists dl{"anreader", "anreader"};
+
 //signals:
 
 public slots:

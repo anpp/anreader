@@ -17,20 +17,35 @@ QModelIndex JumpsTableModel::parent(const QModelIndex &) const
 //----------------------------------------------------------------------------------------------------------------------
 QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
 {
-    if(!m_rows) return QVariant();
+    if(!m_rows || !index.isValid()) return QVariant();
 
     std::unique_ptr<t_jump_attribute> j_atr;
-    if(index.isValid())
-        j_atr = m_rows->at(index.row())->getPairs();
 
-    if(role == Qt::DisplayRole && index.isValid() && index.column() != N3JumpNames::Deleted)
-        return (*j_atr).at(index.column()).second;
+    j_atr = m_rows->at(index.row())->getPairs();
 
-    if(role == Qt::CheckStateRole  && index.isValid() && index.column() == N3JumpNames::Deleted)
-        return m_rows->at(index.row())->isDeleted() ? Qt::Checked: Qt::Unchecked;
+    QVariant row_value = (*j_atr).at(index.column()).second;
+    if(Qt::DisplayRole == role)
+    {
+        QString map_value;
+        switch(index.column())
+        {
+        case CustomJumpNames::AP:
+            map_value = mappedValue(ref_dl.const_aircrafts(), row_value.toString(), true);
+            return (map_value.isEmpty()? row_value : map_value);
+        case CustomJumpNames::Canopy:
+            map_value = mappedValue(ref_dl.const_canopies(), row_value.toString());
+            return (map_value.isEmpty()? row_value : map_value);
+        case CustomJumpNames::DZ:
+            map_value = mappedValue(ref_dl.const_dropzones(), row_value.toString());
+            return (map_value.isEmpty()? row_value : map_value);
+        case N3JumpNames::Deleted:
+            return m_rows->at(index.row())->isDeleted() ? Qt::Checked: Qt::Unchecked;
+        default:
+            return row_value;
+        }
+    }
 
-
-    if (role == Qt::BackgroundColorRole && index.isValid())
+    if (role == Qt::BackgroundColorRole)
     {
         if (index.row() % 2 == 0){
             return color_0;
@@ -97,6 +112,29 @@ bool JumpsTableModel::checkColumns(const int value)
         return false;
     }
     return true;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+QString JumpsTableModel::mappedValue(const map_DataList &mdl, const QString &key, bool trimmed_key) const
+{
+    QString value = "";
+    if(trimmed_key)
+    {
+        for(const auto& m: mdl)
+            if(m.first.trimmed() == key.trimmed())
+            {
+                value = m.second.trimmed();
+                break;
+            }
+    }
+    else
+    {
+        const auto& it = mdl.find(key.trimmed());
+        if(it != mdl.end())
+            value = it->second.trimmed();
+
+    }
+    return value;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -53,9 +53,15 @@ bool DataListModel::setData(const QModelIndex &index, const QVariant &value, int
     {
         switch(index.column())
         {
-        case DataListModel_defs::Key: std::get<DataListModel_defs::Key>(m_datalist[index.row()]) = value.toString();
+        case DataListModel_defs::Key:
+            for(const auto& item: m_datalist)
+                if(std::get<DataListModel_defs::Key>(item).trimmed() == value.toString().trimmed())
+                    return false;
+
+            std::get<DataListModel_defs::Key>(m_datalist[index.row()]) = value.toString().trimmed();
             break;
-        case DataListModel_defs::Value: std::get<DataListModel_defs::Value>(m_datalist[index.row()]) = value.toString();
+        case DataListModel_defs::Value:
+            std::get<DataListModel_defs::Value>(m_datalist[index.row()]) = value.toString().trimmed();
             break;
         default: break;
         }

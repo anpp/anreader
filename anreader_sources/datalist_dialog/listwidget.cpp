@@ -18,8 +18,8 @@ ListWidget::ListWidget(t_datalist& datalist, QWidget *parent) : QWidget(parent),
     m_listTable->resizeColumnsToContents();
     m_listTable->verticalHeader()->hide();
     m_listTable->horizontalHeader()->setStretchLastSection(true);
-    m_listTable->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(m_listTable->selectionModel(), &QItemSelectionModel::selectionChanged,  this, &ListWidget::selectionChanged);
+    m_listTable->setSelectionMode(QAbstractItemView::SingleSelection);    
+    connect(m_listTable->selectionModel(), &QItemSelectionModel::currentRowChanged,  this, &ListWidget::rowChanged);
 }
 
 
@@ -39,7 +39,7 @@ void ListWidget::removeFocusedItem()
 
 
 //-----------------------------------------------------------------------------------------------------------------------------
-void ListWidget::selectionChanged()
+void ListWidget::rowChanged()
 {
-    emit selectedItemUsed(m_model.isUsed(m_listTable->selectionModel()->currentIndex().row()));
+    emit selectedItemUsed(m_model.isUsed(m_listTable->currentIndex().row()));
 }

@@ -24,7 +24,8 @@ void StatusFrame::setStatusText(const QString &text)
 
 //----------------------------------------------------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),
+      jumps_model(dl)
 {
 
     this->resize(MainWindow_defs::BaseWidht, MainWindow_defs::BaseHeight);    
@@ -82,8 +83,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     if(saveQuestion())
     {
-        settings.save();
-        dl.save();
+        settings.save();        
         event->accept();
     } else
     {
@@ -415,7 +415,7 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
                     jump_data.push_back(std::make_pair(field_names[index++], note.replace("\t", "\n")));
                     break;
                 default:
-                    jump_data.push_back(std::make_pair(field_names[index++], item));
+                    jump_data.push_back(std::make_pair(field_names[index++], item.trimmed()));
                     break;
                 }
                                             }
@@ -519,6 +519,7 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
         for(const auto& item: datalist)
             data[std::get<DataListModel_defs::Key>(item)] = std::get<DataListModel_defs::Value>(item);
         dl.save();
+        prepareTableAfterEdit(*jtable);
     }
 }
 
@@ -598,6 +599,8 @@ void MainWindow::afterConnect(const DWidget &widget)
 
     for(auto& dz: widget.device().dropzones().Names())
         initDataInLists("", dz, "");
+
+    dl.save();
 }
 
 

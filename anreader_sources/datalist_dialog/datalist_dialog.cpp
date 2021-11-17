@@ -9,7 +9,7 @@ DataList_Dialog::DataList_Dialog(const QString& Title, t_datalist& datalist, QWi
     m_listWidget(datalist)
 {
     ui->setupUi(this);
-    this->setWindowTitle(Title);
+    this->setWindowTitle(Title);    
     ui->centralLayout->addWidget(&m_listWidget);
     connect(&m_listWidget, &ListWidget::selectedItemUsed,  this, &DataList_Dialog::selectedItemUsed);
 }
