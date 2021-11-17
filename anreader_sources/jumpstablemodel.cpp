@@ -24,7 +24,7 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
     j_atr = m_rows->at(index.row())->getPairs();
 
     QVariant row_value = (*j_atr).at(index.column()).second;
-    if(Qt::DisplayRole == role)
+    if(Qt::DisplayRole == role && N3JumpNames::Deleted != index.column())
     {
         QString map_value;
         switch(index.column())
@@ -38,12 +38,12 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
         case CustomJumpNames::DZ:
             map_value = mappedValue(ref_dl.const_dropzones(), row_value.toString());
             return (map_value.isEmpty()? row_value : map_value);
-        case N3JumpNames::Deleted:
-            return m_rows->at(index.row())->isDeleted() ? Qt::Checked: Qt::Unchecked;
         default:
             return row_value;
         }
     }
+    if(Qt::CheckStateRole == role && N3JumpNames::Deleted == index.column())
+        return m_rows->at(index.row())->isDeleted() ? Qt::Checked: Qt::Unchecked;
 
     if (role == Qt::BackgroundColorRole)
     {

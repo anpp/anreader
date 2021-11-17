@@ -33,6 +33,9 @@ void ListWidget::addItem(const t_datalist_item &item)
 //-----------------------------------------------------------------------------------------------------------------------------
 void ListWidget::removeFocusedItem()
 {
+    if(!m_listTable->currentIndex().isValid())
+        return;
+
     auto currentRow  = m_listTable->currentIndex().row();
     m_model.removeItem(currentRow);
 }
