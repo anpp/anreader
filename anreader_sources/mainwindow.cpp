@@ -494,20 +494,21 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
     for(const auto& item: data)
         datalist.push_back(std::make_tuple(false, item.first, item.second));
 
+
     if(datakind::aircrafts == dlk)
         for(auto& item: datalist)
-            std::get<DataListModel_defs::Used>(item) =  std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
-            { return jump->getAP() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end();
+            std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
+            { return jump->getAP() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
 
     if(datakind::dropzones == dlk)
         for(auto& item: datalist)
-            std::get<DataListModel_defs::Used>(item) =  std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
-            { return jump->getDZ() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end();
+            std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
+            { return jump->getDZ() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
 
     if(datakind::canopies == dlk)
         for(auto& item: datalist)
-            std::get<DataListModel_defs::Used>(item) =  std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
-            { return jump->getCanopy() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end();
+            std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
+            { return jump->getCanopy() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
 
 
     std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[static_cast<uint>(dlk)], datalist, this);

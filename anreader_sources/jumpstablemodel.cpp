@@ -26,22 +26,18 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
     QVariant row_value = (*j_atr).at(index.column()).second;
     if(Qt::DisplayRole == role && N3JumpNames::Deleted != index.column())
     {
-        QString map_value;
-        switch(index.column())
+        int col = index.column();
+        if(CustomJumpNames::AP == col || CustomJumpNames::Canopy == col || CustomJumpNames::DZ == col)
         {
-        case CustomJumpNames::AP:
-            map_value = mappedValue(ref_dl.const_aircrafts(), row_value.toString(), true);
+            const map_DataList& mdl = (CustomJumpNames::AP == col ? ref_dl.const_aircrafts() : (CustomJumpNames::DZ == col ? ref_dl.const_dropzones() : ref_dl.const_canopies()));
+            const QString& map_value = mappedValue(mdl, row_value.toString());
             return (map_value.isEmpty()? row_value : map_value);
-        case CustomJumpNames::Canopy:
-            map_value = mappedValue(ref_dl.const_canopies(), row_value.toString());
-            return (map_value.isEmpty()? row_value : map_value);
-        case CustomJumpNames::DZ:
-            map_value = mappedValue(ref_dl.const_dropzones(), row_value.toString());
-            return (map_value.isEmpty()? row_value : map_value);
-        default:
-            return row_value;
+
         }
+        else
+            return row_value;
     }
+
     if(Qt::CheckStateRole == role && N3JumpNames::Deleted == index.column())
         return m_rows->at(index.row())->isDeleted() ? Qt::Checked: Qt::Unchecked;
 
@@ -115,26 +111,14 @@ bool JumpsTableModel::checkColumns(const int value)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-QString JumpsTableModel::mappedValue(const map_DataList &mdl, const QString &key, bool trimmed_key) const
+const QString& JumpsTableModel::mappedValue(const map_DataList &mdl, const QString &key) const
 {
-    QString value = "";
-    if(trimmed_key)
-    {
-        for(const auto& m: mdl)
-            if(m.first.trimmed() == key.trimmed())
-            {
-                value = m.second.trimmed();
-                break;
-            }
-    }
+    const auto& it = mdl.find(key.trimmed());
+    if(it != mdl.end())
+        return it->second;
     else
-    {
-        const auto& it = mdl.find(key.trimmed());
-        if(it != mdl.end())
-            value = it->second.trimmed();
+        return empty_string;
 
-    }
-    return value;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

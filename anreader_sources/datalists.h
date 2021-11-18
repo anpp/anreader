@@ -16,8 +16,8 @@ class DataLists
     map_DataList m_dropzones;
     map_DataList m_canopies;
 public:
-    DataLists(const QString &organization, const QString &application):
-        qsettings(organization, application) {}
+    DataLists(const QString &organization, const QString &application);
+
     ~DataLists() {}
 
     void load();

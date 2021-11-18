@@ -35,6 +35,7 @@ public:
     void addItem(const t_datalist_item& item);
     void removeItem(const uint row);
     bool isUsed(const uint row) const;
+    bool isEmptyKey(const uint row) const;
 
 
 };

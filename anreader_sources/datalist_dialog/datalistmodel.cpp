@@ -94,10 +94,10 @@ Qt::ItemFlags DataListModel::flags(const QModelIndex &index) const
     flags &= ~Qt::ItemIsEditable;
     if(index.isValid())
     {
-        if(DataListModel_defs::Value == index.column())
+        if(DataListModel_defs::Value == index.column() && !isEmptyKey(index.row()))
             flags |= Qt::ItemIsEditable;
 
-        if(DataListModel_defs::Key == index.column() and !isUsed(index.row()))
+        if(DataListModel_defs::Key == index.column() && !isUsed(index.row()))
             flags |= Qt::ItemIsEditable;
 
     }
@@ -129,4 +129,12 @@ bool DataListModel::isUsed(const uint row) const
     if(m_datalist.size() <= row)
         return false;
     return std::get<DataListModel_defs::Used>(m_datalist[row]);
+}
+
+//---------------------------------------------------------------------------------------------------------------
+bool DataListModel::isEmptyKey(const uint row) const
+{
+    if(m_datalist.size() <= row)
+        return true;
+    return std::get<DataListModel_defs::Key>(m_datalist[row]).isEmpty();
 }

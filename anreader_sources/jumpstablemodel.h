@@ -21,6 +21,7 @@ class JumpsTableModel : public QAbstractItemModel
     int num_cols;
     QColor color_0{QColor(Qt::white)}, color_1{QColor(245, 245, 245)};
     const DataLists& ref_dl;
+    const QString empty_string = "";
 public:
 
     explicit JumpsTableModel(const DataLists& dl, QObject *parent = nullptr)
@@ -47,7 +48,7 @@ public:
 private:
     void setColumnCount(const int value);
     bool checkColumns(const int value);
-    QString mappedValue(const map_DataList& mdl, const QString& key, bool trimmed_key = false) const;
+    const QString& mappedValue(const map_DataList& mdl, const QString& key) const;
 
 public slots:
     void takeLastJump(int &value);

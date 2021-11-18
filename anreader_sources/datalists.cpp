@@ -1,9 +1,16 @@
 #include "datalists.h"
 
-static QString sDataKind[] = {"aircrafts", "dropzones", "canopies"};
+const static QString sDataKind[] = {"aircrafts", "dropzones", "canopies"};
 
 
 //---------------------------------------------------------------------------------------------------
+DataLists::DataLists(const QString &organization, const QString &application): qsettings(organization, application)
+{
+    m_aircrafts[""] = "";
+    m_dropzones[""] = "";
+    m_canopies[""] = "";
+}
+
 void DataLists::load()
 {
     loadDataAircrafts();
