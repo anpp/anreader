@@ -4,10 +4,13 @@
 #include <QDialog>
 #include <memory>
 #include <QComboBox>
+#include <QTableView>
+#include <QSizeGrip>
 
 #include "common.h"
 #include "device/jumps/n3jump.h"
 #include "datalists.h"
+#include "combolist_model.h"
 
 namespace Ui {
 class N3JumpEditor;
@@ -31,7 +34,17 @@ private:
     N3Jump *ptrJump = nullptr;
     bool m_modified = false;
 
+    Combolist_model m_aircrafts_model;
+    Combolist_model m_dropzones_model;
+    Combolist_model m_canopies_model;
+
+    QTableView m_tv_aircrafts;
+    QTableView m_tv_dropzones;
+    QTableView m_tv_canopies;
+
     void setComboValues(QComboBox& combo, const map_DataList& data_list) const;
+    void setup_table_view(QTableView& view);
+
 };
 
 #endif // N3JUMPEDITOR_H

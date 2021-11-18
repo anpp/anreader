@@ -23,6 +23,7 @@ SOURCES += \
     datalist_dialog/listwidget.cpp \
     datalists.cpp \
     devices_list_widget.cpp \
+    jumpeditor_dialog/combolist_model.cpp \
     log_widget.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     datalist_dialog/listwidget.h \
     datalists.h \
     devices_list_widget.h \
+    jumpeditor_dialog/combolist_model.h \
     log_widget.h \
     mainwindow.h \
     jumpstable.h \

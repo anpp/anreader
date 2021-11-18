@@ -80,7 +80,7 @@ QVariant DataListModel::headerData(int section, Qt::Orientation orientation, int
         return section + 1;
 
     if(role == Qt::DisplayRole && orientation == Qt::Horizontal)
-        return (section >= num_columns ? "" : tr(sHorzHeader[section].toStdString().c_str()));
+        return (section >= m_num_columns ? "" : tr(sHorzHeader[section].toStdString().c_str()));
 
     return QVariant();
 }
