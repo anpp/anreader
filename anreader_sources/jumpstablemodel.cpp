@@ -29,8 +29,8 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
         int col = index.column();
         if(CustomJumpNames::AP == col || CustomJumpNames::Canopy == col || CustomJumpNames::DZ == col)
         {
-            const map_DataList& mdl = (CustomJumpNames::AP == col ? ref_dl.const_aircrafts() : (CustomJumpNames::DZ == col ? ref_dl.const_dropzones() : ref_dl.const_canopies()));
-            const QString& map_value = mappedValue(mdl, row_value.toString());
+            const datakind dk = (CustomJumpNames::AP == col ? datakind::aircrafts : (CustomJumpNames::DZ == col ? datakind::dropzones : datakind::canopies));
+            const QString& map_value = ref_dl.mappedValue(dk, row_value.toString());
             return (map_value.isEmpty()? row_value : map_value);
 
         }
@@ -110,16 +110,6 @@ bool JumpsTableModel::checkColumns(const int value)
     return true;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
-const QString& JumpsTableModel::mappedValue(const map_DataList &mdl, const QString &key) const
-{
-    const auto& it = mdl.find(key.trimmed());
-    if(it != mdl.end())
-        return it->second;
-    else
-        return empty_string;
-
-}
 
 //----------------------------------------------------------------------------------------------------------------------
 void JumpsTableModel::takeLastJump(int &value)

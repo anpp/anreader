@@ -29,7 +29,7 @@ SOURCES += \
     jumpstable.cpp \
     jumpstablemodel.cpp \
     dwidget.cpp \
-    n3jumpeditor.cpp \
+    jumpeditor_dialog/n3jumpeditor.cpp \
     n3widget.cpp \
     settings.cpp
 
@@ -47,7 +47,7 @@ HEADERS += \
     jumpstable.h \
     jumpstablemodel.h \
     dwidget.h \
-    n3jumpeditor.h \
+    jumpeditor_dialog/n3jumpeditor.h \
     n3widget.h \
     settings.h
 
@@ -75,6 +75,6 @@ win32:{
 }
 FORMS += \
     datalist_dialog/datalist_dialog.ui \
-    n3jumpeditor.ui
+    jumpeditor_dialog/n3jumpeditor.ui
 
 

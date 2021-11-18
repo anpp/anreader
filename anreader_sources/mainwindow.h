@@ -31,7 +31,7 @@
 #include "devices_list_widget.h"
 #include "settings.h"
 #include "log_widget.h"
-#include "n3jumpeditor.h"
+#include "jumpeditor_dialog/n3jumpeditor.h"
 #include "datalists.h"
 #include "datalist_dialog/datalist_dialog.h"
 

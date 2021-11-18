@@ -69,6 +69,19 @@ void DataLists::saveDataCanopies() const
 }
 
 
+
+//---------------------------------------------------------------------------------------------------
+const QString &DataLists::mappedValue(const datakind dk, const QString &key) const
+{
+    const map_DataList& mdl = (datakind::aircrafts == dk ? const_aircrafts() : (datakind::dropzones == dk ? const_dropzones() : const_canopies()));
+    const auto& it = mdl.find(key.trimmed());
+    if(it != mdl.end())
+        return it->second;
+    else
+        return empty_string;
+}
+
+
 //---------------------------------------------------------------------------------------------------
 void DataLists::loadDataByKind(const datakind dk)
 {

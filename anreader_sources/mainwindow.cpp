@@ -812,7 +812,7 @@ void MainWindow::editJump(uint row_index)
     std::shared_ptr<N3Jump> edit_jump = std::dynamic_pointer_cast<N3Jump>(jumps_model.getItem(row_index));
     if(edit_jump)
     {
-        std::unique_ptr<N3JumpEditor> n3_jump_editor = std::make_unique<N3JumpEditor>(this, *edit_jump, dl.const_aircrafts(), dl.const_dropzones(), dl.const_canopies());
+        std::unique_ptr<N3JumpEditor> n3_jump_editor = std::make_unique<N3JumpEditor>(this, *edit_jump, dl);
         //n3_jump_editor->setAttribute(Qt::WA_DeleteOnClose);
         if(n3_jump_editor->exec() == QDialog::Accepted && n3_jump_editor->isModified())
         {

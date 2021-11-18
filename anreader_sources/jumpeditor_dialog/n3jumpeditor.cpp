@@ -2,7 +2,7 @@
 #include "ui_n3jumpeditor.h"
 
 //-------------------------------------------------------------------------------------------------------------------------------------
-N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const map_DataList& aircrafts, const map_DataList& dropzones, const map_DataList& canopies) :
+N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const DataLists& ref_dl) :
     QDialog(parent),
     ui(new Ui::N3JumpEditor)
 {
@@ -15,13 +15,14 @@ N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const map_DataList& ai
     ui->deDate->setDateTime(jump.getJumpDate());
     ui->cbxDeleted->setChecked(jump.isDeleted());
 
-    setComboValues(*ui->cbAirplane, aircrafts);
-    setComboValues(*ui->cbDZ, dropzones);
-    setComboValues(*ui->cbCanopy, canopies);
+    setComboValues(*ui->cbAirplane, ref_dl.const_aircrafts());
+    setComboValues(*ui->cbDZ, ref_dl.const_dropzones());
+    setComboValues(*ui->cbCanopy, ref_dl.const_canopies());
 
     ui->cbDZ->setCurrentText(jump.getDZ());
     ui->cbAirplane->setCurrentText(jump.getAP());
     ui->cbCanopy->setCurrentText(jump.getCanopy());
+
     ui->teNote->setPlainText(jump.getNote());
 
     ptrJump = &jump;

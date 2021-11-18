@@ -15,6 +15,8 @@ class DataLists
     map_DataList m_aircrafts;
     map_DataList m_dropzones;
     map_DataList m_canopies;
+
+    const QString empty_string = "";
 public:
     DataLists(const QString &organization, const QString &application);
 
@@ -37,6 +39,8 @@ public:
     const map_DataList& const_aircrafts() const { return m_aircrafts; }
     const map_DataList& const_dropzones() const { return m_dropzones; }
     const map_DataList& const_canopies() const { return m_canopies; }
+
+    const QString& mappedValue(const datakind dk, const QString& key) const;
 
 private:
     void loadDataByKind(const datakind dk);

@@ -7,6 +7,7 @@
 
 #include "common.h"
 #include "device/jumps/n3jump.h"
+#include "datalists.h"
 
 namespace Ui {
 class N3JumpEditor;
@@ -17,7 +18,7 @@ class N3JumpEditor : public QDialog
     Q_OBJECT
 
 public:
-    explicit N3JumpEditor(QWidget *parent, N3Jump& jump, const map_DataList& aircrafts, const map_DataList& dropzonesconst, const map_DataList& canopies);
+    explicit N3JumpEditor(QWidget *parent, N3Jump& jump, const DataLists& ref_dl);
     ~N3JumpEditor();
 
     bool isModified() const {return m_modified; }

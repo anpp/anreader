@@ -20,8 +20,7 @@ class JumpsTableModel : public QAbstractItemModel
     std::unique_ptr<t_rows> m_rows = std::make_unique<t_rows>();
     int num_cols;
     QColor color_0{QColor(Qt::white)}, color_1{QColor(245, 245, 245)};
-    const DataLists& ref_dl;
-    const QString empty_string = "";
+    const DataLists& ref_dl;    
 public:
 
     explicit JumpsTableModel(const DataLists& dl, QObject *parent = nullptr)
@@ -48,7 +47,6 @@ public:
 private:
     void setColumnCount(const int value);
     bool checkColumns(const int value);
-    const QString& mappedValue(const map_DataList& mdl, const QString& key) const;
 
 public slots:
     void takeLastJump(int &value);
