@@ -31,7 +31,7 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
         {
             const datakind dk = (CustomJumpNames::AP == col ? datakind::aircrafts : (CustomJumpNames::DZ == col ? datakind::dropzones : datakind::canopies));
             const QString& map_value = ref_dl.mappedValue(dk, row_value.toString());
-            return (map_value.isEmpty()? row_value : map_value);
+            return map_value;
 
         }
         else

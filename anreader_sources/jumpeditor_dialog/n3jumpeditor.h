@@ -42,8 +42,7 @@ private:
     QTableView m_tv_dropzones;
     QTableView m_tv_canopies;
 
-    void setComboValues(QComboBox& combo, const map_DataList& data_list) const;
-    void setup_table_view(QTableView& view);
+    void setup_table_view(QTableView& view, QComboBox& cb);
 
 };
 

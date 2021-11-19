@@ -5,9 +5,9 @@
 N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const DataLists& ref_dl) :
     QDialog(parent),
     ui(new Ui::N3JumpEditor),
-    m_aircrafts_model(ref_dl.const_aircrafts()),
-    m_dropzones_model(ref_dl.const_dropzones()),
-    m_canopies_model(ref_dl.const_canopies())
+    m_aircrafts_model(datakind::aircrafts, ref_dl),
+    m_dropzones_model(datakind::dropzones, ref_dl),
+    m_canopies_model(datakind::canopies, ref_dl)
 {
     ui->setupUi(this);
 
@@ -18,27 +18,17 @@ N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const DataLists& ref_d
     ui->deDate->setDateTime(jump.getJumpDate());
     ui->cbxDeleted->setChecked(jump.isDeleted());
 
-    setup_table_view(m_tv_aircrafts);
-    setup_table_view(m_tv_dropzones);
-    setup_table_view(m_tv_canopies);
+    setup_table_view(m_tv_aircrafts, *ui->cbAirplane);
+    setup_table_view(m_tv_dropzones, *ui->cbDZ);
+    setup_table_view(m_tv_canopies, *ui->cbCanopy);
 
     ui->cbAirplane->setModel(&m_aircrafts_model);
     ui->cbDZ->setModel(&m_dropzones_model);
     ui->cbCanopy->setModel(&m_canopies_model);
 
-
-    ui->cbAirplane->setView(&m_tv_aircrafts);
-    ui->cbDZ->setView(&m_tv_dropzones);
-    ui->cbCanopy->setView(&m_tv_canopies);
-
-
-    //setComboValues(*ui->cbAirplane, ref_dl.const_aircrafts());
-    //setComboValues(*ui->cbDZ, ref_dl.const_dropzones());
-    //setComboValues(*ui->cbCanopy, ref_dl.const_canopies());
-
-    ui->cbDZ->setCurrentText(jump.getDZ() + " " +ref_dl.mappedValue(datakind::dropzones, jump.getDZ()));
-    ui->cbAirplane->setCurrentText(jump.getAP() + " " +ref_dl.mappedValue(datakind::aircrafts, jump.getAP()));
-    ui->cbCanopy->setCurrentText(jump.getCanopy() + " " +ref_dl.mappedValue(datakind::canopies, jump.getCanopy()));
+    ui->cbDZ->setCurrentIndex(m_dropzones_model.indexByKey(jump.getDZ()));
+    ui->cbAirplane->setCurrentIndex(m_aircrafts_model.indexByKey(jump.getAP()));
+    ui->cbCanopy->setCurrentIndex(m_canopies_model.indexByKey(jump.getCanopy()));
 
     ui->teNote->setPlainText(jump.getNote());
 
@@ -53,16 +43,9 @@ N3JumpEditor::~N3JumpEditor()
 }
 
 
-//-------------------------------------------------------------------------------------------------------------------------------------
-void N3JumpEditor::setComboValues(QComboBox &combo, const map_DataList &data_list) const
-{
-    for(auto it = data_list.begin(); it != data_list.end(); ++it)
-        combo.addItem((*it).first);
-}
-
 
 //-------------------------------------------------------------------------------------------------------------------------------------
-void N3JumpEditor::setup_table_view(QTableView &view)
+void N3JumpEditor::setup_table_view(QTableView &view, QComboBox& cb)
 {
     view.horizontalHeader()->hide();
     view.verticalHeader()->hide();
@@ -72,6 +55,9 @@ void N3JumpEditor::setup_table_view(QTableView &view)
     //view.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     view.horizontalHeader()->setStretchLastSection(true);
+
+    cb.setModelColumn(1);
+    cb.setView(&view);
 }
 
 

@@ -20,7 +20,7 @@ class JumpsTableModel : public QAbstractItemModel
     std::unique_ptr<t_rows> m_rows = std::make_unique<t_rows>();
     int num_cols;
     QColor color_0{QColor(Qt::white)}, color_1{QColor(245, 245, 245)};
-    const DataLists& ref_dl;    
+    const DataLists& ref_dl;
 public:
 
     explicit JumpsTableModel(const DataLists& dl, QObject *parent = nullptr)

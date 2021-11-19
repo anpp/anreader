@@ -12,10 +12,12 @@ class Combolist_model : public QAbstractItemModel
 {
     Q_OBJECT
 
-    const int m_num_columns;
     t_combodata m_data;
+    const int m_num_columns;
+    const datakind m_dk;
+    const DataLists& m_dl;
 public:
-    explicit Combolist_model(const map_DataList& datalist, QObject *parent = nullptr);
+    explicit Combolist_model(const datakind dk, const DataLists& ref_dl, QObject *parent = nullptr);
 
     QModelIndex index(int row, int column, const QModelIndex & = QModelIndex()) const override { return createIndex(row, column);}
     QModelIndex parent(const QModelIndex &) const override { return QModelIndex(); }
@@ -23,6 +25,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     int rowCount(const QModelIndex&) const override { return m_data.size(); }
     int columnCount(const QModelIndex&) const override { return m_num_columns; }
+    int indexByKey(const QString& key);
 
 };
 

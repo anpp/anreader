@@ -1,9 +1,11 @@
 #include "combolist_model.h"
 
 //-----------------------------------------------------------------------------------------------
-Combolist_model::Combolist_model(const map_DataList &datalist, QObject *parent):
-    QAbstractItemModel(parent), m_num_columns(2)
+Combolist_model::Combolist_model(const datakind dk, const DataLists& ref_dl, QObject *parent):
+    QAbstractItemModel(parent), m_num_columns(2), m_dk(dk), m_dl(ref_dl)
 {
+    const map_DataList& datalist = m_dl.datalist_by_kind(m_dk);
+
     for(auto it = datalist.begin(); it != datalist.end(); ++it)
         m_data.push_back(std::make_pair((*it).first, (*it).second));
 }
@@ -19,7 +21,7 @@ QVariant Combolist_model::data(const QModelIndex &index, int role) const
         case 0:
             return m_data[index.row()].first;
         case 1:
-            return m_data[index.row()].second;
+            return m_dl.mappedValue(m_dk, m_data[index.row()].first); //m_data[index.row()].second;
         default:
             break;
         }
@@ -35,4 +37,23 @@ Qt::ItemFlags Combolist_model::flags(const QModelIndex &index) const
 
     flags &= ~Qt::ItemIsEditable;
     return flags;
+}
+
+
+//-----------------------------------------------------------------------------------------------
+int Combolist_model::indexByKey(const QString &key)
+{
+    int index = 0;
+    bool found = false;
+
+    for(const auto& item: m_data)
+    {
+        if(item.first == key)
+        {
+            found = true;
+            break;
+        }
+        index++;
+    }
+    return found? index : 0;
 }
