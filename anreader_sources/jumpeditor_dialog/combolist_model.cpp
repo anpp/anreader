@@ -14,14 +14,14 @@ Combolist_model::Combolist_model(const datakind dk, const DataLists& ref_dl, QOb
 //-----------------------------------------------------------------------------------------------
 QVariant Combolist_model::data(const QModelIndex &index, int role) const
 {
-    if(index.isValid() && Qt::DisplayRole == role) //&& index.row() < static_cast<int>(m_data.size()))
+    if(index.isValid() && Qt::DisplayRole == role && index.row() < static_cast<int>(m_data.size()))
     {
         switch(index.column())
         {
         case 0:
             return m_data[index.row()].first;
         case 1:
-            return m_dl.mappedValue(m_dk, m_data[index.row()].first); //m_data[index.row()].second;
+            return m_dl.mappedValue(m_dk, m_data[index.row()].first);
         default:
             break;
         }
