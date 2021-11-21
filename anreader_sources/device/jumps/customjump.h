@@ -13,7 +13,7 @@ enum CustomJumpNames: int {
                             JumpNumber = 0,
                             JumpDate,
                             DZ,
-                            AP,
+                            AC,
                             Canopy,
                             CtUnk
                            };
@@ -28,11 +28,11 @@ class CustomJump
 {
 public:
     explicit CustomJump();
-    explicit CustomJump(uint jump_number, QDateTime jump_date, QString dz, QString ap) :
+    explicit CustomJump(uint jump_number, QDateTime jump_date, QString dz, QString ac) :
         m_jump_number(jump_number),
         m_jump_date(jump_date),
         m_dz(dz),
-        m_ap(ap),
+        m_ac(ac),
         m_canopy("") {}
 
     virtual ~CustomJump(){}
@@ -46,7 +46,7 @@ public:
     virtual bool isDeleted() const = 0;
     virtual QString getNote() const = 0;
     virtual QString getDZ() const = 0;
-    virtual QString getAP() const = 0;
+    virtual QString getAC() const = 0;
     virtual QString getCanopy() const = 0;
 
 
@@ -59,7 +59,7 @@ public:
     virtual void setDeleted(bool value) = 0;
     virtual void setNote(const QString& value) = 0;
     virtual void setDZ(const QString& value) = 0;
-    virtual void setAP(const QString& value) = 0;
+    virtual void setAC(const QString& value) = 0;
     virtual void setCanopy(const QString& value) = 0;
 
 
@@ -72,7 +72,7 @@ protected:
     uint m_jump_number;
     QDateTime m_jump_date;
     QString m_dz;
-    QString m_ap;
+    QString m_ac;
     QString m_canopy;
 };
 

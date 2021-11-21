@@ -5,7 +5,7 @@ const static QString CustomJumpFieldNames[] =
                                 QObject::tr("Number"),
                                 QObject::tr("Date"),
                                 QObject::tr("DZ"),
-                                QObject::tr("Airplane"),
+                                QObject::tr("Aircraft"),
                                 QObject::tr("Canopy"),
                                 QObject::tr("Unknown")
                               };
@@ -25,7 +25,7 @@ std::unique_ptr<t_jump_attribute> CustomJump::getPairs() const
     (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpNumber), m_jump_number));
     (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpDate), m_jump_date));
     (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::DZ), m_dz));
-    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::AP), m_ap));
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::AC), m_ac));
     (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::Canopy), m_canopy));
 
     return jump_attr;
@@ -51,8 +51,8 @@ void CustomJump::setPairs(const t_jump_attribute &pairs)
             if(CustomJumpNames::DZ == i && found_atr->second.canConvert(QMetaType::QString))
                 m_dz = found_atr->second.toString();
 
-            if(CustomJumpNames::AP == i && found_atr->second.canConvert(QMetaType::QString))
-                m_ap = found_atr->second.toString();
+            if(CustomJumpNames::AC == i && found_atr->second.canConvert(QMetaType::QString))
+                m_ac = found_atr->second.toString();
 
             if(CustomJumpNames::Canopy == i && found_atr->second.canConvert(QMetaType::QString))
                 m_canopy = found_atr->second.toString();

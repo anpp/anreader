@@ -423,7 +423,7 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
 
             jump->setPairs(jump_data);
             jumps->push_back(jump);
-            initDataInLists(jump->getAP(), jump->getDZ(), jump->getCanopy());
+            initDataInLists(jump->getAC(), jump->getDZ(), jump->getCanopy());
         }
         if(!jm.moveItems(jumps))
         {
@@ -498,7 +498,7 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
     if(datakind::aircrafts == dlk)
         for(auto& item: datalist)
             std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
-            { return jump->getAP() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
+            { return jump->getAC() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
 
     if(datakind::dropzones == dlk)
         for(auto& item: datalist)

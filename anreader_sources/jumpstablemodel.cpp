@@ -27,9 +27,9 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
     if(Qt::DisplayRole == role && N3JumpNames::Deleted != index.column())
     {
         int col = index.column();
-        if(CustomJumpNames::AP == col || CustomJumpNames::Canopy == col || CustomJumpNames::DZ == col)
+        if(CustomJumpNames::AC == col || CustomJumpNames::Canopy == col || CustomJumpNames::DZ == col)
         {
-            const datakind dk = (CustomJumpNames::AP == col ? datakind::aircrafts : (CustomJumpNames::DZ == col ? datakind::dropzones : datakind::canopies));
+            const datakind dk = (CustomJumpNames::AC == col ? datakind::aircrafts : (CustomJumpNames::DZ == col ? datakind::dropzones : datakind::canopies));
             const QString& map_value = ref_dl.mappedValue(dk, row_value.toString());
             return map_value;
 

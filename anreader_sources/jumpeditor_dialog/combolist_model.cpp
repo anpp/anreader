@@ -41,7 +41,7 @@ Qt::ItemFlags Combolist_model::flags(const QModelIndex &index) const
 
 
 //-----------------------------------------------------------------------------------------------
-int Combolist_model::indexByKey(const QString &key)
+int Combolist_model::indexByKey(const QString &key) const
 {
     int index = 0;
     bool found = false;
@@ -56,4 +56,13 @@ int Combolist_model::indexByKey(const QString &key)
         index++;
     }
     return found? index : 0;
+}
+
+
+//-----------------------------------------------------------------------------------------------
+const QString &Combolist_model::keyByIndex(int index) const
+{
+    if(index < 0 || static_cast<size_t>(index) >= m_data.size())
+        index = 0;
+    return m_data[index].first;
 }

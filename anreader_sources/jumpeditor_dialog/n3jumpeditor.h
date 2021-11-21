@@ -28,6 +28,7 @@ public:
 
 private slots:
     void on_buttonBox_accepted();
+    void combo_changeindex(int index);
 
 private:
     Ui::N3JumpEditor *ui;
@@ -38,11 +39,16 @@ private:
     Combolist_model m_dropzones_model;
     Combolist_model m_canopies_model;
 
+    QString m_aircraft_key;
+    QString m_dropzone_key;
+    QString m_canopy_key;
+
+
     QTableView m_tv_aircrafts;
     QTableView m_tv_dropzones;
     QTableView m_tv_canopies;
 
-    void setup_table_view(QTableView& view, QComboBox& cb);
+    void setup_combobox(const datakind dk, QAbstractItemModel &model, QTableView &view);
 
 };
 

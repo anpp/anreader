@@ -67,9 +67,9 @@
         <item row="0" column="0">
          <layout class="QGridLayout" name="gridLayout">
           <item row="3" column="0">
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="lbAircraft">
             <property name="text">
-             <string>Airplane</string>
+             <string>Aircraft</string>
             </property>
            </widget>
           </item>
@@ -107,7 +107,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QComboBox" name="cbAirplane"/>
+           <widget class="QComboBox" name="cbAC"/>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_3">

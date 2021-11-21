@@ -18,16 +18,12 @@ N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const DataLists& ref_d
     ui->deDate->setDateTime(jump.getJumpDate());
     ui->cbxDeleted->setChecked(jump.isDeleted());
 
-    setup_table_view(m_tv_aircrafts, *ui->cbAirplane);
-    setup_table_view(m_tv_dropzones, *ui->cbDZ);
-    setup_table_view(m_tv_canopies, *ui->cbCanopy);
-
-    ui->cbAirplane->setModel(&m_aircrafts_model);
-    ui->cbDZ->setModel(&m_dropzones_model);
-    ui->cbCanopy->setModel(&m_canopies_model);
+    setup_combobox(datakind::aircrafts, m_aircrafts_model, m_tv_aircrafts);
+    setup_combobox(datakind::dropzones, m_dropzones_model, m_tv_dropzones);
+    setup_combobox(datakind::canopies, m_canopies_model, m_tv_canopies);
 
     ui->cbDZ->setCurrentIndex(m_dropzones_model.indexByKey(jump.getDZ()));
-    ui->cbAirplane->setCurrentIndex(m_aircrafts_model.indexByKey(jump.getAP()));
+    ui->cbAC->setCurrentIndex(m_aircrafts_model.indexByKey(jump.getAC()));
     ui->cbCanopy->setCurrentIndex(m_canopies_model.indexByKey(jump.getCanopy()));
 
     ui->teNote->setPlainText(jump.getNote());
@@ -45,8 +41,8 @@ N3JumpEditor::~N3JumpEditor()
 
 
 //-------------------------------------------------------------------------------------------------------------------------------------
-void N3JumpEditor::setup_table_view(QTableView &view, QComboBox& cb)
-{
+void N3JumpEditor::setup_combobox(const datakind dk, QAbstractItemModel &model, QTableView &view)
+{    
     view.horizontalHeader()->hide();
     view.verticalHeader()->hide();
     view.setSelectionMode(QAbstractItemView::SingleSelection);
@@ -56,10 +52,27 @@ void N3JumpEditor::setup_table_view(QTableView &view, QComboBox& cb)
 
     view.horizontalHeader()->setStretchLastSection(true);
 
+    QComboBox& cb = (datakind::aircrafts == dk ? *ui->cbAC : (datakind::dropzones == dk ? *ui->cbDZ : *ui->cbCanopy));
+
+    cb.setModel(&model);
+    cb.setProperty("datakind", QVariant(static_cast<int>(dk)));
+    connect(&cb, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &N3JumpEditor::combo_changeindex);
+
     cb.setModelColumn(1);
     cb.setView(&view);
 }
 
+
+//-------------------------------------------------------------------------------------------------------------------------------------
+void N3JumpEditor::combo_changeindex(int index)
+{
+    datakind dk = static_cast<datakind>((QObject::sender()->property("datakind").toInt()));
+    const Combolist_model *model = dynamic_cast<Combolist_model*>((dynamic_cast<QComboBox*>(QObject::sender()))->model());
+
+    if(datakind::aircrafts == dk) m_aircraft_key = model->keyByIndex(index);
+    if(datakind::dropzones == dk) m_dropzone_key = model->keyByIndex(index);
+    if(datakind::canopies == dk) m_canopy_key = model->keyByIndex(index);
+}
 
 
 
@@ -68,21 +81,21 @@ void N3JumpEditor::on_buttonBox_accepted()
 {
     if(nullptr != ptrJump)
     {
-        if(ptrJump->getAP() != ui->cbAirplane->currentText())
+        if(ptrJump->getAC() != m_aircraft_key)
         {
-            ptrJump->setAP(ui->cbAirplane->currentText());
+            ptrJump->setAC(m_aircraft_key);
             m_modified = true;
         }
 
-        if(ptrJump->getDZ() != ui->cbDZ->currentText())
+        if(ptrJump->getDZ() != m_dropzone_key)
         {
-            ptrJump->setDZ(ui->cbDZ->currentText());
+            ptrJump->setDZ(m_dropzone_key);
             m_modified = true;
         }
 
-        if(ptrJump->getCanopy() != ui->cbCanopy->currentText())
+        if(ptrJump->getCanopy() != m_canopy_key)
         {
-            ptrJump->setCanopy(ui->cbCanopy->currentText());
+            ptrJump->setCanopy(m_canopy_key);
             m_modified = true;
         }
 
