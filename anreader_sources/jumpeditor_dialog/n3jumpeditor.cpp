@@ -57,7 +57,6 @@ void N3JumpEditor::setup_combobox(const datakind dk, QAbstractItemModel &model, 
     cb.setModel(&model);
     cb.setProperty("datakind", QVariant(static_cast<int>(dk)));
     connect(&cb, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &N3JumpEditor::combo_changeindex);
-
     cb.setModelColumn(1);
     cb.setView(&view);
 }

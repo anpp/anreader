@@ -236,8 +236,8 @@ void MainWindow::createDevicesWidget()
 {
     QDockWidget *dock = new QDockWidget(tr("Devices"), this);
     dock->setObjectName("devices_widget_dock");
-    //dock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetClosable);
-    dock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    dock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetClosable);
+    //dock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     m_toggleDevices = dock->toggleViewAction();
     m_toggleDevices->setShortcut(QKeySequence("F11"));
