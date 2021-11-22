@@ -548,14 +548,10 @@ std::unique_ptr<QByteArray> Neptune::cryptPacket(const QByteArray &packet, bool 
     {
         local_packet = packet; //копирование... (в эту ветку не заходит, но на всякий случай)
 
-        #ifdef Q_OS_WIN64
-            local_packet.append('\0', packet_size - packet.size()); 
-        #else
-            #ifdef Q_OS_MACOS
-                local_packet.append('\0', packet_size - packet.size());
-            #else
+        #if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
                 local_packet.append(0, packet_size - packet.size()); //для XP
-            #endif
+        #else
+                local_packet.append('\0', packet_size - packet.size());
         #endif
 
         ref_packet = &local_packet;

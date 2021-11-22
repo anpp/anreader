@@ -3,13 +3,11 @@
 
 #include <map>
 #include <QString>
+#include <QtGlobal>
 
 typedef std::map<QString, QString> map_DataList;
 
-#ifdef Q_OS_WIN64
-#else
-    #ifdef Q_OS_MACOS
-    #else
+#if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
     //для XP
 template <typename T>
 typename std::add_const<T>::type &qAsConst(T &t) {return t;}
@@ -55,7 +53,7 @@ struct QOverload : QConstOverload<Args...>, QNonConstOverload<Args...>
     { return ptr; }
 };
 
-    #endif
+
 #endif
 
 

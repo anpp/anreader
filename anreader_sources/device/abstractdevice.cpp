@@ -95,8 +95,7 @@ void AbstractDevice::setupComPort()
     connect(this, &AbstractDevice::sopen, sp.get(), &SerialPortThread::sopen);
     connect(sp.get(), &SerialPortThread::connected, this, &AbstractDevice::connected);
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &AbstractDevice::disconnectStateSignal);
-
-    #ifdef Q_OS_WIN64
+    #if QT_VERSION > QT_VERSION_CHECK(5, 6, 3)
         connect(sp.get(), &SerialPortThread::errorOccurred, this, &AbstractDevice::slotSerialPortError); //Для XP (Qt 5.6) закомментировать
     #endif
 }
