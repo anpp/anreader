@@ -17,7 +17,7 @@ enum class dtype: int {unk = -1, N3 = 0};
 class DWidget : public QFrame
 {    
     Q_OBJECT
-    enum dw_consts: int {base_spacing = 4, base_margin = 4};
+    enum dw_consts: int {base_spacing = 4, base_margin = 4, connect_button_height = 29};
 public:
     explicit DWidget(QWidget *parent = nullptr);
     explicit DWidget(dtype device_type, QWidget *parent = nullptr);
@@ -36,7 +36,8 @@ public:
 
 
 private:
-    void init();    
+    void init();
+    void setVisibleCB(const bool value);
 
     QLabel lblIcon;
     QLabel lblPort;
@@ -64,6 +65,7 @@ protected:
     QHBoxLayout *lTopHorz;
     QHBoxLayout *lConnectButon;
 
+    bool is_visible_connect_button = false;
     QPushButton connect_button;
 
     QPointer<QWidget> wtop;

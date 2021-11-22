@@ -59,6 +59,14 @@ void DWidget::init()
     m_wtop_height = lMain->spacing() + lTopVert->spacing() + lTopHorz->spacing() + lConnectButon->spacing();
 }
 
+
+//----------------------------------------------------------------------------------------------------------------------
+void DWidget::setVisibleCB(const bool value)
+{
+    is_visible_connect_button = value;
+    connect_button.setVisible(is_visible_connect_button);
+}
+
 //----------------------------------------------------------------------------------------------------------------------
 void DWidget::setupConnects()
 {
@@ -74,21 +82,23 @@ void DWidget::setupConnects()
 //----------------------------------------------------------------------------------------------------------------------
 void DWidget::addConnectButton()
 {
-    if(connect_button.isVisible()) return;
+    if(is_visible_connect_button) return;
 
-    connect_button.setVisible(true);
+    setVisibleCB(true);
+    if(!this->isVisible()) //костыль - кнопка имеет огромные размера на невидимом виджете
+        connect_button.setFixedHeight(dw_consts::connect_button_height);
+
     wtop->setFixedHeight(m_wtop_height + m_icon_height + connect_button.height());
     this->resize(this->width(), wtop->height());
-
     emit setHeight(this->height());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void DWidget::deleteConnectButton()
-{
-    if(!connect_button.isVisible()) return;
+{    
+    if(!is_visible_connect_button) return;
 
-    connect_button.setVisible(false);
+    setVisibleCB(false);
     wtop->setFixedHeight(m_wtop_height + m_icon_height);
     this->resize(this->width(), wtop->height());    
     emit setHeight(this->height());
