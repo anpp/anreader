@@ -81,46 +81,25 @@ void N3JumpEditor::on_buttonBox_accepted()
     if(nullptr != ptrJump)
     {
 
-        if(ptrJump->getJumpNumber() != static_cast<uint>(ui->spnNumber->value()))
+        m_modified = (
+                       (ptrJump->getJumpNumber() != static_cast<uint>(ui->spnNumber->value()))
+                    || (ptrJump->isDeleted() != (ui->cbxDeleted->checkState() == Qt::CheckState::Checked))
+                    || (ptrJump->getJumpDate() != ui->deDate->dateTime())
+                    || (ptrJump->getAC() != m_aircraft_key)
+                    || (ptrJump->getDZ() != m_dropzone_key)
+                    || (ptrJump->getCanopy() != m_canopy_key)
+                    || (ptrJump->getNote() != ui->teNote->toPlainText())
+                );
+
+        if(isModified())
         {
             ptrJump->setJumpNumber(ui->spnNumber->value());
-            m_modified = true;
-        }
-
-        if(ptrJump->isDeleted() != (ui->cbxDeleted->checkState() == Qt::CheckState::Checked))
-        {
             ptrJump->setDeleted((ui->cbxDeleted->checkState() == Qt::CheckState::Checked));
-            m_modified = true;
-        }
-
-        if(ptrJump->getJumpDate() != ui->deDate->dateTime())
-        {
             ptrJump->setJumpDate(ui->deDate->dateTime());
-            m_modified = true;
-        }
-
-        if(ptrJump->getAC() != m_aircraft_key)
-        {
             ptrJump->setAC(m_aircraft_key);
-            m_modified = true;
-        }
-
-        if(ptrJump->getDZ() != m_dropzone_key)
-        {
             ptrJump->setDZ(m_dropzone_key);
-            m_modified = true;
-        }
-
-        if(ptrJump->getCanopy() != m_canopy_key)
-        {
             ptrJump->setCanopy(m_canopy_key);
-            m_modified = true;
-        }
-
-        if(ptrJump->getNote() != ui->teNote->toPlainText())
-        {
             ptrJump->setNote(ui->teNote->toPlainText());
-            m_modified = true;
         }
 
     }
