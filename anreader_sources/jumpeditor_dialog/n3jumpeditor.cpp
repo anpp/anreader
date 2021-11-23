@@ -11,8 +11,8 @@ N3JumpEditor::N3JumpEditor(QWidget *parent, N3Jump& jump, const DataLists& ref_d
 {
     ui->setupUi(this);
 
-    ui->cbxDeleted->setAttribute(Qt::WA_TransparentForMouseEvents);
-    ui->cbxDeleted->setFocusPolicy(Qt::NoFocus);
+    //ui->cbxDeleted->setAttribute(Qt::WA_TransparentForMouseEvents);
+    //ui->cbxDeleted->setFocusPolicy(Qt::NoFocus);
 
     ui->spnNumber->setValue(jump.getJumpNumber());
     ui->deDate->setDateTime(jump.getJumpDate());
@@ -80,6 +80,25 @@ void N3JumpEditor::on_buttonBox_accepted()
 {
     if(nullptr != ptrJump)
     {
+
+        if(ptrJump->getJumpNumber() != static_cast<uint>(ui->spnNumber->value()))
+        {
+            ptrJump->setJumpNumber(ui->spnNumber->value());
+            m_modified = true;
+        }
+
+        if(ptrJump->isDeleted() != (ui->cbxDeleted->checkState() == Qt::CheckState::Checked))
+        {
+            ptrJump->setDeleted((ui->cbxDeleted->checkState() == Qt::CheckState::Checked));
+            m_modified = true;
+        }
+
+        if(ptrJump->getJumpDate() != ui->deDate->dateTime())
+        {
+            ptrJump->setJumpDate(ui->deDate->dateTime());
+            m_modified = true;
+        }
+
         if(ptrJump->getAC() != m_aircraft_key)
         {
             ptrJump->setAC(m_aircraft_key);
