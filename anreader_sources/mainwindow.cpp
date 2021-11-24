@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "csvparser.h"
 
-const static QString sDataList_Titles[] = {QObject::tr("Aircrafts"), QObject::tr("Dropzones"), QObject::tr("Canopies")};
+const static QString sDataList_Titles[] = {QObject::tr("Aircrafts"), QObject::tr("Dropzones"), QObject::tr("Canopies"), QObject::tr("Jump types")};
 
 //----------------------------------------------------------------------------------------------------------------------
 StatusFrame::StatusFrame(QWidget *parent) : QWidget (parent)
@@ -21,6 +21,9 @@ void StatusFrame::setStatusText(const QString &text)
 
 
 //============================================================================================================================================
+
+
+
 
 //----------------------------------------------------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *parent)
@@ -204,6 +207,13 @@ void MainWindow::createActions()
     connect(m_registerCanopiesAct, &QAction::triggered, this, &MainWindow::canopies_list);
     registerMenu->addAction(m_registerCanopiesAct);
 
+    const QIcon jumptypesIcon = QIcon(":/images/icons/menu/jump.png");
+    m_registerJumpTypesAct = new QAction(jumptypesIcon, tr("Jump types"), this);
+    m_actions.push_back(m_registerCanopiesAct);
+    m_registerJumpTypesAct->setToolTip(tr("Jump types..."));
+    connect(m_registerJumpTypesAct, &QAction::triggered, this, &MainWindow::jumptypes_list);
+    registerMenu->addAction(m_registerJumpTypesAct);
+
 
     QToolBar *mainToolBar = addToolBar(tr("File"));
     mainToolBar->setIconSize(QSize(40, 40));
@@ -220,6 +230,7 @@ void MainWindow::createActions()
     registerMenu->addAction(m_registerAicraftsAct);
     registerMenu->addAction(m_registerDropZonesAct);
     registerMenu->addAction(m_registerCanopiesAct);
+    registerMenu->addAction(m_registerJumpTypesAct);
 
     if(m_toggleDevices)
         windowsMenu->addAction(m_toggleDevices);
@@ -514,9 +525,13 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
             std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
             { return jump->getCanopy() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
 
+    if(datakind::jump_types == dlk)
+        for(auto& item: datalist)
+            std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
+            { return jump->getType() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
+
 
     std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[static_cast<uint>(dlk)], datalist, this);
-
 
     if(dl_dialog->exec())
     {

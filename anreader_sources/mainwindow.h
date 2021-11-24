@@ -113,6 +113,7 @@ private:
     QPointer<QAction> m_registerAicraftsAct;
     QPointer<QAction> m_registerDropZonesAct;
     QPointer<QAction> m_registerCanopiesAct;
+    QPointer<QAction> m_registerJumpTypesAct;
     QVector<QPointer<QAction>> m_actions;
 
     QPointer<QAction> m_toggleDevices;
@@ -150,9 +151,10 @@ public slots:
     void delete_selected();
     void copy_selected();
     void edit_selected();
-    void aicrafts_list()  {open_DataListDialog(datakind::aircrafts, dl.aircrafts()); }
-    void dropzones_list() {open_DataListDialog(datakind::dropzones, dl.dropzones()); }
-    void canopies_list()  {open_DataListDialog(datakind::canopies, dl.canopies()); }
+    void aicrafts_list()  { open_DataListDialog(datakind::aircrafts, dl.aircrafts()); }
+    void dropzones_list() { open_DataListDialog(datakind::dropzones, dl.dropzones()); }
+    void canopies_list()  { open_DataListDialog(datakind::canopies, dl.canopies()); }
+    void jumptypes_list() { open_DataListDialog(datakind::jump_types, dl.jumptypes()); }
     void about();
     void documentWasModified();
     void enableActions(const bool enable);

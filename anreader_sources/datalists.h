@@ -7,7 +7,7 @@
 
 #include "common.h"
 
-enum class datakind: int {aircrafts = 0, dropzones, canopies};
+enum class datakind: int {aircrafts = 0, dropzones, canopies, jump_types};
 
 class DataLists
 {
@@ -15,6 +15,8 @@ class DataLists
     map_DataList m_aircrafts;
     map_DataList m_dropzones;
     map_DataList m_canopies;
+    map_DataList m_jumptypes;
+    map_DataList m_empty;
 
     QString empty_string = "";
 public:
@@ -30,19 +32,24 @@ public:
     void saveDataDropZones() const;
     void loadDataCanopies();
     void saveDataCanopies() const;
+    void loadDataJumpTypes();
+    void saveDataJumpTypes() const;
 
 
     map_DataList& aircrafts() { return m_aircrafts; }
     map_DataList& dropzones() { return m_dropzones; }
     map_DataList& canopies() { return m_canopies; }
+    map_DataList& jumptypes() { return m_jumptypes; }
 
     const map_DataList& const_aircrafts() const { return m_aircrafts; }
     const map_DataList& const_dropzones() const { return m_dropzones; }
     const map_DataList& const_canopies() const { return m_canopies; }
+    const map_DataList& const_jumptypes() const { return m_jumptypes; }
 
-    const map_DataList& datalist_by_kind(const datakind dk) const;
+    map_DataList& datalist_by_kind(const datakind dk);
+    const map_DataList& const_datalist_by_kind(const datakind dk) const;
 
-    const QString& mappedValue(const datakind dk, const QString& key) const;
+    const QString& mappedValue(const datakind dk, const QString& key) const;    
 
 private:
     void loadDataByKind(const datakind dk);

@@ -51,6 +51,7 @@ public:
     virtual QString getDZ() const {return m_dz;}
     virtual QString getAC() const {return m_ac;}
     virtual QString getCanopy() const {return m_canopy;}
+    virtual QString getType() const {return m_type;}
     virtual QString getNote() const {return m_note;}
     virtual bool isDeleted() const {return m_is_deleted;}
 
@@ -64,6 +65,7 @@ public:
     virtual void setDZ(const QString& value) {m_dz = value;}
     virtual void setAC(const QString& value) {m_ac = value;}
     virtual void setCanopy(const QString& value) {m_canopy = value; }
+    virtual void setType(const QString& value) {m_type = value; }
     virtual void setNote(const QString& value) {m_note = value;}
     virtual void setDeleted(bool value) {m_is_deleted = value;}
 
@@ -79,6 +81,7 @@ protected:
     QString m_dz;
     QString m_ac;
     QString m_canopy;
+    QString m_type;
     QString m_note;
     bool m_is_deleted;
 };

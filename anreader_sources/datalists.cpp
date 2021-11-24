@@ -1,6 +1,6 @@
 #include "datalists.h"
 
-const static QString sDataKind[] = {"aircrafts", "dropzones", "canopies"};
+const static QString sDataKind[] = {"aircrafts", "dropzones", "canopies", "jumptypes"};
 
 
 //---------------------------------------------------------------------------------------------------
@@ -9,6 +9,7 @@ DataLists::DataLists(const QString &organization, const QString &application): q
     m_aircrafts[""] = "";
     m_dropzones[""] = "";
     m_canopies[""] = "";
+    m_jumptypes[""] = "";
 }
 
 void DataLists::load()
@@ -16,6 +17,7 @@ void DataLists::load()
     loadDataAircrafts();
     loadDataDropZones();
     loadDataCanopies();
+    loadDataJumpTypes();
 }
 
 
@@ -25,6 +27,7 @@ void DataLists::save() const
     saveDataAircrafts();
     saveDataDropZones();
     saveDataCanopies();
+    saveDataJumpTypes();
 }
 
 
@@ -68,11 +71,45 @@ void DataLists::saveDataCanopies() const
     saveDataByKind(datakind::canopies);
 }
 
+//---------------------------------------------------------------------------------------------------
+void DataLists::loadDataJumpTypes()
+{
+    loadDataByKind(datakind::jump_types);
+}
 
 //---------------------------------------------------------------------------------------------------
-const map_DataList &DataLists::datalist_by_kind(const datakind dk) const
+void DataLists::saveDataJumpTypes() const
 {
-    return (dk == datakind::aircrafts ? const_aircrafts() : (dk == datakind::dropzones ? const_dropzones() : const_canopies()));
+    saveDataByKind(datakind::jump_types);
+}
+
+
+//---------------------------------------------------------------------------------------------------
+map_DataList &DataLists::datalist_by_kind(const datakind dk)
+{
+    switch (static_cast<int>(dk)) {
+    case (static_cast<int>(datakind::dropzones)): return dropzones();
+    case (static_cast<int>(datakind::aircrafts)): return aircrafts();
+    case (static_cast<int>(datakind::canopies)): return canopies();
+    case (static_cast<int>(datakind::jump_types)): return jumptypes();
+    default:
+        break;
+    }
+    return m_empty;
+}
+
+//---------------------------------------------------------------------------------------------------
+const map_DataList &DataLists::const_datalist_by_kind(const datakind dk) const
+{
+    switch (static_cast<int>(dk)) {
+    case (static_cast<int>(datakind::dropzones)): return const_dropzones();
+    case (static_cast<int>(datakind::aircrafts)): return const_aircrafts();
+    case (static_cast<int>(datakind::canopies)): return const_canopies();
+    case (static_cast<int>(datakind::jump_types)): return const_jumptypes();
+    default:
+        break;
+    }
+    return m_empty;
 }
 
 
@@ -80,7 +117,7 @@ const map_DataList &DataLists::datalist_by_kind(const datakind dk) const
 //---------------------------------------------------------------------------------------------------
 const QString &DataLists::mappedValue(const datakind dk, const QString &key) const
 {
-    const map_DataList& mdl = (datakind::aircrafts == dk ? const_aircrafts() : (datakind::dropzones == dk ? const_dropzones() : const_canopies()));
+    const map_DataList& mdl = const_datalist_by_kind(dk);
     const auto& it = mdl.find(key.trimmed());
     if(it != mdl.end())
         return (it->second.isEmpty() ? it->first : it->second);
@@ -92,38 +129,35 @@ const QString &DataLists::mappedValue(const datakind dk, const QString &key) con
 //---------------------------------------------------------------------------------------------------
 void DataLists::loadDataByKind(const datakind dk)
 {
-    map_DataList *ptr_mdl = nullptr;
-
-    ptr_mdl = (datakind::dropzones == dk)? &m_dropzones : ((datakind::canopies == dk)? &m_canopies : &m_aircrafts);
-    if(nullptr == ptr_mdl) return;
+    map_DataList& mdl = datalist_by_kind(dk);
+    if(m_empty == mdl) return;
 
     qsettings.beginGroup("/" + sDataKind[static_cast<int>(dk)]);
     for(auto& k: qsettings.allKeys())
         if(k != ".")
-            (*ptr_mdl)[k] = qsettings.value(k, "").toString();
+            mdl[k] = qsettings.value(k, "").toString();
     qsettings.endGroup();
 }
 
 //---------------------------------------------------------------------------------------------------
 void DataLists::saveDataByKind(const datakind dk) const
 {
-    const map_DataList *ptr_mdl = nullptr;
+    const map_DataList& mdl = const_datalist_by_kind(dk);
 
-    ptr_mdl = (datakind::dropzones == dk)? &m_dropzones : ((datakind::canopies == dk)? &m_canopies : &m_aircrafts);
-    if(nullptr == ptr_mdl) return;
+    if(m_empty == mdl) return;
 
     qsettings.beginGroup("/" + sDataKind[static_cast<int>(dk)]);
 
     //--удаление
     QStringList sl;
     for(auto& k: qsettings.allKeys())
-        if(ptr_mdl->find(k) == ptr_mdl->end())
+        if(mdl.find(k) == mdl.end())
             sl << k;
     for(auto& key: sl)
         qsettings.remove(key);
     //--
 
-    for(auto it = (*ptr_mdl).begin(); it != (*ptr_mdl).end(); ++it)
+    for(auto it = mdl.begin(); it != mdl.end(); ++it)
         qsettings.setValue("/" + (*it).first, (*it).second);
 
     qsettings.endGroup();

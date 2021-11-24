@@ -4,7 +4,7 @@
 Combolist_model::Combolist_model(const datakind dk, const DataLists& ref_dl, QObject *parent):
     QAbstractItemModel(parent), m_num_columns(2), m_dk(dk), m_dl(ref_dl)
 {
-    const map_DataList& datalist = m_dl.datalist_by_kind(m_dk);
+    const map_DataList& datalist = m_dl.const_datalist_by_kind(m_dk);
 
     for(auto it = datalist.begin(); it != datalist.end(); ++it)
         m_data.push_back(std::make_pair((*it).first, (*it).second));
