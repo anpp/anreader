@@ -294,8 +294,6 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
         QTextStream ts(&f );
         QStringList csv_string;
 
-        //csv_string << "\" \"";
-        QStringList field_names;
         for(auto i = 0; i < jm.columnCount(QModelIndex()); ++i)
             csv_string << "\"" + jm.headerData(i, Qt::Horizontal).toString()+ "\"";
 
@@ -311,7 +309,7 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
             for(uint i = 0; i < j_atr->size(); ++i)
             {
                 QString csv_field;
-                int inner_index = N3Jump::index((*j_atr).at(i).first);
+                int inner_index = N3Jump::index((*j_atr)[i].first);
                 switch(inner_index)
                 {
                 case CustomJumpNames::JumpDate:
