@@ -10,8 +10,6 @@ const static QString N3JumpFieldNames[] =
                                 QObject::tr("Speed 9K"),
                                 QObject::tr("Speed 6K"),
                                 QObject::tr("Speed 3K"),
-                                QObject::tr("Deleted"),
-                                QObject::tr("Note"),
                                 QObject::tr("Unknown"),
                               };
 
@@ -35,21 +33,22 @@ std::unique_ptr<t_jump_attribute> N3Jump::getPairs() const
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed9K), m_speed9K));
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed6K), m_speed6K));
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed3K), m_speed3K));
-    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Deleted), m_is_deleted));
-    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Note), m_note));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(CustomJumpNames::Deleted), m_is_deleted));
+    (*jump_attr).push_back(std::make_pair(N3Jump::field_name(CustomJumpNames::Note), m_note));
 
     return jump_attr;
 }
 
+//----------------------------------------------------------------------------------------------------------------------
 void N3Jump::setPairs(const t_jump_attribute &pairs)
 {
     CustomJump::setPairs(pairs);
 
-    for(int i = N3JumpNames::ExitAlt; i <= N3JumpNames::Note; ++i)
+    for(int i = N3JumpNames::ExitAlt; i < N3JumpNames::Unk; ++i)
     {
         auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
         {
-            return atr.first == N3JumpFieldNames[i - CustomJumpNames::Canopy - 1];
+            return atr.first == N3JumpFieldNames[i - CustomJumpNames::CtUnk];
         });
 
         if(found_atr != pairs.end())
@@ -78,24 +77,36 @@ void N3Jump::setPairs(const t_jump_attribute &pairs)
 
             if(N3JumpNames::Speed3K == i && found_atr->second.canConvert(QMetaType::Int))
                 m_speed3K = found_atr->second.toUInt();
-
-            if(N3JumpNames::Deleted == i && found_atr->second.canConvert(QMetaType::Bool))
-                m_is_deleted = found_atr->second.toBool();
-
-            if(N3JumpNames::Note == i && found_atr->second.canConvert(QMetaType::QString))
-                m_note = found_atr->second.toString();
         }
     }
 }
 
-const QString &N3Jump::field_name(const int n_field) const
+//----------------------------------------------------------------------------------------------------------------------
+const QString &N3Jump::field_name(const int n_field)
 {
     if(n_field < N3JumpNames::ExitAlt)
         return CustomJump::field_name(n_field);
 
-    int offset = CustomJumpNames::Canopy + 1; //parent offset
+    int offset = CustomJumpNames::CtUnk; //parent offset
     int n_field_abs  = n_field - offset;
     n_field_abs = (n_field_abs > 0 ? n_field_abs: 0);
 
-    return N3JumpFieldNames[n_field >= N3JumpNames::ExitAlt && n_field <= N3JumpNames::Note ? n_field_abs : N3JumpNames::Unk - offset];
+    return N3JumpFieldNames[n_field >= N3JumpNames::ExitAlt && n_field < N3JumpNames::Unk ? n_field_abs : N3JumpNames::Unk - offset];
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+int N3Jump::index(const QString &field_name)
+{
+    int index = CustomJump::index(field_name);
+    if(index < CustomJumpNames::CtUnk)
+        return index;
+
+    for(const auto& value: N3JumpFieldNames)
+    {
+        if(value == field_name)
+            break;
+        index++;
+    }
+    return index;
 }

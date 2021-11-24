@@ -15,6 +15,8 @@ enum CustomJumpNames: int {
                             DZ,
                             AC,
                             Canopy,
+                            Deleted,
+                            Note,
                             CtUnk
                            };
 
@@ -28,12 +30,15 @@ class CustomJump
 {
 public:
     explicit CustomJump();
-    explicit CustomJump(uint jump_number, QDateTime jump_date, QString dz, QString ac) :
+    explicit CustomJump(uint jump_number, QDateTime jump_date, QString dz, QString ac, bool is_deleted) :
         m_jump_number(jump_number),
         m_jump_date(jump_date),
         m_dz(dz),
         m_ac(ac),
-        m_canopy("") {}
+        m_canopy(""),
+        m_note(""),
+        m_is_deleted(is_deleted)
+    {}
 
     virtual ~CustomJump(){}
 
@@ -43,11 +48,11 @@ public:
     virtual uint getDeplAlt() const = 0;
     virtual uint getFreefallTime() const = 0;
     virtual uint getCanopyTime() const = 0;
-    virtual bool isDeleted() const = 0;
-    virtual QString getNote() const = 0;
-    virtual QString getDZ() const = 0;
-    virtual QString getAC() const = 0;
-    virtual QString getCanopy() const = 0;
+    virtual QString getDZ() const {return m_dz;}
+    virtual QString getAC() const {return m_ac;}
+    virtual QString getCanopy() const {return m_canopy;}
+    virtual QString getNote() const {return m_note;}
+    virtual bool isDeleted() const {return m_is_deleted;}
 
 
     void setJumpNumber(uint value) {m_jump_number = value;}
@@ -56,16 +61,16 @@ public:
     virtual void setDeplAlt(uint value) = 0;
     virtual void setFreefallTime(uint value) = 0;
     virtual void setCanopyTime(uint value) = 0;
-    virtual void setDeleted(bool value) = 0;
-    virtual void setNote(const QString& value) = 0;
-    virtual void setDZ(const QString& value) = 0;
-    virtual void setAC(const QString& value) = 0;
-    virtual void setCanopy(const QString& value) = 0;
-
+    virtual void setDZ(const QString& value) {m_dz = value;}
+    virtual void setAC(const QString& value) {m_ac = value;}
+    virtual void setCanopy(const QString& value) {m_canopy = value; }
+    virtual void setNote(const QString& value) {m_note = value;}
+    virtual void setDeleted(bool value) {m_is_deleted = value;}
 
     virtual std::unique_ptr<t_jump_attribute> getPairs() const;
     virtual void setPairs(const t_jump_attribute& pairs);
-    virtual const QString& field_name(const int n_field) const;
+    static const QString& field_name(const int n_field);
+    static int index(const QString& field_name);
 
 protected:    
 
@@ -74,6 +79,8 @@ protected:
     QString m_dz;
     QString m_ac;
     QString m_canopy;
+    QString m_note;
+    bool m_is_deleted;
 };
 
 #endif // CUSTOMJUMP_H

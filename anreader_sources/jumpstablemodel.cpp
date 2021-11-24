@@ -24,12 +24,13 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
     j_atr = m_rows->at(index.row())->getPairs();
 
     QVariant row_value = (*j_atr).at(index.column()).second;
-    if(Qt::DisplayRole == role && N3JumpNames::Deleted != index.column())
+    int inner_index = N3Jump::index((*j_atr).at(index.column()).first);
+
+    if(Qt::DisplayRole == role && CustomJumpNames::Deleted != inner_index)
     {
-        int col = index.column();
-        if(CustomJumpNames::AC == col || CustomJumpNames::Canopy == col || CustomJumpNames::DZ == col)
+        if(CustomJumpNames::AC == inner_index || CustomJumpNames::Canopy == inner_index || CustomJumpNames::DZ == inner_index)
         {
-            const datakind dk = (CustomJumpNames::AC == col ? datakind::aircrafts : (CustomJumpNames::DZ == col ? datakind::dropzones : datakind::canopies));
+            const datakind dk = (CustomJumpNames::AC == inner_index ? datakind::aircrafts : (CustomJumpNames::DZ == inner_index ? datakind::dropzones : datakind::canopies));
             const QString& map_value = ref_dl.mappedValue(dk, row_value.toString());
             return map_value;
 
@@ -38,7 +39,7 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
             return row_value;
     }
 
-    if(Qt::CheckStateRole == role && N3JumpNames::Deleted == index.column())
+    if(Qt::CheckStateRole == role && CustomJumpNames::Deleted == inner_index)
         return m_rows->at(index.row())->isDeleted() ? Qt::Checked: Qt::Unchecked;
 
     if (role == Qt::BackgroundColorRole)

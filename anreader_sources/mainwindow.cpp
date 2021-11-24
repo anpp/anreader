@@ -294,9 +294,14 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
         QTextStream ts(&f );
         QStringList csv_string;
 
-        //csv_string << "\" \"";        
+        //csv_string << "\" \"";
+        QStringList field_names;
         for(auto i = 0; i < jm.columnCount(QModelIndex()); ++i)
+        {
             csv_string << "\"" + jm.headerData(i, Qt::Horizontal).toString()+ "\"";
+            field_names << jm.headerData(i, Qt::Horizontal).toString();
+
+        }
         ts << csv_string.join(delimiter) + "\n";
 
         std::unique_ptr<t_jump_attribute> j_atr;
@@ -309,13 +314,14 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
             for(uint i = 0; i < j_atr->size(); ++i)
             {
                 QString csv_field;
-                switch(i)
+                int inner_index = N3Jump::index(field_names[i]);
+                switch(inner_index)
                 {
                 case CustomJumpNames::JumpDate:
                     if(j_atr->at(i).second.canConvert(QMetaType::QDateTime))
                             csv_string << "\"" + j_atr->at(i).second.toDateTime().toString(dateFormat) + "\"";
                     break;
-                case N3JumpNames::Deleted:
+                case CustomJumpNames::Deleted:
                     csv_field = "";
                     if(j_atr->at(i).second.canConvert(QMetaType::Bool))
                         csv_field = j_atr->at(i).second.toBool() ? "1": "0";
@@ -385,6 +391,7 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
             std::shared_ptr<CustomJump> jump = std::make_shared<N3Jump>();
 
             int index = 0;
+            int inner_index = 0;
             auto checkFormat { [&] (bool greater) -> bool
                 {
                     if((index >= field_names.count() && greater) || (index < field_names.count() && !greater)){
@@ -395,29 +402,32 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
                 }};
 
             tokens = CSVParser::csvToken(line, delimiter);
-            for(const auto& item: qAsConst(*tokens)){
+            for(const auto& item: qAsConst(*tokens))
+            {
                 if(!checkFormat(true)) return false;
+                inner_index = N3Jump::index(field_names[index]);
 
                 QDateTime dt;
                 QString note;
 
-                switch (index)
+                switch (inner_index)
                 {
                 case CustomJumpNames::JumpDate:
                     dt = QDateTime::fromString(item, dateFormat);
                     if(dt.isNull() || !dt.isValid())
                         dt = QDateTime::fromString(item, dateFormat_excel);
-                    jump_data.push_back(std::make_pair(field_names[index++], dt));
+                    jump_data.push_back(std::make_pair(field_names[index], dt));
                     break;
-                case N3JumpNames::Note:
+                case CustomJumpNames::Note:
                     note = item;
-                    jump_data.push_back(std::make_pair(field_names[index++], note.replace("\t", "\n")));
+                    jump_data.push_back(std::make_pair(field_names[index], note.replace("\t", "\n")));
                     break;
                 default:
-                    jump_data.push_back(std::make_pair(field_names[index++], item.trimmed()));
+                    jump_data.push_back(std::make_pair(field_names[index], item.trimmed()));
                     break;
                 }
-                                            }
+                index++;
+            }
             if(!checkFormat(false)) return false;
 
             jump->setPairs(jump_data);
@@ -727,6 +737,11 @@ void MainWindow::copy_selected()
 {
     QClipboard *clipboard = QApplication::clipboard();
     QString rows = "";
+
+    QStringList field_names;
+    for(auto i = 0; i < jtable->model()->columnCount(); ++i)
+        field_names << jtable->model()->headerData(i, Qt::Horizontal).toString();
+
     int selection_size = (jtable ? jtable->selectionModel()->selectedRows().size() : 0);
     for(int i = 0; i < selection_size; ++i)
     {
@@ -735,13 +750,14 @@ void MainWindow::copy_selected()
         {
             rows += (j > 0)? "\t": "";
 
-            switch(j)
+            int inner_index = N3Jump::index(field_names[j]);
+            switch(inner_index)
             {
             case CustomJumpNames::JumpDate:
                 if(jtable->selectionModel()->selectedRows(j).at(i).data().canConvert(QMetaType::QDateTime))
                     rows += jtable->selectionModel()->selectedRows(j).at(i).data().toDateTime().toString(dateFormat);
                 break;
-            case N3JumpNames::Deleted:
+            case CustomJumpNames::Deleted:
                 if(jtable->selectionModel()->selectedRows(j).at(i).data(Qt::CheckStateRole).canConvert(QMetaType::Bool))
                     rows += (jtable->selectionModel()->selectedRows(j).at(i).data(Qt::CheckStateRole).toBool()) ? "1": "0";
                 break;

@@ -7,6 +7,8 @@ const static QString CustomJumpFieldNames[] =
                                 QObject::tr("DZ"),
                                 QObject::tr("Aircraft"),
                                 QObject::tr("Canopy"),
+                                QObject::tr("Deleted"),
+                                QObject::tr("Note"),
                                 QObject::tr("Unknown")
                               };
 
@@ -31,9 +33,11 @@ std::unique_ptr<t_jump_attribute> CustomJump::getPairs() const
     return jump_attr;
 }
 
+
+//----------------------------------------------------------------------------------------------------------------------
 void CustomJump::setPairs(const t_jump_attribute &pairs)
 {
-    for(int i = 0; i <= CustomJumpNames::Canopy; ++i)
+    for(int i = 0; i < CustomJumpNames::CtUnk; ++i)
     {
         auto found_atr = std::find_if(pairs.begin(), pairs.end(), [i] (const auto &atr)
         {
@@ -57,12 +61,35 @@ void CustomJump::setPairs(const t_jump_attribute &pairs)
             if(CustomJumpNames::Canopy == i && found_atr->second.canConvert(QMetaType::QString))
                 m_canopy = found_atr->second.toString();
 
+            if(CustomJumpNames::Deleted == i && found_atr->second.canConvert(QMetaType::Bool))
+                m_is_deleted = found_atr->second.toBool();
+
+            if(CustomJumpNames::Note == i && found_atr->second.canConvert(QMetaType::QString))
+                m_note = found_atr->second.toString();
+
+
         }
     }
 }
 
-const QString &CustomJump::field_name(const int n_field) const
+
+//----------------------------------------------------------------------------------------------------------------------
+const QString &CustomJump::field_name(const int n_field)
 {
-    return CustomJumpFieldNames[n_field >= CustomJumpNames::JumpNumber && n_field <= CustomJumpNames::Canopy ? n_field : CustomJumpNames::CtUnk];
+    return CustomJumpFieldNames[n_field >= CustomJumpNames::JumpNumber && n_field < CustomJumpNames::CtUnk ? n_field : CustomJumpNames::CtUnk];
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+int CustomJump::index(const QString &field_name)
+{
+    int index = 0;
+    for(const auto& value: CustomJumpFieldNames)
+    {
+        if(value == field_name)
+            break;
+        index++;
+    }
+    return index;
 }
 
