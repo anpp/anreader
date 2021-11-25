@@ -23,7 +23,13 @@ N3Jump::N3Jump()
 //----------------------------------------------------------------------------------------------------------------------
 std::unique_ptr<t_jump_attribute> N3Jump::getPairs() const
 {
-    std::unique_ptr<t_jump_attribute> jump_attr = CustomJump::getPairs();
+    std::unique_ptr<t_jump_attribute> jump_attr = std::make_unique<t_jump_attribute>();
+
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpNumber), m_jump_number));
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpDate), m_jump_date));
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::DZ), m_dz));
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::AC), m_ac));
+    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::Canopy), m_canopy));
 
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::ExitAlt), m_exit_alt));
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::DeplAlt), m_depl_alt));
@@ -33,6 +39,7 @@ std::unique_ptr<t_jump_attribute> N3Jump::getPairs() const
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed9K), m_speed9K));
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed6K), m_speed6K));
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(N3JumpNames::Speed3K), m_speed3K));
+
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(CustomJumpNames::Deleted), m_is_deleted));
     (*jump_attr).push_back(std::make_pair(N3Jump::field_name(CustomJumpNames::Note), m_note));
 

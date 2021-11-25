@@ -31,11 +31,11 @@ public:
 
     QModelIndex index(int row, int column, const QModelIndex & = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &) const override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;    
+    QVariant data(const QModelIndex &index = QModelIndex(), int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-    Qt::ItemFlags flags(const QModelIndex &index) const override;
-    int rowCount(const QModelIndex&) const override;
-    int columnCount(const QModelIndex&) const override;    
+    Qt::ItemFlags flags(const QModelIndex &index = QModelIndex()) const override;
+    int rowCount(const QModelIndex& = QModelIndex()) const override;
+    int columnCount(const QModelIndex& = QModelIndex()) const override;
     bool addItem(const std::shared_ptr<CustomJump>& jump);
     bool addItems(const t_rows& jumps);
     bool moveItems(std::unique_ptr<t_rows>& jumps);

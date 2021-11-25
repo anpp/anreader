@@ -19,20 +19,6 @@ CustomJump::CustomJump()
 
 }
 
-//----------------------------------------------------------------------------------------------------------------------
-std::unique_ptr<t_jump_attribute> CustomJump::getPairs() const
-{
-    std::unique_ptr<t_jump_attribute> jump_attr = std::make_unique<t_jump_attribute>();
-
-    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpNumber), m_jump_number));
-    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::JumpDate), m_jump_date));
-    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::DZ), m_dz));
-    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::AC), m_ac));
-    (*jump_attr).push_back(std::make_pair(CustomJump::field_name(CustomJumpNames::Canopy), m_canopy));
-
-    return jump_attr;
-}
-
 
 //----------------------------------------------------------------------------------------------------------------------
 void CustomJump::setPairs(const t_jump_attribute &pairs)

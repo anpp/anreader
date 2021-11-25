@@ -292,6 +292,9 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
 {
     settings.setSetting("current_file_delimiter", delimiter);
 
+    const auto& data = jm.items();
+    if(!data.size()) return false;
+
     QString owner;
     if(QFile(filename).exists())
     {
@@ -302,17 +305,18 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
     QFile f(filename);
     if(f.open(QIODevice::WriteOnly))
     {
+        std::unique_ptr<t_jump_attribute> j_atr;
+        j_atr = data[0]->getPairs(); //из первой записи считаем названия полей
+
         QTextStream ts(&f );
         QStringList csv_string;
 
-        for(auto i = 0; i < jm.columnCount(QModelIndex()); ++i)
-            csv_string << "\"" + jm.headerData(i, Qt::Horizontal).toString()+ "\"";
+        for(const auto& fields: *j_atr)
+            csv_string << "\"" + fields.first+ "\"";
 
         ts << csv_string.join(delimiter) + "\n";
 
-        std::unique_ptr<t_jump_attribute> j_atr;
-
-        for(const auto& jump: jm.items())
+        for(const auto& jump: data)
         {
             csv_string.clear();
             j_atr = jump->getPairs();
@@ -503,32 +507,28 @@ void MainWindow::fileWasModified(bool value)
 
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
-{    
+{        
+    auto jump_property = [](const std::shared_ptr<CustomJump>& jump, const datakind dk) -> QString
+    {
+        switch (static_cast<int>(dk)) {
+        case (static_cast<int>(datakind::aircrafts)): return jump->getAC();
+        case (static_cast<int>(datakind::dropzones)): return jump->getDZ();
+        case (static_cast<int>(datakind::canopies)): return jump->getCanopy();
+        case (static_cast<int>(datakind::jump_types)): return jump->getType();
+        default:
+            return "";
+
+        }
+    };
+
     t_datalist datalist;
 
     for(const auto& item: data)
         datalist.push_back(std::make_tuple(false, item.first, item.second));
 
-
-    if(datakind::aircrafts == dlk)
-        for(auto& item: datalist)
-            std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
-            { return jump->getAC() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
-
-    if(datakind::dropzones == dlk)
-        for(auto& item: datalist)
-            std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
-            { return jump->getDZ() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
-
-    if(datakind::canopies == dlk)
-        for(auto& item: datalist)
-            std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
-            { return jump->getCanopy() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
-
-    if(datakind::jump_types == dlk)
-        for(auto& item: datalist)
-            std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
-            { return jump->getType() == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
+    for(auto& item: datalist)
+        std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
+        { return jump_property(jump, dlk) == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
 
 
     std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[static_cast<uint>(dlk)], datalist, this);
@@ -748,9 +748,16 @@ void MainWindow::copy_selected()
     QClipboard *clipboard = QApplication::clipboard();
     QString rows = "";
 
+    const auto& data = jumps_model.items();
+    if(!data.size()) return;
+
+    std::unique_ptr<t_jump_attribute> j_atr;
+    j_atr = data[0]->getPairs(); //из первой записи считаем названия полей
+
     QStringList field_names;
-    for(auto i = 0; i < jtable->model()->columnCount(); ++i)
-        field_names << jtable->model()->headerData(i, Qt::Horizontal).toString();
+    for(const auto& fields: *j_atr)
+        field_names << fields.first;
+
 
     int selection_size = (jtable ? jtable->selectionModel()->selectedRows().size() : 0);
     for(int i = 0; i < selection_size; ++i)

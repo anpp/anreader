@@ -69,7 +69,7 @@ public:
     virtual void setNote(const QString& value) {m_note = value;}
     virtual void setDeleted(bool value) {m_is_deleted = value;}
 
-    virtual std::unique_ptr<t_jump_attribute> getPairs() const;
+    virtual std::unique_ptr<t_jump_attribute> getPairs() const = 0;
     virtual void setPairs(const t_jump_attribute& pairs);
     static const QString& field_name(const int n_field);
     static int index(const QString& field_name);

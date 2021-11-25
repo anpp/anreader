@@ -18,7 +18,8 @@ ListWidget::ListWidget(t_datalist& datalist, QWidget *parent) : QWidget(parent),
     m_listTable->resizeColumnsToContents();
     m_listTable->verticalHeader()->hide();
     m_listTable->horizontalHeader()->setStretchLastSection(true);
-    m_listTable->setSelectionMode(QAbstractItemView::SingleSelection);    
+    m_listTable->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_listTable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     connect(m_listTable->selectionModel(), &QItemSelectionModel::currentRowChanged,  this, &ListWidget::rowChanged);
 }
 

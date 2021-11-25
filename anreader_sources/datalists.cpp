@@ -3,6 +3,8 @@
 const static QString sDataKind[] = {"aircrafts", "dropzones", "canopies", "jumptypes"};
 
 
+
+
 //---------------------------------------------------------------------------------------------------
 DataLists::DataLists(const QString &organization, const QString &application): qsettings(organization, application)
 {
@@ -87,6 +89,7 @@ void DataLists::saveDataJumpTypes() const
 //---------------------------------------------------------------------------------------------------
 map_DataList &DataLists::datalist_by_kind(const datakind dk)
 {
+
     switch (static_cast<int>(dk)) {
     case (static_cast<int>(datakind::dropzones)): return dropzones();
     case (static_cast<int>(datakind::aircrafts)): return aircrafts();
@@ -99,6 +102,7 @@ map_DataList &DataLists::datalist_by_kind(const datakind dk)
 }
 
 //---------------------------------------------------------------------------------------------------
+
 const map_DataList &DataLists::const_datalist_by_kind(const datakind dk) const
 {
     switch (static_cast<int>(dk)) {

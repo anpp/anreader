@@ -40,6 +40,7 @@ public:
     map_DataList& dropzones() { return m_dropzones; }
     map_DataList& canopies() { return m_canopies; }
     map_DataList& jumptypes() { return m_jumptypes; }
+    map_DataList& empty() { return m_empty; }
 
     const map_DataList& const_aircrafts() const { return m_aircrafts; }
     const map_DataList& const_dropzones() const { return m_dropzones; }
