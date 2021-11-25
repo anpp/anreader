@@ -508,13 +508,13 @@ void MainWindow::fileWasModified(bool value)
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
 {        
-    auto jump_property = [](const std::shared_ptr<CustomJump>& jump, const datakind dk) -> QString
+    auto jump_property = [](const CustomJump& jump, const datakind dk) -> QString
     {
         switch (static_cast<int>(dk)) {
-        case (static_cast<int>(datakind::aircrafts)): return jump->getAC();
-        case (static_cast<int>(datakind::dropzones)): return jump->getDZ();
-        case (static_cast<int>(datakind::canopies)): return jump->getCanopy();
-        case (static_cast<int>(datakind::jump_types)): return jump->getType();
+        case (static_cast<int>(datakind::aircrafts)): return jump.getAC();
+        case (static_cast<int>(datakind::dropzones)): return jump.getDZ();
+        case (static_cast<int>(datakind::canopies)): return jump.getCanopy();
+        case (static_cast<int>(datakind::jump_types)): return jump.getType();
         default:
             return "";
 
@@ -528,7 +528,7 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
 
     for(auto& item: datalist)
         std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
-        { return jump_property(jump, dlk) == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
+        { return jump_property(*jump, dlk) == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
 
 
     std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[static_cast<uint>(dlk)], datalist, this);
