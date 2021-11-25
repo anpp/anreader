@@ -9,7 +9,7 @@ QWidget *LineEditDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
     Q_UNUSED(index);
 
     QLineEdit *le = new QLineEdit(parent);
-    if(m_lat_only)
+    if(chars_type::lat_only == m_ct)
         le->setValidator(new QRegExpValidator(QRegExp("^[a-zA-Z0-9:;/-,.]{0,20}$")));
     return le;
 }

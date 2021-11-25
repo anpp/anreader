@@ -5,7 +5,7 @@
 ListWidget::ListWidget(t_datalist& datalist, QWidget *parent) : QWidget(parent), m_model(datalist)
 {
     auto layout = new QVBoxLayout;
-    auto ledKey = new LineEditDelegate(this, true);
+    auto ledKey = new LineEditDelegate(this, chars_type::lat_only);
     auto ledValue = new LineEditDelegate(this);
 
 

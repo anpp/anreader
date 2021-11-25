@@ -4,15 +4,17 @@
 #include <QItemDelegate>
 #include <QLineEdit>
 
+enum class chars_type: int {all = 0, lat_only};
+
 class LineEditDelegate : public QItemDelegate
 {
     Q_OBJECT
 
-    bool m_lat_only = false;
+    chars_type m_ct = chars_type::all;
 public:
-    LineEditDelegate(QObject *parent = nullptr, bool lat_only = false) :
+    LineEditDelegate(QObject *parent = nullptr, chars_type ct = chars_type::all) :
         QItemDelegate(parent),
-        m_lat_only(lat_only)
+        m_ct(ct)
     {};
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
