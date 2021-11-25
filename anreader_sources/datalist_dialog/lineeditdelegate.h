@@ -7,8 +7,13 @@
 class LineEditDelegate : public QItemDelegate
 {
     Q_OBJECT
+
+    bool m_lat_only = false;
 public:
-    LineEditDelegate(QObject *parent = nullptr) : QItemDelegate(parent) {};
+    LineEditDelegate(QObject *parent = nullptr, bool lat_only = false) :
+        QItemDelegate(parent),
+        m_lat_only(lat_only)
+    {};
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     void setEditorData(QWidget *editor, const QModelIndex &index) const override;

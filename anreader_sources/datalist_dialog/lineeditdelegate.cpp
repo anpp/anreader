@@ -1,4 +1,6 @@
 #include "lineeditdelegate.h"
+#include <QRegExp>
+#include <QRegExpValidator>
 
 //---------------------------------------------------------------------------------------------------------------------------
 QWidget *LineEditDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -7,6 +9,8 @@ QWidget *LineEditDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
     Q_UNUSED(index);
 
     QLineEdit *le = new QLineEdit(parent);
+    if(m_lat_only)
+        le->setValidator(new QRegExpValidator(QRegExp("^[a-zA-Z0-9:;/-,.]{0,20}$")));
     return le;
 }
 

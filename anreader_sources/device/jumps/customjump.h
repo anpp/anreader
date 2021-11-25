@@ -48,11 +48,11 @@ public:
     virtual uint getDeplAlt() const = 0;
     virtual uint getFreefallTime() const = 0;
     virtual uint getCanopyTime() const = 0;
-    virtual QString getDZ() const {return m_dz;}
-    virtual QString getAC() const {return m_ac;}
-    virtual QString getCanopy() const {return m_canopy;}
-    virtual QString getType() const {return m_type;}
-    virtual QString getNote() const {return m_note;}
+    virtual const QString& getDZ() const {return m_dz;}
+    virtual const QString& getAC() const {return m_ac;}
+    virtual const QString& getCanopy() const {return m_canopy;}
+    virtual const QString& getType() const {return m_type;}
+    virtual const QString& getNote() const {return m_note;}
     virtual bool isDeleted() const {return m_is_deleted;}
 
 

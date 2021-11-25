@@ -5,7 +5,9 @@
 ListWidget::ListWidget(t_datalist& datalist, QWidget *parent) : QWidget(parent), m_model(datalist)
 {
     auto layout = new QVBoxLayout;
-    auto delegate = new LineEditDelegate(this);
+    auto ledKey = new LineEditDelegate(this, true);
+    auto ledValue = new LineEditDelegate(this);
+
 
     layout->addWidget(m_listTable.get());
     this->setLayout(layout);
@@ -13,8 +15,8 @@ ListWidget::ListWidget(t_datalist& datalist, QWidget *parent) : QWidget(parent),
     layout->setMargin(0);
 
     m_listTable->setModel(&m_model);
-    m_listTable->setItemDelegateForColumn(DataListModel_defs::Key, delegate);
-    m_listTable->setItemDelegateForColumn(DataListModel_defs::Value, delegate);
+    m_listTable->setItemDelegateForColumn(DataListModel_defs::Key, ledKey);
+    m_listTable->setItemDelegateForColumn(DataListModel_defs::Value, ledValue);
     m_listTable->resizeColumnsToContents();
     m_listTable->verticalHeader()->hide();
     m_listTable->horizontalHeader()->setStretchLastSection(true);

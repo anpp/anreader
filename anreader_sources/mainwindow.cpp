@@ -507,8 +507,10 @@ void MainWindow::fileWasModified(bool value)
 
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
-{        
-    auto jump_property = [](const CustomJump& jump, const datakind dk) -> QString
+{
+    QString def_sting;
+
+    auto jump_property = [&def_sting](const CustomJump& jump, const datakind dk) -> const QString&
     {
         switch (static_cast<int>(dk)) {
         case (static_cast<int>(datakind::aircrafts)): return jump.getAC();
@@ -516,7 +518,7 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
         case (static_cast<int>(datakind::canopies)): return jump.getCanopy();
         case (static_cast<int>(datakind::jump_types)): return jump.getType();
         default:
-            return "";
+            return def_sting;
 
         }
     };
