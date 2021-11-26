@@ -85,20 +85,6 @@ void DataLists::saveDataJumpTypes() const
 
 
 //---------------------------------------------------------------------------------------------------
-map_DataList &DataLists::datalist_by_kind(const datakind dk)
-{
-    switch (static_cast<int>(dk)) {
-    case (static_cast<int>(datakind::dropzones)): return dropzones();
-    case (static_cast<int>(datakind::aircrafts)): return aircrafts();
-    case (static_cast<int>(datakind::canopies)): return canopies();
-    case (static_cast<int>(datakind::jump_types)): return jumptypes();
-    default:
-        break;
-    }
-    return m_empty;
-}
-
-//---------------------------------------------------------------------------------------------------
 
 const map_DataList &DataLists::const_datalist_by_kind(const datakind dk) const
 {
@@ -113,6 +99,12 @@ const map_DataList &DataLists::const_datalist_by_kind(const datakind dk) const
     return m_empty;
 }
 
+
+//---------------------------------------------------------------------------------------------------
+map_DataList &DataLists::datalist_by_kind(const datakind dk)
+{
+    return const_cast<map_DataList&>(const_datalist_by_kind(dk));
+}
 
 
 //---------------------------------------------------------------------------------------------------

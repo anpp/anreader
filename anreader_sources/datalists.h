@@ -39,16 +39,15 @@ public:
     map_DataList& aircrafts() { return m_aircrafts; }
     map_DataList& dropzones() { return m_dropzones; }
     map_DataList& canopies() { return m_canopies; }
-    map_DataList& jumptypes() { return m_jumptypes; }
-    map_DataList& empty() { return m_empty; }
+    map_DataList& jumptypes() { return m_jumptypes; }    
 
     const map_DataList& const_aircrafts() const { return m_aircrafts; }
     const map_DataList& const_dropzones() const { return m_dropzones; }
     const map_DataList& const_canopies() const { return m_canopies; }
     const map_DataList& const_jumptypes() const { return m_jumptypes; }
 
-    map_DataList& datalist_by_kind(const datakind dk);
     const map_DataList& const_datalist_by_kind(const datakind dk) const;
+    map_DataList& datalist_by_kind(const datakind dk);    
 
     const QString& mappedValue(const datakind dk, const QString& key) const;    
 

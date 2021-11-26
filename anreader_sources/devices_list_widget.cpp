@@ -123,7 +123,6 @@ void DevicesWidget::init()
     layout->addWidget(&table_devices);
     this->setLayout(layout);
 
-    //this->setFixedWidth(DevicesWidget_defs::default_width);
     this->setMinimumWidth(DevicesWidget_defs::default_width);
 }
 
