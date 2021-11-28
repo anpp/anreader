@@ -191,28 +191,24 @@ void MainWindow::createActions()
     m_actions.push_back(m_registerAicraftsAct);
     m_registerAicraftsAct->setToolTip(tr("Aircrafts..."));
     connect(m_registerAicraftsAct, &QAction::triggered, this, &MainWindow::aicrafts_list);
-    registerMenu->addAction(m_registerAicraftsAct);
 
     const QIcon dropzonesIcon = QIcon(":/images/icons/menu/dz.png");
     m_registerDropZonesAct = new QAction(dropzonesIcon, tr("Dropzones"), this);
     m_actions.push_back(m_registerDropZonesAct);
     m_registerDropZonesAct->setToolTip(tr("Dropzones..."));
     connect(m_registerDropZonesAct, &QAction::triggered, this, &MainWindow::dropzones_list);
-    registerMenu->addAction(m_registerDropZonesAct);
 
     const QIcon canopiesIcon = QIcon(":/images/icons/menu/canopy.png");
     m_registerCanopiesAct = new QAction(canopiesIcon, tr("Canopies"), this);
     m_actions.push_back(m_registerCanopiesAct);
     m_registerCanopiesAct->setToolTip(tr("Canopies..."));
-    connect(m_registerCanopiesAct, &QAction::triggered, this, &MainWindow::canopies_list);
-    registerMenu->addAction(m_registerCanopiesAct);
+    connect(m_registerCanopiesAct, &QAction::triggered, this, &MainWindow::canopies_list);    
 
     const QIcon jumptypesIcon = QIcon(":/images/icons/menu/jump.png");
     m_registerJumpTypesAct = new QAction(jumptypesIcon, tr("Jump types"), this);
-    m_actions.push_back(m_registerCanopiesAct);
+    m_actions.push_back(m_registerJumpTypesAct);
     m_registerJumpTypesAct->setToolTip(tr("Jump types..."));
     connect(m_registerJumpTypesAct, &QAction::triggered, this, &MainWindow::jumptypes_list);
-    registerMenu->addAction(m_registerJumpTypesAct);
 
 
     QToolBar *mainToolBar = addToolBar(tr("File"));
@@ -330,13 +326,13 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
                 int inner_index = N3Jump::index(field_names[i]);
                 switch(inner_index)
                 {
-                case CustomJumpNames::JumpDate:                    
+                case CustomJumpNames::JumpDate:
                     csv_string << "\"" + jump->getJumpDate().toString(dateFormat) + "\"";
                     break;
                 case CustomJumpNames::Deleted:
-                    csv_field = "";                    
+                    csv_field = "";
                     csv_field = jump->isDeleted() ? "1": "0";
-                     csv_string << ("\"" + csv_field + "\"");
+                    csv_string << ("\"" + csv_field + "\"");
                     break;
                 default:
                     csv_field = j_atr->at(i).second.toString();
@@ -540,7 +536,7 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
     {
         data.clear();
         for(const auto& item: datalist)
-            data[std::get<DataListModel_defs::Key>(item)] = std::get<DataListModel_defs::Value>(item);
+            data[std::get<DataListModel_defs::Key>(item).trimmed()] = std::get<DataListModel_defs::Value>(item);
         dl.save();
         prepareTableAfterEdit(*jtable);
     }
@@ -606,11 +602,12 @@ void MainWindow::finish(const DWidget& widget)
        jumps->push_back(jump);
     }
 
-    if(jumps_model.rowCount(QModelIndex()) == 0)
+    if(jumps_model.rowCount() == 0)
         jumps_model.moveItems(jumps);
     else
         jumps_model.addItems(*jumps);
 
+    jumps_model.sort_jumps();
     prepareTableAfterLoad(*jtable);
 }
 
@@ -783,10 +780,10 @@ void MainWindow::copy_selected()
                     switch(inner_index)
                     {
                     case CustomJumpNames::JumpDate:
-                            rows += jump->getJumpDate().toString(dateFormat);
+                        rows += jump->getJumpDate().toString(dateFormat);
                         break;
                     case CustomJumpNames::Deleted:
-                            rows += jump->isDeleted() ? "1": "0";
+                        rows += jump->isDeleted() ? "1": "0";
                         break;
                     case CustomJumpNames::AC:
                     case CustomJumpNames::Canopy:
@@ -839,6 +836,8 @@ void MainWindow::enableActions(const bool enable)
         action->setEnabled(enable);
 
     if(jtable) jtable->setEnabled(enable);
+
+    selection_changed(enable);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

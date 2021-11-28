@@ -217,3 +217,9 @@ std::shared_ptr<CustomJump> JumpsTableModel::getItem(const uint row) const
 
     return result;
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+void JumpsTableModel::sort_jumps()
+{
+    std::sort(m_rows->begin(), m_rows->end(), [](const auto& j1, const auto& j2){ return j1->getJumpNumber() < j2->getJumpNumber();} );
+}

@@ -151,7 +151,7 @@ void DataLists::saveDataByKind(const datakind dk) const
     //--
 
     for(auto it = mdl.begin(); it != mdl.end(); ++it)
-        qsettings.setValue("/" + (*it).first, (*it).second);
+        qsettings.setValue("/" + (*it).first.trimmed(), (*it).second);
 
     qsettings.endGroup();
 }

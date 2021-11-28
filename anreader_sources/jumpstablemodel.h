@@ -43,6 +43,7 @@ public:
     void clear();
     std::shared_ptr<CustomJump> getItem(const uint row) const;
     const t_rows& items() const {return *m_rows; }
+    void sort_jumps();
 
 private:
     void setColumnCount(const int value);
