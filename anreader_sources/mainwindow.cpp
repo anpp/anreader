@@ -753,26 +753,22 @@ void MainWindow::copy_selected()
     const auto& data = jumps_model.items();
     if(!data.size()) return;
 
-    std::unique_ptr<t_jump_attribute> j_atr;
-    j_atr = data[0]->getPairs(); //из первой записи считаем названия полей
-
-    QStringList field_names;
-    for(const auto& fields: *j_atr)
-        field_names << fields.first;
-
-
     uint selection_size = (jtable ? jtable->selectionModel()->selectedRows().size() : 0);
     if(selection_size > 0)
     {
+        std::unique_ptr<t_jump_attribute> j_atr;
+        j_atr = data[0]->getPairs(); //из первой записи считаем названия полей
+
+        QStringList field_names;
+        for(const auto& fields: *j_atr)
+            field_names << fields.first;
+
         uint n_first_item = jtable->selectionModel()->selectedRows().at(0).row();
 
-        uint i = 0;
-        for(const auto& jump: data)
+        for(uint i = n_first_item; i < selection_size + n_first_item; ++i)
         {
-            if(i >= n_first_item && i < (selection_size + n_first_item))
+            const auto& jump = data[i];
             {
-                rows += (i > 0)? "\n": "";
-
                 j_atr = jump->getPairs();
 
                 for(size_t j = 0; j < j_atr->size(); ++j)
@@ -806,9 +802,8 @@ void MainWindow::copy_selected()
                     }
                 }
             }
-            i++;
+            rows += "\n";
         }
-
     }
     if(!rows.isEmpty())
         clipboard->setText(rows);
