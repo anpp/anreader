@@ -761,30 +761,54 @@ void MainWindow::copy_selected()
         field_names << fields.first;
 
 
-    int selection_size = (jtable ? jtable->selectionModel()->selectedRows().size() : 0);
-    for(int i = 0; i < selection_size; ++i)
+    uint selection_size = (jtable ? jtable->selectionModel()->selectedRows().size() : 0);
+    if(selection_size > 0)
     {
-        rows += (i > 0)? "\n": "";
-        for(int j = 0; j < jtable->model()->columnCount(); ++j)
-        {
-            rows += (j > 0)? "\t": "";
+        uint n_first_item = jtable->selectionModel()->selectedRows().at(0).row();
 
-            int inner_index = N3Jump::index(field_names[j]);
-            switch(inner_index)
+        uint i = 0;
+        for(const auto& jump: data)
+        {
+            if(i >= n_first_item && i < (selection_size + n_first_item))
             {
-            case CustomJumpNames::JumpDate:
-                if(jtable->selectionModel()->selectedRows(j).at(i).data().canConvert(QMetaType::QDateTime))
-                    rows += jtable->selectionModel()->selectedRows(j).at(i).data().toDateTime().toString(dateFormat);
-                break;
-            case CustomJumpNames::Deleted:
-                if(jtable->selectionModel()->selectedRows(j).at(i).data(Qt::CheckStateRole).canConvert(QMetaType::Bool))
-                    rows += (jtable->selectionModel()->selectedRows(j).at(i).data(Qt::CheckStateRole).toBool()) ? "1": "0";
-                break;
-            default:
-                rows += "\"" + jtable->selectionModel()->selectedRows(j).at(i).data().toString() + "\"";
-                break;
+                rows += (i > 0)? "\n": "";
+
+                j_atr = jump->getPairs();
+
+                for(size_t j = 0; j < j_atr->size(); ++j)
+                {
+                    rows += (j > 0)? "\t": "";
+
+                    int inner_index = N3Jump::index((*j_atr)[j].first);
+                    const datakind dk = (CustomJumpNames::AC == inner_index ? datakind::aircrafts : (CustomJumpNames::DZ == inner_index ? datakind::dropzones : datakind::canopies));
+                    QString map_value;
+
+                    switch(inner_index)
+                    {
+                    case CustomJumpNames::JumpDate:
+                        if(j_atr->at(j).second.canConvert(QMetaType::QDateTime))
+                            rows += j_atr->at(j).second.toDateTime().toString(dateFormat);
+                        break;
+                    case CustomJumpNames::Deleted:
+                        if(j_atr->at(j).second.canConvert(QMetaType::Bool))
+                            rows += j_atr->at(j).second.toBool() ? "1": "0";
+                        break;
+                    case CustomJumpNames::AC:
+                    case CustomJumpNames::Canopy:
+                    case CustomJumpNames::DZ:
+                        map_value = dl.mappedValue(dk, j_atr->at(j).second.toString());
+                        rows += map_value;
+                        break;
+
+                    default:
+                        rows += "\"" + j_atr->at(j).second.toString() + "\"";
+                        break;
+                    }
+                }
             }
+            i++;
         }
+
     }
     if(!rows.isEmpty())
         clipboard->setText(rows);
