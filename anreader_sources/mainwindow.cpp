@@ -305,14 +305,17 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
     QFile f(filename);
     if(f.open(QIODevice::WriteOnly))
     {
-        std::unique_ptr<t_jump_attribute> j_atr;
-        j_atr = data[0]->getPairs(); //из первой записи считаем названия полей
-
         QTextStream ts(&f );
         QStringList csv_string;
+        std::unique_ptr<t_jump_attribute> j_atr;
+        QStringList field_names;
 
+        j_atr = data[0]->getPairs(); //из первой записи считаем названия полей        
         for(const auto& fields: *j_atr)
+        {
+            field_names << fields.first;
             csv_string << "\"" + fields.first+ "\"";
+        }
 
         ts << csv_string.join(delimiter) + "\n";
 
@@ -324,17 +327,15 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
             for(uint i = 0; i < j_atr->size(); ++i)
             {
                 QString csv_field;
-                int inner_index = N3Jump::index((*j_atr)[i].first);
+                int inner_index = N3Jump::index(field_names[i]);
                 switch(inner_index)
                 {
-                case CustomJumpNames::JumpDate:
-                    if(j_atr->at(i).second.canConvert(QMetaType::QDateTime))
-                            csv_string << "\"" + j_atr->at(i).second.toDateTime().toString(dateFormat) + "\"";
+                case CustomJumpNames::JumpDate:                    
+                    csv_string << "\"" + jump->getJumpDate().toString(dateFormat) + "\"";
                     break;
                 case CustomJumpNames::Deleted:
-                    csv_field = "";
-                    if(j_atr->at(i).second.canConvert(QMetaType::Bool))
-                        csv_field = j_atr->at(i).second.toBool() ? "1": "0";
+                    csv_field = "";                    
+                    csv_field = jump->isDeleted() ? "1": "0";
                      csv_string << ("\"" + csv_field + "\"");
                     break;
                 default:
@@ -775,19 +776,17 @@ void MainWindow::copy_selected()
                 {
                     rows += (j > 0)? "\t": "";
 
-                    int inner_index = N3Jump::index((*j_atr)[j].first);
+                    int inner_index = N3Jump::index(field_names[j]);
                     const datakind dk = (CustomJumpNames::AC == inner_index ? datakind::aircrafts : (CustomJumpNames::DZ == inner_index ? datakind::dropzones : datakind::canopies));
                     QString map_value;
 
                     switch(inner_index)
                     {
                     case CustomJumpNames::JumpDate:
-                        if(j_atr->at(j).second.canConvert(QMetaType::QDateTime))
-                            rows += j_atr->at(j).second.toDateTime().toString(dateFormat);
+                            rows += jump->getJumpDate().toString(dateFormat);
                         break;
                     case CustomJumpNames::Deleted:
-                        if(j_atr->at(j).second.canConvert(QMetaType::Bool))
-                            rows += j_atr->at(j).second.toBool() ? "1": "0";
+                            rows += jump->isDeleted() ? "1": "0";
                         break;
                     case CustomJumpNames::AC:
                     case CustomJumpNames::Canopy:
