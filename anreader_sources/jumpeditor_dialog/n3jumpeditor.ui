@@ -17,7 +17,7 @@
    <string>Jump edit</string>
   </property>
   <property name="modal">
-   <bool>true</bool>
+   <bool>false</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="spacing">

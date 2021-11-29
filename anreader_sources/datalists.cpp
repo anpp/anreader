@@ -127,7 +127,7 @@ void DataLists::loadDataByKind(const datakind dk)
 
     qsettings.beginGroup("/" + sDataKind[static_cast<int>(dk)]);
     for(auto& k: qsettings.allKeys())
-        if(k != ".")
+        if(k != "." && k != "")
             mdl[k] = qsettings.value(k, "").toString();
     qsettings.endGroup();
 }
