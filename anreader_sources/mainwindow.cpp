@@ -125,7 +125,7 @@ void MainWindow::createActions()
 {
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
-    QMenu *registerMenu = menuBar()->addMenu(tr("&Register"));
+    QMenu *registerMenu = menuBar()->addMenu(tr("&Registry"));
     QMenu *windowsMenu = menuBar()->addMenu(tr("&Windows"));
 
     const QIcon newIcon = QIcon(":/images/icons/toolbar/new.png");
@@ -134,15 +134,13 @@ void MainWindow::createActions()
     m_newAct->setShortcuts(QKeySequence::New);
     m_newAct->setToolTip(tr("Create a new file"));
     connect(m_newAct, &QAction::triggered, this, &MainWindow::newFile);
-    fileMenu->addAction(m_newAct);
 
     const QIcon openIcon = QIcon(":/images/icons/toolbar/open.png");
     m_openAct = new QAction(openIcon, tr("&Open..."), this);
     m_actions.push_back(m_openAct);
     m_openAct->setShortcuts(QKeySequence::Open);
     m_openAct->setToolTip(tr("Open an existing file"));
-    connect(m_openAct, &QAction::triggered, this, &MainWindow::open);
-    fileMenu->addAction(m_openAct);
+    connect(m_openAct, &QAction::triggered, this, &MainWindow::open);    
 
     const QIcon saveIcon = QIcon(":/images/icons/toolbar/save.png");
     m_saveAct = new QAction(saveIcon, tr("&Save..."), this);
@@ -150,14 +148,12 @@ void MainWindow::createActions()
     m_saveAct->setShortcuts(QKeySequence::Save);
     m_saveAct->setToolTip(tr("Save the document to disk"));
     connect(m_saveAct, &QAction::triggered, this, &MainWindow::save);
-    fileMenu->addAction(m_saveAct);
 
     m_saveAsAct = new QAction(saveIcon, tr("Save &As..."), this);
     m_actions.push_back(m_saveAsAct);
     m_saveAsAct->setShortcuts(QKeySequence::SaveAs);
     m_saveAsAct->setToolTip(tr("Save the document under a new name"));
     connect(m_saveAsAct, &QAction::triggered, this, &MainWindow::saveAs);
-    fileMenu->addAction(m_saveAsAct);
 
     const QIcon copyIcon = QIcon(":/images/icons/toolbar/copy.png");
     m_copyAct = new QAction(copyIcon, tr("&Copy"), this);
@@ -166,17 +162,13 @@ void MainWindow::createActions()
     m_copyAct->setToolTip(tr("Copy selected jumps"));
     //m_copyAct->setShortcutVisibleInContextMenu(true);
     connect(m_copyAct, &QAction::triggered, this, &MainWindow::copy_selected);
-    editMenu->addAction(m_copyAct);
-
-    editMenu->addSeparator();
 
     const QIcon editIcon = QIcon(":/images/icons/toolbar/edit.png");
     m_editAct = new QAction(editIcon, tr("&Edit"), this);
     m_actions.push_back(m_editAct);
     m_editAct->setShortcuts(QKeySequence::UnknownKey);
     m_editAct->setToolTip(tr("Edit selected jump..."));
-    connect(m_editAct, &QAction::triggered, this, &MainWindow::edit_selected);
-    editMenu->addAction(m_editAct);
+    connect(m_editAct, &QAction::triggered, this, &MainWindow::edit_selected);   
 
     const QIcon deleteIcon = QIcon(":/images/icons/toolbar/delete.png");
     m_deleteAct = new QAction(deleteIcon, tr("&Delete"), this);
@@ -184,7 +176,6 @@ void MainWindow::createActions()
     m_deleteAct->setShortcuts(QKeySequence::Delete);
     m_deleteAct->setToolTip(tr("Delete selected jumps"));
     connect(m_deleteAct, &QAction::triggered, this, &MainWindow::delete_selected);
-    editMenu->addAction(m_deleteAct);
 
     const QIcon aircraftsIcon = QIcon(":/images/icons/menu/airplane.png");
     m_registerAicraftsAct = new QAction(aircraftsIcon, tr("Aircrafts"), this);
@@ -222,6 +213,16 @@ void MainWindow::createActions()
     mainToolBar->addSeparator();
     mainToolBar->addAction(m_editAct);
     mainToolBar->addAction(m_deleteAct);
+
+    fileMenu->addAction(m_newAct);
+    fileMenu->addAction(m_openAct);
+    fileMenu->addAction(m_saveAct);
+    fileMenu->addAction(m_saveAsAct);
+
+    editMenu->addAction(m_copyAct);
+    editMenu->addSeparator();
+    editMenu->addAction(m_editAct);
+    editMenu->addAction(m_deleteAct);
 
     registerMenu->addAction(m_registerAicraftsAct);
     registerMenu->addAction(m_registerDropZonesAct);
