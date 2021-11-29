@@ -249,7 +249,7 @@ void MainWindow::createDevicesWidget()
 #ifndef Q_OS_MACOS
     m_toggleDevices->setShortcut(QKeySequence("F11"));
 #else
-    m_toggleDevices->setShortcut(QKeySequence("Command+F11"));
+    m_toggleDevices->setShortcut(QKeySequence("Ctrl+F11"));
 #endif
 
     devices_window = std::make_unique<DevicesWidget>(dock);
