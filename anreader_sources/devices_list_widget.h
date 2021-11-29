@@ -17,6 +17,7 @@
 Q_DECLARE_METATYPE(QSerialPortInfo)
 Q_DECLARE_METATYPE(QList<QSerialPortInfo>)
 
+typedef QPointer<DWidget> ptrWidget;
 
 
 class WorkerEnumerator : public QObject
@@ -59,12 +60,12 @@ public:
 
 private:
     void init();
-    void createDevice(DWidget *device_widget);
+    void createDevice(ptrWidget device_widget);
     dtype typeByDescription(const QString& description) const;
 
     QThread threadEnumerator;
     WorkerEnumerator worker;
-    std::vector<DWidget*> devices;
+    std::vector<ptrWidget> devices;
 
     QTableWidget table_devices;
 

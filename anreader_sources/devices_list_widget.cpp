@@ -62,7 +62,6 @@ void WorkerEnumerator::enumerate()
 
 
 
-
 //=========================================================================================================================
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -127,7 +126,7 @@ void DevicesWidget::init()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void DevicesWidget::createDevice(DWidget *device_widget)
+void DevicesWidget::createDevice(ptrWidget device_widget)
 {
     connect(device_widget, &DWidget::newTextOfState, this, &DevicesWidget::newTextOfState);
     connect(device_widget, &DWidget::setProgress, this, &DevicesWidget::setProgress);
@@ -139,7 +138,7 @@ void DevicesWidget::createDevice(DWidget *device_widget)
     connect(device_widget, &DWidget::log, this, &DevicesWidget::log);
     connect(device_widget, &DWidget::giveLastJump, this, &DevicesWidget::giveLastJump);
 
-    devices.push_back(device_widget);
+    devices.emplace_back(device_widget);
     int row_count = table_devices.rowCount();
 
     table_devices.setRowCount(row_count + 1);
@@ -179,7 +178,7 @@ void DevicesWidget::attach(QSerialPortInfo port_info)
 #endif
     dtype type = typeByDescription(port_info.description());
 
-    auto device_widget = std::find_if(devices.begin(), devices.end(), [type] (const DWidget *widget) { return (type == widget->getDeviceType() && widget->getPortName() == ""); });
+    auto device_widget = std::find_if(devices.begin(), devices.end(), [type] (const auto& widget) { return (type == widget->getDeviceType() && widget->getPortName() == ""); });
     if(device_widget != devices.end()){
         (*device_widget)->setPortInfo(port_info);
         (*device_widget)->create();
@@ -188,7 +187,7 @@ void DevicesWidget::attach(QSerialPortInfo port_info)
     {
         if(type == dtype::N3)
         {
-            DWidget* new_widget = new N3Widget();
+            ptrWidget new_widget = new N3Widget();
             createDevice(new_widget);
             new_widget->setPortInfo(port_info);
             new_widget->create();
@@ -202,7 +201,7 @@ void DevicesWidget::detach(QSerialPortInfo port_info)
 {    
     emit log("Detached: " + port_info.description() + " " + port_info.portName());
 
-    auto device_widget = std::find_if(devices.begin(), devices.end(), [port_info] (const DWidget *widget) { return port_info.portName() == widget->getPortName(); });
+    auto device_widget = std::find_if(devices.begin(), devices.end(), [port_info] (const auto& widget) { return port_info.portName() == widget->getPortName(); });
     if(device_widget != devices.end())
         (*device_widget)->clear();
 }

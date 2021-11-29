@@ -501,8 +501,6 @@ void Neptune::addJumpsToVector()
     uint n_jumps = n_jumps_readed();
     for(uint i = 0; i < n_jumps; ++i)
         m_jumps.emplace_back(jump_from_raw(i));
-
-    //std::sort(m_jumps.begin(), m_jumps.end(), [](const std::shared_ptr<CustomJump>& j1, const std::shared_ptr<CustomJump>& j2){ return j1->getJumpNumber() < j2->getJumpNumber();} );
 }
 
 
