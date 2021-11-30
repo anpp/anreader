@@ -3,15 +3,34 @@
 
 
 //---------------------------------------------------------------------------------------------------------------
-DataList_Dialog::DataList_Dialog(const QString& Title, t_datalist& datalist, QWidget *parent) :
+DataList_Dialog::DataList_Dialog(const QString& Title, t_registry& datalist, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::DataList_Dialog),
-    m_listWidget(datalist)
+    ui(new Ui::DataList_Dialog)
 {
+    ListWidget *listwidget = new ListWidget(datalist);
     ui->setupUi(this);
     this->setWindowTitle(Title);    
-    ui->centralLayout->addWidget(&m_listWidget);
-    connect(&m_listWidget, &ListWidget::selectedItemUsed,  this, &DataList_Dialog::selectedItemUsed);
+    ui->centralLayout->addWidget(listwidget);
+
+    connect(listwidget, &ListWidget::selectedItemUsed,  this, &DataList_Dialog::selectedItemUsed);
+    connect(this, &DataList_Dialog::removeFocusedItem, listwidget, &ListWidget::removeFocusedItem);
+    connect(this, &DataList_Dialog::addItem, listwidget, &ListWidget::addItem);
+}
+
+
+//---------------------------------------------------------------------------------------------------------------
+DataList_Dialog::DataList_Dialog(const QString &Title, t_devicetypelist &datalist, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::DataList_Dialog)
+{
+    ListDeviceTypesWidget *listwidget = new ListDeviceTypesWidget(datalist);
+    ui->setupUi(this);
+    this->setWindowTitle(Title);
+    ui->centralLayout->addWidget(listwidget);
+
+    connect(this, &DataList_Dialog::removeFocusedItem, listwidget, &ListDeviceTypesWidget::removeFocusedItem);
+    connect(this, &DataList_Dialog::addItem, listwidget, &ListDeviceTypesWidget::addItem);
+
 }
 
 
@@ -32,13 +51,13 @@ void DataList_Dialog::on_buttonBox_accepted()
 //---------------------------------------------------------------------------------------------------------------
 void DataList_Dialog::on_btnAdd_clicked()
 {
-    m_listWidget.addItem(std::make_tuple(false, "", ""));
+    emit addItem();
 }
 
 //---------------------------------------------------------------------------------------------------------------
 void DataList_Dialog::on_btnRemove_clicked()
 {
-    m_listWidget.removeFocusedItem();
+    emit removeFocusedItem();
 }
 
 

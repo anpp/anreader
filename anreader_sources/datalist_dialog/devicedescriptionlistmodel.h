@@ -1,5 +1,5 @@
-#ifndef DATALISTMODEL_H
-#define DATALISTMODEL_H
+#ifndef DEVICEDESCRIPTIONLISTMODEL_H
+#define DEVICEDESCRIPTIONLISTMODEL_H
 
 #include <QAbstractItemModel>
 #include <QObject>
@@ -9,18 +9,20 @@
 #include <vector>
 #include <memory>
 
-typedef std::tuple<bool, QString, QString> t_datalist_item;
-typedef std::vector<t_datalist_item> t_registry;
+#include "common.h"
 
-enum class DataListModel_defs: int {NumColumns = 3, Used = 0, Key = 1, Value = 2 };
+typedef std::tuple<dtype, QString> t_device_description_item;
+typedef std::vector<t_device_description_item> t_devicetypelist;
 
-class DataListModel : public QAbstractItemModel
+enum class DeviceDescriptionListModel_defs: int {NumColumns = 2, DeviceType = 0, DeviceDescription = 1 };
+
+class DeviceDescriptionListModel : public QAbstractItemModel
 {
-    const int m_num_columns = static_cast<int>(DataListModel_defs::NumColumns);
-    t_registry &m_datalist;
+    const int m_num_columns = static_cast<int>(DeviceDescriptionListModel_defs::NumColumns);
+    t_devicetypelist &m_datalist;
 
 public:
-    explicit DataListModel(t_registry& datalist, QObject *parent = nullptr):
+    explicit DeviceDescriptionListModel(t_devicetypelist& datalist, QObject *parent = nullptr):
         QAbstractItemModel(parent), m_datalist(datalist) {};
 
     QModelIndex index(int row, int column, const QModelIndex & = QModelIndex()) const override { return createIndex(row, column);}
@@ -33,12 +35,9 @@ public:
     int rowCount(const QModelIndex&) const override { return m_datalist.size(); }
     int columnCount(const QModelIndex&) const override {return m_num_columns; }
 
-    void addItem(const t_datalist_item& item);
+    void addItem(const t_device_description_item& item);
     void removeItem(const uint row);
-    bool isUsed(const uint row) const;
-    bool isEmptyKey(const uint row) const;
-
 
 };
 
-#endif // DATALISTMODEL_H
+#endif // DEVICEDESCRIPTIONLISTMODEL_H

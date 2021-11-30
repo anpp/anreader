@@ -11,8 +11,8 @@
 #include <memory>
 
 #include "device/abstractdevice.h"
+#include "common.h"
 
-enum class dtype: int {unk = -1, N3 = 0};
 
 class DWidget : public QFrame
 {    

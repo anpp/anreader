@@ -125,7 +125,8 @@ void MainWindow::createActions()
 {
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
-    QMenu *registerMenu = menuBar()->addMenu(tr("&Registry"));
+    QMenu *registryMenu = menuBar()->addMenu(tr("&Registry"));
+    QMenu *configMenu = menuBar()->addMenu(tr("&Configuration"));
     QMenu *windowsMenu = menuBar()->addMenu(tr("&Windows"));
 
     const QIcon newIcon = QIcon(":/images/icons/toolbar/new.png");
@@ -178,29 +179,33 @@ void MainWindow::createActions()
     connect(m_deleteAct, &QAction::triggered, this, &MainWindow::delete_selected);
 
     const QIcon aircraftsIcon = QIcon(":/images/icons/menu/airplane.png");
-    m_registerAicraftsAct = new QAction(aircraftsIcon, tr("Aircrafts"), this);
-    m_actions.push_back(m_registerAicraftsAct);
-    m_registerAicraftsAct->setToolTip(tr("Aircrafts..."));
-    connect(m_registerAicraftsAct, &QAction::triggered, this, &MainWindow::aicrafts_list);
+    m_registryAicraftsAct = new QAction(aircraftsIcon, tr("Aircrafts"), this);
+    m_actions.push_back(m_registryAicraftsAct);
+    m_registryAicraftsAct->setToolTip(tr("Aircrafts..."));
+    connect(m_registryAicraftsAct, &QAction::triggered, this, &MainWindow::aicrafts_list);
 
     const QIcon dropzonesIcon = QIcon(":/images/icons/menu/dz.png");
-    m_registerDropZonesAct = new QAction(dropzonesIcon, tr("Dropzones"), this);
-    m_actions.push_back(m_registerDropZonesAct);
-    m_registerDropZonesAct->setToolTip(tr("Dropzones..."));
-    connect(m_registerDropZonesAct, &QAction::triggered, this, &MainWindow::dropzones_list);
+    m_registryDropZonesAct = new QAction(dropzonesIcon, tr("Dropzones"), this);
+    m_actions.push_back(m_registryDropZonesAct);
+    m_registryDropZonesAct->setToolTip(tr("Dropzones..."));
+    connect(m_registryDropZonesAct, &QAction::triggered, this, &MainWindow::dropzones_list);
 
     const QIcon canopiesIcon = QIcon(":/images/icons/menu/canopy.png");
-    m_registerCanopiesAct = new QAction(canopiesIcon, tr("Canopies"), this);
-    m_actions.push_back(m_registerCanopiesAct);
-    m_registerCanopiesAct->setToolTip(tr("Canopies..."));
-    connect(m_registerCanopiesAct, &QAction::triggered, this, &MainWindow::canopies_list);    
+    m_registryCanopiesAct = new QAction(canopiesIcon, tr("Canopies"), this);
+    m_actions.push_back(m_registryCanopiesAct);
+    m_registryCanopiesAct->setToolTip(tr("Canopies..."));
+    connect(m_registryCanopiesAct, &QAction::triggered, this, &MainWindow::canopies_list);
 
     const QIcon jumptypesIcon = QIcon(":/images/icons/menu/jump.png");
-    m_registerJumpTypesAct = new QAction(jumptypesIcon, tr("Jump types"), this);
-    m_actions.push_back(m_registerJumpTypesAct);
-    m_registerJumpTypesAct->setToolTip(tr("Jump types..."));
-    connect(m_registerJumpTypesAct, &QAction::triggered, this, &MainWindow::jumptypes_list);
+    m_registryJumpTypesAct = new QAction(jumptypesIcon, tr("Jump types"), this);
+    m_actions.push_back(m_registryJumpTypesAct);
+    m_registryJumpTypesAct->setToolTip(tr("Jump types..."));
+    connect(m_registryJumpTypesAct, &QAction::triggered, this, &MainWindow::jumptypes_list);
 
+    m_deviceTypesAct = new QAction(tr("Device types"), this);
+    m_actions.push_back(m_deviceTypesAct);
+    m_deviceTypesAct->setToolTip(tr("Device types and descriptions..."));
+    connect(m_deviceTypesAct, &QAction::triggered, this, &MainWindow::devicetypes_list);
 
     QToolBar *mainToolBar = addToolBar(tr("File"));
     mainToolBar->setIconSize(QSize(40, 40));
@@ -224,10 +229,12 @@ void MainWindow::createActions()
     editMenu->addAction(m_editAct);
     editMenu->addAction(m_deleteAct);
 
-    registerMenu->addAction(m_registerAicraftsAct);
-    registerMenu->addAction(m_registerDropZonesAct);
-    registerMenu->addAction(m_registerCanopiesAct);
-    registerMenu->addAction(m_registerJumpTypesAct);
+    registryMenu->addAction(m_registryAicraftsAct);
+    registryMenu->addAction(m_registryDropZonesAct);
+    registryMenu->addAction(m_registryCanopiesAct);
+    registryMenu->addAction(m_registryJumpTypesAct);
+
+    configMenu->addAction(m_deviceTypesAct);
 
     if(m_toggleDevices)
         windowsMenu->addAction(m_toggleDevices);
@@ -525,14 +532,14 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
         }
     };
 
-    t_datalist datalist;
+    t_registry datalist;
 
     for(const auto& item: data)
         datalist.push_back(std::make_tuple(false, item.first, item.second));
 
     for(auto& item: datalist)
-        std::get<DataListModel_defs::Used>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
-        { return jump_property(*jump, dlk) == std::get<DataListModel_defs::Key>(item); }) != jumps_model.items().end() ||  std::get<DataListModel_defs::Key>(item) == "");
+        std::get<static_cast<int>(DataListModel_defs::Used)>(item) =  (std::find_if(jumps_model.items().begin(), jumps_model.items().end(), [&] (const ptr_jump& jump)
+        { return jump_property(*jump, dlk) == std::get<static_cast<int>(DataListModel_defs::Key)>(item); }) != jumps_model.items().end() ||  std::get<static_cast<int>(DataListModel_defs::Key)>(item) == "");
 
 
     std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[static_cast<uint>(dlk)], datalist, this);
@@ -541,11 +548,26 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
     {
         data.clear();
         for(const auto& item: datalist)
-            data[std::get<DataListModel_defs::Key>(item).trimmed()] = std::get<DataListModel_defs::Value>(item);
+            data[std::get<static_cast<int>(DataListModel_defs::Key)>(item).trimmed()] = std::get<static_cast<int>(DataListModel_defs::Value)>(item);
         dl.save();
         prepareTableAfterEdit(*jtable);
     }
 }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+void MainWindow::devicetypes_list()
+{
+    t_devicetypelist datalist;
+
+    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>("Device types/descriptions", datalist, this);
+
+    if(dl_dialog->exec())
+    {
+
+    }
+}
+
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -821,6 +843,7 @@ void MainWindow::edit_selected()
         editJump(currentRow);
     }
 }
+
 
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::about()

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "listwidget.h"
+#include "listdevicetypeswidget.h"
 
 namespace Ui {
 class DataList_Dialog;
@@ -13,7 +14,8 @@ class DataList_Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit DataList_Dialog(const QString& Title, t_datalist& datalist, QWidget *parent = nullptr);
+    explicit DataList_Dialog(const QString& Title, t_registry& datalist, QWidget *parent = nullptr);
+    explicit DataList_Dialog(const QString& Title, t_devicetypelist& datalist, QWidget *parent = nullptr);
     ~DataList_Dialog();
 
 private slots:
@@ -27,7 +29,10 @@ private slots:
 
 private:
     Ui::DataList_Dialog *ui;
-    ListWidget m_listWidget;
+
+signals:
+    void removeFocusedItem();
+    void addItem();
 };
 
 #endif // DATALIST_DIALOG_H

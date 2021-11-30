@@ -5,7 +5,6 @@ const static QString sHorzHeader[] = {QObject::tr("Used"), QObject::tr("Key"), Q
 //---------------------------------------------------------------------------------------------------------------
 QVariant DataListModel::data(const QModelIndex &index, int role) const
 {
-
     if(index.isValid())
     {
         QString key, value;
@@ -13,20 +12,18 @@ QVariant DataListModel::data(const QModelIndex &index, int role) const
 
         std::tie(used, key, value) = m_datalist[index.row()];
 
-        if(role == Qt::DisplayRole && index.column() != DataListModel_defs::Used)
+        if(role == Qt::DisplayRole && index.column() != static_cast<int>(DataListModel_defs::Used))
         {
-            switch(index.column())
+            switch(static_cast<DataListModel_defs>(index.column()))
             {
             case DataListModel_defs::Key: return key;
             case DataListModel_defs::Value: return value;
             default: break;
             }
-
         }
-        if(role == Qt::CheckStateRole && index.column() == DataListModel_defs::Used)
+        if(role == Qt::CheckStateRole && index.column() == static_cast<int>(DataListModel_defs::Used))
             return used ? Qt::Checked: Qt::Unchecked;
     }
-
 /*
     if (role == Qt::BackgroundColorRole && index.isValid())
     {
@@ -51,17 +48,17 @@ bool DataListModel::setData(const QModelIndex &index, const QVariant &value, int
 
     if (role == Qt::EditRole)
     {
-        switch(index.column())
+        switch(static_cast<DataListModel_defs>(index.column()))
         {
         case DataListModel_defs::Key:
             for(const auto& item: m_datalist)
-                if(std::get<DataListModel_defs::Key>(item).trimmed() == value.toString().trimmed())
+                if(std::get<static_cast<int>(DataListModel_defs::Key)>(item).trimmed() == value.toString().trimmed())
                     return false;
 
-            std::get<DataListModel_defs::Key>(m_datalist[index.row()]) = value.toString().trimmed();
+            std::get<static_cast<int>(DataListModel_defs::Key)>(m_datalist[index.row()]) = value.toString().trimmed();
             break;
         case DataListModel_defs::Value:
-            std::get<DataListModel_defs::Value>(m_datalist[index.row()]) = value.toString().trimmed();
+            std::get<static_cast<int>(DataListModel_defs::Value)>(m_datalist[index.row()]) = value.toString().trimmed();
             break;
         default: break;
         }
@@ -94,10 +91,10 @@ Qt::ItemFlags DataListModel::flags(const QModelIndex &index) const
     flags &= ~Qt::ItemIsEditable;
     if(index.isValid())
     {
-        if(DataListModel_defs::Value == index.column() && !isEmptyKey(index.row()))
+        if(static_cast<int>(DataListModel_defs::Value) == index.column() && !isEmptyKey(index.row()))
             flags |= Qt::ItemIsEditable;
 
-        if(DataListModel_defs::Key == index.column() && !isUsed(index.row()))
+        if(static_cast<int>(DataListModel_defs::Key) == index.column() && !isUsed(index.row()))
             flags |= Qt::ItemIsEditable;
 
     }
@@ -128,7 +125,7 @@ bool DataListModel::isUsed(const uint row) const
 {
     if(m_datalist.size() <= row)
         return false;
-    return std::get<DataListModel_defs::Used>(m_datalist[row]);
+    return std::get<static_cast<int>(DataListModel_defs::Used)>(m_datalist[row]);
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -136,5 +133,5 @@ bool DataListModel::isEmptyKey(const uint row) const
 {
     if(m_datalist.size() <= row)
         return true;
-    return std::get<DataListModel_defs::Key>(m_datalist[row]).isEmpty();
+    return std::get<static_cast<int>(DataListModel_defs::Key)>(m_datalist[row]).isEmpty();
 }

@@ -1,5 +1,5 @@
-#ifndef LISTWIDGET_H
-#define LISTWIDGET_H
+#ifndef LISTDEVICETYPESWIDGET_H
+#define LISTDEVICETYPESWIDGET_H
 
 #include <QWidget>
 #include <QTableView>
@@ -9,29 +9,25 @@
 #include <QHeaderView>
 #include <memory>
 
-#include "common.h"
-#include "datalistmodel.h"
-#include "lineeditdelegate.h"
+#include "devicedescriptionlistmodel.h"
 
-class ListWidget : public QWidget
+class ListDeviceTypesWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ListWidget(t_registry& datalist, QWidget *parent = nullptr);
+    explicit ListDeviceTypesWidget(t_devicetypelist& datalist, QWidget *parent = nullptr);
 
     const QTableView& listTable() const { return *m_listTable; }
 
 private:
     std::unique_ptr<QTableView> m_listTable = std::make_unique<QTableView>(this);
-    DataListModel m_model;
+    DeviceDescriptionListModel m_model;
 signals:
-    void selectedItemUsed(bool value);
 
 public slots:
-    void rowChanged();
     void addItem();
     void removeFocusedItem();
 
 };
 
-#endif // LISTWIDGET_H
+#endif // LISTDEVICETYPESWIDGET_H
