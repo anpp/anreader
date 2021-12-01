@@ -1,8 +1,8 @@
 #include "settings.h"
-#include <QDebug>
 #include <QDir>
 
-const static QString sSettingKind[] = {"appearance", "misc", "screen", "environment"};
+
+const static QString sSettingKind[] = {"appearance", "misc", "screen", "environment", "device_types"};
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -14,7 +14,9 @@ Settings::Settings(QMainWindow* widget_owner, const QString& organization, const
                     std::make_shared<Setting>("state", kindset::screen, 0, QVariant(QVariant::Int), false),
                     std::make_shared<Setting>("directory_for_save", kindset::environment, QDir::homePath(), QVariant(QVariant::String), false),
                     std::make_shared<Setting>("current_file", kindset::environment, QString(), QVariant(QVariant::String), false),
-                    std::make_shared<Setting>("current_file_delimiter", kindset::environment, QString(";"), QVariant(QVariant::String), false)
+                    std::make_shared<Setting>("current_file_delimiter", kindset::environment, QString(";"), QVariant(QVariant::String), false),
+                    std::make_shared<Setting>("N3", kindset::device_types, QString("Altimaster N3"), QVariant(QVariant::String), false),
+                    std::make_shared<Setting>("Atlas", kindset::device_types, QString("USB"), QVariant(QVariant::String), false),
                    };
 
     for(auto& s: vec_settings) {mapset[s.get()->title] = s.get();}
@@ -46,10 +48,10 @@ bool Settings::loadSettingsByKind(kindset ks)
 
 
 //----------------------------------------------------------------------------------------------------------------------
-void Settings::saveSettingsByKind(kindset ks)
+void Settings::saveSettingsByKind(kindset ks) const
 {
     qsettings.beginGroup("/" + sSettingKind[static_cast<int>(ks)]);
-    for(auto& s: vec_settings){
+    for(const auto& s: vec_settings){
         if (s->kind == ks)
             qsettings.setValue("/" + s->title, s->value);
     }
@@ -91,7 +93,7 @@ const QVariant& Settings::getSetting(const QString& title) const
     QMap<QString, Setting*>::const_iterator mit = mapset.find(title);
     if(mit != mapset.end())
     {
-        auto s = *mit;
+        const auto s = *mit;
         if(s->value.isNull() || !s->value.isValid())
             return s->default_value;
         return  s->value;
@@ -127,7 +129,32 @@ void Settings::setSetting(const QString& title, QVariant value)
 
 
 //----------------------------------------------------------------------------------------------------------------------
-const QString& Settings::getSettingsName(kindset ks) const
+const QString& Settings::getSettingsName(const kindset ks) const
 {
     return sSettingKind[static_cast<int>(ks)];
 }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+const mset &Settings::map_set(const kindset ks) const
+{
+    setup_mapset(ks);
+    return mapset_by_kind;
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+void Settings::setup_mapset(const kindset ks) const
+{
+    mapset_by_kind.clear();
+
+    qsettings.beginGroup("/" + sSettingKind[static_cast<int>(ks)]);
+
+    for(auto& k: qsettings.allKeys())
+        if(k != "." && k != "")
+            mapset_by_kind[k] = qsettings.value(k, "").toString();
+
+    qsettings.endGroup();
+}
+
+

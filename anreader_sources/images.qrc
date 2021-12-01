@@ -24,5 +24,6 @@
         <file>images/icons/menu/canopy.png</file>
         <file>images/icons/menu/dz.png</file>
         <file>images/icons/menu/jump.png</file>
+        <file>images/icons/menu/usb.png</file>
     </qresource>
 </RCC>

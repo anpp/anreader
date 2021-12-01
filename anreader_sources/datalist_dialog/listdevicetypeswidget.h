@@ -9,7 +9,7 @@
 #include <QHeaderView>
 #include <memory>
 
-#include "devicedescriptionlistmodel.h"
+#include "models/devicedescriptionlistmodel.h"
 
 class ListDeviceTypesWidget : public QWidget
 {

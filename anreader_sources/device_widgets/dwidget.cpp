@@ -191,6 +191,27 @@ void DWidget::clear()
     stateChanged();
 }
 
+
+//----------------------------------------------------------------------------------------------------------------------
+dtype DWidget::typeByName(const QString &type_name)
+{
+    int index = 0;
+    bool found = false;
+    for(const auto& value: sDeviceTypes)
+    {
+        if(value == type_name)
+        {
+            found = true;
+            break;
+        }
+        index++;
+    }
+    if(!found)
+        index = 0;
+
+    return static_cast<dtype>(index);
+}
+
 //----------------------------------------------------------------------------------------------------------------------
 void DWidget::slotOpen()
 {

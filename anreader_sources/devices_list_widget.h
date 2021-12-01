@@ -11,8 +11,9 @@
 #include <QHeaderView>
 #include <memory>
 
-#include "dwidget.h"
-#include "n3widget.h"
+#include "device_widgets/dwidget.h"
+#include "device_widgets/n3widget.h"
+#include "settings.h"
 
 Q_DECLARE_METATYPE(QSerialPortInfo)
 Q_DECLARE_METATYPE(QList<QSerialPortInfo>)
@@ -52,7 +53,7 @@ class DevicesWidget : public QWidget
     Q_OBJECT
     enum DevicesWidget_defs: int {default_width = 240};
 public:
-    explicit DevicesWidget(QWidget *parent = nullptr);
+    explicit DevicesWidget(const Settings& asettings, QWidget *parent = nullptr);
     ~DevicesWidget();
 
     void start();
@@ -68,6 +69,7 @@ private:
     std::vector<ptrWidget> devices;
 
     QTableWidget table_devices;
+    const Settings& settings;
 
 protected:
 

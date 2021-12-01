@@ -33,6 +33,7 @@ public:
     virtual void create() = 0;
     void clear();
     int getId() const { return m_id; }
+    static dtype typeByName(const QString& type_name);
 
 
 private:

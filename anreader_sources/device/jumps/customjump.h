@@ -42,8 +42,8 @@ public:
 
     virtual ~CustomJump(){}
 
-    uint getJumpNumber() const {return m_jump_number;}
-    QDateTime getJumpDate() const {return m_jump_date;}
+    inline uint getJumpNumber() const {return m_jump_number;}
+    inline QDateTime getJumpDate() const {return m_jump_date;}
     virtual uint getExitAlt() const = 0;
     virtual uint getDeplAlt() const = 0;
     virtual uint getFreefallTime() const = 0;
@@ -56,8 +56,8 @@ public:
     virtual bool isDeleted() const {return m_is_deleted;}
 
 
-    void setJumpNumber(uint value) {m_jump_number = value;}
-    void setJumpDate(QDateTime value) {m_jump_date = value;}
+    inline void setJumpNumber(uint value) {m_jump_number = value;}
+    inline void setJumpDate(QDateTime value) {m_jump_date = value;}
     virtual void setExitAlt(uint value) = 0;
     virtual void setDeplAlt(uint value) = 0;
     virtual void setFreefallTime(uint value) = 0;

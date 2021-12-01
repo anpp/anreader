@@ -38,19 +38,19 @@ public:
     uint getDeplAlt() const override {return m_depl_alt;}
     uint getFreefallTime() const override {return m_freefall_time;}
     uint getCanopyTime() const override {return m_canopy_time;}
-    uint getSpeed12K() const {return m_speed12K;}
-    uint getSpeed9K() const {return m_speed9K;}
-    uint getSpeed6K() const {return m_speed6K;}
-    uint getSpeed3K() const {return m_speed3K;}
+    inline uint getSpeed12K() const {return m_speed12K;}
+    inline uint getSpeed9K() const {return m_speed9K;}
+    inline uint getSpeed6K() const {return m_speed6K;}
+    inline uint getSpeed3K() const {return m_speed3K;}
 
     void setExitAlt(uint value) override {m_exit_alt = value;}
     void setDeplAlt(uint value) override {m_depl_alt = value;}
     void setFreefallTime(uint value) override {m_freefall_time = value;}
     void setCanopyTime(uint value) override {m_canopy_time = value;}
-    void setSpeed12K(uint value) {m_speed12K = value;}
-    void setSpeed9K(uint value) {m_speed9K = value;}
-    void setSpeed6K(uint value) {m_speed6K = value;}
-    void setSpeed3K(uint value) {m_speed3K = value;}
+    inline void setSpeed12K(uint value) {m_speed12K = value;}
+    inline void setSpeed9K(uint value) {m_speed9K = value;}
+    inline void setSpeed6K(uint value) {m_speed6K = value;}
+    inline void setSpeed3K(uint value) {m_speed3K = value;}
 
     std::unique_ptr<t_jump_attribute> getPairs() const override;
     virtual void setPairs(const t_jump_attribute& pairs) override;

@@ -18,9 +18,9 @@ QMAKE_LFLAGS_RELEASE += -static -static-libgcc
 SOURCES += \
     csvparser.cpp \
     datalist_dialog/datalist_dialog.cpp \
-    datalist_dialog/datalistmodel.cpp \
-    datalist_dialog/devicedescriptionlistmodel.cpp \
-    datalist_dialog/lineeditdelegate.cpp \
+    datalist_dialog/models/datalistmodel.cpp \
+    datalist_dialog/models/devicedescriptionlistmodel.cpp \
+    datalist_dialog/delegates/lineeditdelegate.cpp \
     datalist_dialog/listdevicetypeswidget.cpp \
     datalist_dialog/listwidget.cpp \
     datalists.cpp \
@@ -31,18 +31,18 @@ SOURCES += \
     mainwindow.cpp \
     jumpstable.cpp \
     jumpstablemodel.cpp \
-    dwidget.cpp \
+    device_widgets/dwidget.cpp \
     jumpeditor_dialog/n3jumpeditor.cpp \
-    n3widget.cpp \
+    device_widgets/n3widget.cpp \
     settings.cpp
 
 HEADERS += \
     common.h \
     csvparser.h \
     datalist_dialog/datalist_dialog.h \
-    datalist_dialog/datalistmodel.h \
-    datalist_dialog/devicedescriptionlistmodel.h \
-    datalist_dialog/lineeditdelegate.h \
+    datalist_dialog/models/datalistmodel.h \
+    datalist_dialog/models/devicedescriptionlistmodel.h \
+    datalist_dialog/delegates/lineeditdelegate.h \
     datalist_dialog/listdevicetypeswidget.h \
     datalist_dialog/listwidget.h \
     datalists.h \
@@ -52,9 +52,9 @@ HEADERS += \
     mainwindow.h \
     jumpstable.h \
     jumpstablemodel.h \
-    dwidget.h \
+    device_widgets/dwidget.h \
     jumpeditor_dialog/n3jumpeditor.h \
-    n3widget.h \
+    device_widgets/n3widget.h \
     settings.h
 
 TRANSLATIONS += \

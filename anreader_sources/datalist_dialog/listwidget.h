@@ -10,8 +10,8 @@
 #include <memory>
 
 #include "common.h"
-#include "datalistmodel.h"
-#include "lineeditdelegate.h"
+#include "models/datalistmodel.h"
+#include "delegates/lineeditdelegate.h"
 
 class ListWidget : public QWidget
 {

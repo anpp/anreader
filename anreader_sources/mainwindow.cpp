@@ -202,7 +202,8 @@ void MainWindow::createActions()
     m_registryJumpTypesAct->setToolTip(tr("Jump types..."));
     connect(m_registryJumpTypesAct, &QAction::triggered, this, &MainWindow::jumptypes_list);
 
-    m_deviceTypesAct = new QAction(tr("Device types"), this);
+    const QIcon deviceTypesIcon = QIcon(":/images/icons/menu/usb.png");
+    m_deviceTypesAct = new QAction(deviceTypesIcon, tr("Device types"), this);
     m_actions.push_back(m_deviceTypesAct);
     m_deviceTypesAct->setToolTip(tr("Device types and descriptions..."));
     connect(m_deviceTypesAct, &QAction::triggered, this, &MainWindow::devicetypes_list);
@@ -260,7 +261,7 @@ void MainWindow::createDevicesWidget()
     m_toggleDevices->setShortcut(QKeySequence("Ctrl+F11"));
 #endif
 
-    devices_window = std::make_unique<DevicesWidget>(dock);
+    devices_window = std::make_unique<DevicesWidget>(settings, dock);
     dock->setWidget(devices_window.get());
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 
@@ -559,6 +560,9 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
 void MainWindow::devicetypes_list()
 {
     t_devicetypelist datalist;
+
+    for(const auto& item: settings.map_set(kindset::device_types))
+        datalist.push_back(std::make_tuple(DWidget::typeByName(item.first), item.second.toString()));
 
     std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>("Device types/descriptions", datalist, this);
 

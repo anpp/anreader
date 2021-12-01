@@ -1,5 +1,4 @@
 #include "devices_list_widget.h"
-#include <QDebug>
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -65,8 +64,9 @@ void WorkerEnumerator::enumerate()
 //=========================================================================================================================
 
 //----------------------------------------------------------------------------------------------------------------------
-DevicesWidget::DevicesWidget(QWidget *parent) :
-    QWidget(parent)
+DevicesWidget::DevicesWidget(const Settings& asettings, QWidget *parent) :
+    QWidget(parent),
+    settings(asettings)
 {
     qRegisterMetaType <QSerialPortInfo>();
     qRegisterMetaType <QList<QSerialPortInfo>>();
@@ -155,15 +155,12 @@ void DevicesWidget::createDevice(ptrWidget device_widget)
 dtype DevicesWidget::typeByDescription(const QString &description) const
 {
     dtype type = dtype::unk;
-    if(description.contains("Altimaster N3"))
-        type = dtype::N3;
-    if(description.contains("Altas"))
-        type = dtype::N3;
 
-    if(description.contains("USB"))
-        type = dtype::N3;
+    for(const auto& item: settings.map_set(kindset::device_types))
+        if(description.contains(item.second.toString()))
+            type = DWidget::typeByName(item.first);
 
-    return type;
+    return (type == dtype::Atlas ? dtype::N3: type);
 }
 
 
