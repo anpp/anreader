@@ -564,7 +564,7 @@ void MainWindow::devicetypes_list()
     for(const auto& item: settings.map_set(kindset::device_types))
         datalist.push_back(std::make_tuple(DWidget::typeByName(item.first), item.second.toString()));
 
-    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>("Device types/descriptions", datalist, this);
+    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>("Device types", datalist, this);
 
     if(dl_dialog->exec())
     {

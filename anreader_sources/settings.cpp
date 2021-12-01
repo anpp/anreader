@@ -20,6 +20,7 @@ Settings::Settings(QMainWindow* widget_owner, const QString& organization, const
                    };
 
     for(auto& s: vec_settings) {mapset[s.get()->title] = s.get();}
+    for(auto& s: vec_settings) {k_mapset[s.get()] = s.get()->kind;}
 }
 
 
@@ -155,6 +156,12 @@ void Settings::setup_mapset(const kindset ks) const
             mapset_by_kind[k] = qsettings.value(k, "").toString();
 
     qsettings.endGroup();
+
+    //значения по-умолчанию
+    if(mapset_by_kind.empty())
+        for(const auto& s: k_mapset)
+            if(ks == s.second)
+                mapset_by_kind[s.first->title] = s.first->default_value;
 }
 
 

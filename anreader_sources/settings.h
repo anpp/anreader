@@ -46,6 +46,7 @@ class Settings {
 
     std::vector<ptrSetting> vec_settings;
     QMap<QString, Setting*> mapset;
+    std::map<Setting*, kindset> k_mapset;
     QVariant default_return;       
 
     void setup_mapset(const kindset ks) const;

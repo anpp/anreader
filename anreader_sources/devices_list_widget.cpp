@@ -158,8 +158,13 @@ dtype DevicesWidget::typeByDescription(const QString &description) const
 
     for(const auto& item: settings.map_set(kindset::device_types))
         if(description.contains(item.second.toString()))
+        {
             type = DWidget::typeByName(item.first);
+            if(dtype::unk != type)
+                break;
+        }
 
+    //return type;
     return (type == dtype::Atlas ? dtype::N3: type);
 }
 
