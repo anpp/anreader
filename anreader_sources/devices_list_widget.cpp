@@ -22,7 +22,7 @@ void WorkerEnumerator::enumerate()
         //поиск добавленных
         for (const QSerialPortInfo &new_port_info : new_ports)
         {
-            auto found = std::find_if(ports.begin(), ports.end(), [new_port_info] (QSerialPortInfo &port_info)
+            auto found = std::find_if(ports.begin(), ports.end(), [&new_port_info] (QSerialPortInfo &port_info)
             {
                 return port_info.portName() == new_port_info.portName();
             });
@@ -39,7 +39,7 @@ void WorkerEnumerator::enumerate()
 
             for (const QSerialPortInfo &port_info : ports)
             {
-                auto found = std::find_if(new_ports.begin(), new_ports.end(), [port_info] (QSerialPortInfo &new_port_info)
+                auto found = std::find_if(new_ports.begin(), new_ports.end(), [&port_info] (QSerialPortInfo &new_port_info)
                 {
                     return port_info.portName() == new_port_info.portName();
                 });
@@ -157,13 +157,15 @@ dtype DevicesWidget::typeByDescription(const QString &description) const
     dtype type = dtype::unk;
 
     for(const auto& item: settings.map_set(kindset::device_types))
-        if(description.contains(item.second.toString()))
+    {
+        QString device_string_value = item.second->getValue().toString();
+        if(!device_string_value.trimmed().isEmpty() && description.contains(device_string_value))
         {
             type = DWidget::typeByName(item.first);
             if(dtype::unk != type)
                 break;
         }
-
+    }
     //return type;
     return (type == dtype::Atlas ? dtype::N3: type);
 }
@@ -203,7 +205,7 @@ void DevicesWidget::detach(QSerialPortInfo port_info)
 {    
     emit log("Detached: " + port_info.description() + " " + port_info.portName());
 
-    auto device_widget = std::find_if(devices.begin(), devices.end(), [port_info] (const auto& widget) { return port_info.portName() == widget->getPortName(); });
+    auto device_widget = std::find_if(devices.begin(), devices.end(), [&port_info] (const auto& widget) { return port_info.portName() == widget->getPortName(); });
     if(device_widget != devices.end())
         (*device_widget)->clear();
 }

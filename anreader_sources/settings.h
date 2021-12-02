@@ -5,7 +5,6 @@
 #include <QWidget>
 #include <QSize>
 #include <QPoint>
-#include <QMap>
 #include <QVariant>
 #include <QMainWindow>
 #include <vector>
@@ -15,17 +14,19 @@
 #include "common.h"
 
 
-enum class kindset: int {appearance = 0, misc, screen, environment, device_types};
+enum class kindset: int {all =0, appearance, misc, screen, environment, device_types};
 
 class Settings;
 
-class Setting
+struct Setting
 {
     QString title;
     kindset kind;
     QVariant default_value;
     QVariant value;
     bool isChanged = false;
+
+    const QVariant& getValue() const { return (value.isNull() || !value.isValid())? default_value : value; }
 
 public:
     Setting(QString atitle, kindset akind, QVariant adefault, QVariant avalue, bool aisChanged):
@@ -37,16 +38,14 @@ protected:
 
 
 typedef std::shared_ptr<Setting> ptrSetting;
-typedef std::map<QString, QVariant> mset;
+typedef std::map<QString, Setting*> mset;
 
 class Settings {    
     QMainWindow* owner;
     mutable QSettings qsettings;
     mutable mset mapset_by_kind;
 
-    std::vector<ptrSetting> vec_settings;
-    QMap<QString, Setting*> mapset;
-    std::map<Setting*, kindset> k_mapset;
+    std::vector<ptrSetting> vec_settings;        
     QVariant default_return;       
 
     void setup_mapset(const kindset ks) const;
@@ -54,15 +53,15 @@ public:
     Settings(QMainWindow* widget_owner, const QString &organization, const QString &application);
     ~Settings();
 
-    bool loadSettingsByKind(kindset ks);
+    void loadSettingsByKind(kindset ks);
     void saveSettingsByKind(kindset ks) const;
 
     void loadSettingsScreen();
     void saveSettingsScreen();
 
-    const QVariant& getSetting(const QString& title) const;
-    bool isChanged(const QString& title) const;
-    void setSetting(const QString& title, QVariant value);
+    const QVariant& getSetting(const QString& title, const kindset ks = kindset::all) const;
+    bool isChanged(const QString& title, const kindset ks = kindset::all) const;
+    void setSetting(const QString& title, QVariant value, const kindset ks = kindset::all);
 
 
     void load(){
@@ -81,10 +80,8 @@ public:
         saveSettingsScreen();
     }
 
-    //const QVector<ptrSetting>& getListSettings() {return vec_settings;}
-    //const QMap<QString, ptrSetting>& getMapSettings() {return mapset;}
 
-    const QString& getSettingsName(const kindset ks) const;
+    const QString& name(const kindset ks) const;
     const mset& map_set(const kindset ks) const;
 };
 
