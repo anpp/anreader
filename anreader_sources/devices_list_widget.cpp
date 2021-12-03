@@ -159,7 +159,7 @@ dtype DevicesWidget::typeByDescription(const QString &description) const
     for(const auto& item: settings.map_set(kindset::device_types))
     {
         QString device_string_value = item.second->getValue().toString();
-        if(!device_string_value.trimmed().isEmpty() && description.contains(device_string_value))
+        if(device_string_value.trimmed().trimmed() == description)
         {
             type = DWidget::typeByName(item.first);
             if(dtype::unk != type)

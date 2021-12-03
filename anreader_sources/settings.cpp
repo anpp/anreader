@@ -15,8 +15,8 @@ Settings::Settings(QMainWindow* widget_owner, const QString& organization, const
                     std::make_shared<Setting>("directory_for_save", kindset::environment, QDir::homePath(), QVariant(QVariant::String), false),
                     std::make_shared<Setting>("current_file", kindset::environment, QString(), QVariant(QVariant::String), false),
                     std::make_shared<Setting>("current_file_delimiter", kindset::environment, QString(";"), QVariant(QVariant::String), false),
-                    std::make_shared<Setting>("N3", kindset::device_types, QString("Altimaster N3"), QVariant(QVariant::String), false),
-                    std::make_shared<Setting>("Atlas", kindset::device_types, QString("USB"), QVariant(QVariant::String), false),
+                    std::make_shared<Setting>("N3", kindset::device_types, QString("USB Serial Port Driver for Altimaster N3"), QVariant(QVariant::String), false),
+                    std::make_shared<Setting>("Atlas", kindset::device_types, QString("USB Serial Port Driver"), QVariant(QVariant::String), false),
                    };
 }
 
@@ -38,7 +38,7 @@ void Settings::loadSettingsByKind(kindset ks)
     for(auto& key: qsettings.allKeys())
         if(key != "." && key != "")
         {
-            auto s = map_set(ks).find(key);
+            auto s = mapset_by_kind.find(key);
             if(s != mapset_by_kind.end())
             {
                 Setting *setting = s->second;

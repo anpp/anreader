@@ -18,7 +18,7 @@ enum class kindset: int {all =0, appearance, misc, screen, environment, device_t
 
 class Settings;
 
-struct Setting
+class Setting
 {
     QString title;
     kindset kind;
@@ -26,11 +26,11 @@ struct Setting
     QVariant value;
     bool isChanged = false;
 
-    const QVariant& getValue() const { return (value.isNull() || !value.isValid())? default_value : value; }
-
 public:
     Setting(QString atitle, kindset akind, QVariant adefault, QVariant avalue, bool aisChanged):
         title(atitle), kind(akind), default_value(adefault), value(avalue), isChanged(aisChanged) {}
+
+    const QVariant& getValue() const { return (value.isNull() || !value.isValid())? default_value : value; }
 
 protected:
     friend class Settings;
