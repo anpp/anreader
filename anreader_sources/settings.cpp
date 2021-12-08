@@ -31,9 +31,9 @@ Settings::~Settings()
 //----------------------------------------------------------------------------------------------------------------------
 void Settings::loadSettingsByKind(kindset ks)
 {        
-    qsettings.beginGroup("/" + name(ks));
-
     setup_mapset(ks);
+
+    qsettings.beginGroup("/" + name(ks));
 
     for(auto& key: qsettings.allKeys())
         if(key != "." && key != "")
@@ -52,8 +52,20 @@ void Settings::loadSettingsByKind(kindset ks)
 //----------------------------------------------------------------------------------------------------------------------
 void Settings::saveSettingsByKind(kindset ks) const
 {    
+    setup_mapset(ks);
+
     qsettings.beginGroup("/" + name(ks));
-    for(const auto& item: map_set(ks))
+
+    //--удаление
+    QStringList sl;
+    for(auto& k: qsettings.allKeys())
+        if(mapset_by_kind.find(k) == mapset_by_kind.end())
+            sl << k;
+    for(auto& key: sl)
+        qsettings.remove(key);
+    //--
+
+    for(const auto& item: mapset_by_kind)
         qsettings.setValue("/" + item.second->title, item.second->getValue());
 
     qsettings.endGroup();

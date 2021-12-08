@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "models/devicedescriptionlistmodel.h"
+#include "delegates/comboeditdelegate.h"
 
 class ListDeviceTypesWidget : public QWidget
 {

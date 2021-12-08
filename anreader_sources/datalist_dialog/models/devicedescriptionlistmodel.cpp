@@ -34,6 +34,19 @@ bool DeviceDescriptionListModel::setData(const QModelIndex &index, const QVarian
 
     if (role == Qt::EditRole)
     {
+        switch(static_cast<DeviceDescriptionListModel_defs>(index.column()))
+        {
+        case DeviceDescriptionListModel_defs::DeviceType:
+            if(std::find_if(m_datalist.begin(), m_datalist.end(), [&value] (const auto& item) {return std::get<static_cast<int>(DeviceDescriptionListModel_defs::DeviceType)>(item) == static_cast<dtype>(value.toInt()); }) != m_datalist.end())
+                return false;
+
+            std::get<static_cast<int>(DeviceDescriptionListModel_defs::DeviceType)>(m_datalist[index.row()]) = static_cast<dtype>(value.toInt());
+            break;
+        case DeviceDescriptionListModel_defs::DeviceDescription:
+            std::get<static_cast<int>(DeviceDescriptionListModel_defs::DeviceDescription)>(m_datalist[index.row()]) = value.toString().trimmed();
+            break;
+        default: break;
+        }
 
         emit dataChanged(index, index);
         return true;
