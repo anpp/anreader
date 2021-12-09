@@ -21,6 +21,15 @@ QVariant DeviceDescriptionListModel::data(const QModelIndex &index, int role) co
             default: break;
             }
         }
+        if(role == Qt::EditRole)
+        {
+            switch(static_cast<DeviceDescriptionListModel_defs>((index.column())))
+            {
+            case DeviceDescriptionListModel_defs::DeviceType: return static_cast<int>(type);
+            case DeviceDescriptionListModel_defs::DeviceDescription: return description;
+            default: break;
+            }
+        }
     }
     return QVariant();
 }
@@ -72,13 +81,7 @@ QVariant DeviceDescriptionListModel::headerData(int section, Qt::Orientation ori
 Qt::ItemFlags DeviceDescriptionListModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-
-    flags &= ~Qt::ItemIsEditable;
-    if(index.isValid())
-    {
-        if(static_cast<int>(DeviceDescriptionListModel_defs::DeviceType) == index.column())
-            flags |= Qt::ItemIsEditable;
-    }
+    flags |= Qt::ItemIsEditable;
     return flags;
 }
 

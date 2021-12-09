@@ -74,6 +74,7 @@ QVariant JumpsTableModel::headerData(int section, Qt::Orientation orientation, i
 Qt::ItemFlags JumpsTableModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    flags &= ~Qt::ItemIsEditable;
     return flags;
 }
 

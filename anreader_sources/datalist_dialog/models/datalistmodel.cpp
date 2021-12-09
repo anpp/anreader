@@ -24,19 +24,7 @@ QVariant DataListModel::data(const QModelIndex &index, int role) const
         if(role == Qt::CheckStateRole && index.column() == static_cast<int>(DataListModel_defs::Used))
             return used ? Qt::Checked: Qt::Unchecked;
     }
-/*
-    if (role == Qt::BackgroundColorRole && index.isValid())
-    {
-        if (index.row() % 2 == 0){
-            return color_0;
-        }
-        else {
-            return color_1;
-        }
-    }
-*/
     return QVariant();
-
 }
 
 

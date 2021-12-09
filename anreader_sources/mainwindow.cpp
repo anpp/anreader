@@ -543,7 +543,7 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
         { return jump_property(*jump, dlk) == std::get<static_cast<int>(DataListModel_defs::Key)>(item); }) != jumps_model.items().end() ||  std::get<static_cast<int>(DataListModel_defs::Key)>(item) == "");
 
 
-    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(sDataList_Titles[static_cast<uint>(dlk)], datalist, this);
+    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(tr(sDataList_Titles[static_cast<uint>(dlk)].toStdString().c_str()), datalist, this);
 
     if(dl_dialog->exec())
     {
@@ -564,7 +564,7 @@ void MainWindow::devicetypes_list()
     for(const auto& item: settings.map_set(kindset::device_types))
         datalist.push_back(std::make_tuple(DWidget::typeByName(item.first), item.second->getValue().toString()));
 
-    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>("Device types", datalist, this);
+    std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(tr("Device types"), datalist, this);
 
     if(dl_dialog->exec())
     {

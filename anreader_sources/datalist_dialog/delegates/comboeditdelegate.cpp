@@ -20,9 +20,8 @@ void ComboEditDelegate::setEditorData(QWidget *editor, const QModelIndex &index)
 {
     if(!index.isValid()) return;
 
-    QString value = index.model()->data(index).toString();
     QComboBox *cb = static_cast<QComboBox*>(editor);
-    cb->setCurrentText(value);
+    cb->setCurrentIndex(index.model()->data(index, Qt::EditRole).toInt());
 }
 
 //---------------------------------------------------------------------------------------------------------------------------

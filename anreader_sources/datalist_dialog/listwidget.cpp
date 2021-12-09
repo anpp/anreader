@@ -18,10 +18,12 @@ ListWidget::ListWidget(t_registry& datalist, QWidget *parent) : QWidget(parent),
     m_listTable->setItemDelegateForColumn(static_cast<int>(DataListModel_defs::Key), ledKey);
     m_listTable->setItemDelegateForColumn(static_cast<int>(DataListModel_defs::Value), ledValue);
     m_listTable->resizeColumnsToContents();
+    m_listTable->resizeRowsToContents();
     m_listTable->verticalHeader()->hide();
     m_listTable->horizontalHeader()->setStretchLastSection(true);
     m_listTable->setSelectionMode(QAbstractItemView::SingleSelection);
     m_listTable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    m_listTable->setAlternatingRowColors(true);
     connect(m_listTable->selectionModel(), &QItemSelectionModel::currentRowChanged,  this, &ListWidget::rowChanged);
 }
 
