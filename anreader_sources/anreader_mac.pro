@@ -18,6 +18,8 @@ QMAKE_CXXFLAGS += -std=c++14
 SOURCES += \
     csvparser.cpp \
     datalist_dialog/datalist_dialog.cpp \
+    datalist_dialog/delegates/combo_popupwidget_delegate.cpp \
+    datalist_dialog/delegates/comboeditdelegate.cpp \
     datalist_dialog/models/datalistmodel.cpp \
     datalist_dialog/models/devicedescriptionlistmodel.cpp \
     datalist_dialog/delegates/lineeditdelegate.cpp \
@@ -40,6 +42,8 @@ HEADERS += \
     common.h \
     csvparser.h \
     datalist_dialog/datalist_dialog.h \
+    datalist_dialog/delegates/combo_popupwidget_delegate.h \
+    datalist_dialog/delegates/comboeditdelegate.h \
     datalist_dialog/models/datalistmodel.h \
     datalist_dialog/models/devicedescriptionlistmodel.h \
     datalist_dialog/delegates/lineeditdelegate.h \
