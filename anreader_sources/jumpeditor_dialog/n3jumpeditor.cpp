@@ -43,15 +43,6 @@ N3JumpEditor::~N3JumpEditor()
 //-------------------------------------------------------------------------------------------------------------------------------------
 void N3JumpEditor::setup_combobox(const datakind dk, QAbstractItemModel &model, QTableView &view)
 {    
-    view.horizontalHeader()->hide();
-    view.verticalHeader()->hide();
-    view.setSelectionMode(QAbstractItemView::SingleSelection);
-    view.setSelectionBehavior(QAbstractItemView::SelectRows);
-    view.setCornerWidget(new QSizeGrip(nullptr));
-    //view.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
-    view.horizontalHeader()->setStretchLastSection(true);
-
     QComboBox& cb = (datakind::aircrafts == dk ? *ui->cbAC : (datakind::dropzones == dk ? *ui->cbDZ : *ui->cbCanopy));
 
     cb.setModel(&model);
@@ -59,6 +50,15 @@ void N3JumpEditor::setup_combobox(const datakind dk, QAbstractItemModel &model, 
     connect(&cb, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &N3JumpEditor::combo_changeindex);
     cb.setModelColumn(1);
     cb.setView(&view);
+
+    view.horizontalHeader()->hide();
+    view.verticalHeader()->hide();
+    view.setSelectionMode(QAbstractItemView::SingleSelection);
+    view.setSelectionBehavior(QAbstractItemView::SelectRows);
+    view.setCornerWidget(new QSizeGrip(nullptr));
+    view.resizeColumnsToContents();
+    view.resizeRowsToContents();
+    view.horizontalHeader()->setStretchLastSection(true);
 }
 
 
