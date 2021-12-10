@@ -7,7 +7,7 @@
 #include <QTableView>
 #include <QSizeGrip>
 
-#include "common.h"
+#include "common/common.h"
 #include "device/jumps/n3jump.h"
 #include "datalists.h"
 #include "combolist_model.h"

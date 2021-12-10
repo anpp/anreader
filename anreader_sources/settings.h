@@ -11,7 +11,7 @@
 #include <map>
 #include <memory>
 
-#include "common.h"
+#include "common/common.h"
 
 
 enum class kindset: int {all =0, appearance, misc, screen, environment, device_types};

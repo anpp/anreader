@@ -5,7 +5,7 @@
 #include <QVariant>
 #include <memory>
 
-#include "common.h"
+#include "common/common.h"
 
 enum class datakind: int {aircrafts = 0, dropzones, canopies, jump_types};
 

@@ -6,31 +6,11 @@
 #include <QListWidget>
 #include <QWidget>
 #include <QSizeGrip>
+#include <QKeyEvent>
 
-#include "common.h"
+#include "common/common.h"
+#include "common/stringlist_popup.h"
 
-
-
-
-
-//===========================================================================================================
-class PopupComboBox : public QComboBox
-{
-    Q_OBJECT
-public:
-    explicit PopupComboBox(QWidget *parent = nullptr);
-
-    QListWidget m_view;
-    QWidget m_widget;
-    QSizeGrip sg;
-/*
-protected:
-    void showPopup()
-    {
-        QComboBox::showPopup();
-    }
-    (*/
-};
 
 
 //===========================================================================================================
@@ -48,3 +28,36 @@ public:
 };
 
 #endif // COMBOPOPUPWIDGETDELEGATE_H
+
+
+
+//===========================================================================================================
+//Device description combobox with popup widget
+class DDComboBox : public QComboBox
+{
+    Q_OBJECT
+
+    QListWidget m_view;
+    StringListPopup m_widget;
+    QSizeGrip sg;
+
+public:
+    explicit DDComboBox(QWidget *parent = nullptr, const QString& strings = "");
+
+    QString currentText() const;
+
+protected:
+    void showPopup() override
+    {
+        m_widget.setFixedWidth(this->width());
+        QComboBox::showPopup();        
+    }
+
+    void keyPressEvent(QKeyEvent *e) override
+    {
+        e->ignore();
+        return;
+    }
+
+     virtual bool eventFilter(QObject *, QEvent *) override;
+};

@@ -11,7 +11,7 @@
 #include <memory>
 
 #include "device/abstractdevice.h"
-#include "common.h"
+#include "common/common.h"
 
 
 class DWidget : public QFrame
@@ -25,7 +25,7 @@ public:
 
     const AbstractDevice& device() const { return *m_device; }
     void setImage(const QString& image_name);
-    virtual void setPortInfo(const QSerialPortInfo& port_info);    
+    virtual void setPortName(const QString& port_name);
     virtual void open() = 0;
     virtual void close() = 0;
     dtype getDeviceType() const { return device_type; }
@@ -56,7 +56,7 @@ protected:
     void setIconHeight(const int icon_height);
 
     std::unique_ptr<AbstractDevice> m_device;
-    std::unique_ptr<QSerialPortInfo> port_info;
+    QString m_port_name;
 
     dtype device_type = dtype::N3;    
 

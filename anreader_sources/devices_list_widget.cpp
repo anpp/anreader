@@ -184,7 +184,7 @@ void DevicesWidget::attach(QSerialPortInfo port_info)
 
     auto device_widget = std::find_if(devices.begin(), devices.end(), [type] (const auto& widget) { return (type == widget->getDeviceType() && widget->getPortName() == ""); });
     if(device_widget != devices.end()){
-        (*device_widget)->setPortInfo(port_info);
+        (*device_widget)->setPortName(port_info.portName());
         (*device_widget)->create();
     }
     else
@@ -193,7 +193,7 @@ void DevicesWidget::attach(QSerialPortInfo port_info)
         {
             ptrWidget new_widget = new N3Widget();
             createDevice(new_widget);
-            new_widget->setPortInfo(port_info);
+            new_widget->setPortName(port_info.portName());
             new_widget->create();
         }
     }

@@ -4,6 +4,8 @@
 #include <QItemDelegate>
 #include <QLineEdit>
 
+#include "common/common.h"
+
 enum class chars_type: int {all = 0, lat_only};
 
 class LineEditDelegate : public QItemDelegate

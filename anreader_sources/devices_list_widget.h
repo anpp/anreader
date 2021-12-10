@@ -14,7 +14,7 @@
 #include "device_widgets/dwidget.h"
 #include "device_widgets/n3widget.h"
 #include "settings.h"
-#include "common.h"
+#include "common/common.h"
 
 Q_DECLARE_METATYPE(QSerialPortInfo)
 Q_DECLARE_METATYPE(QList<QSerialPortInfo>)

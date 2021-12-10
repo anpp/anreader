@@ -166,9 +166,9 @@ void DWidget::setImage(const QString &image_name)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void DWidget::setPortInfo(const QSerialPortInfo& port_info)
+void DWidget::setPortName(const QString& port_name)
 {
-    this->port_info = std::make_unique<QSerialPortInfo>(port_info);
+    m_port_name = port_name;
     lblPort.setText(getPortName());
     stateChanged();    
 }
@@ -176,7 +176,7 @@ void DWidget::setPortInfo(const QSerialPortInfo& port_info)
 //----------------------------------------------------------------------------------------------------------------------
 const QString DWidget::getPortName() const
 {
-    return (!port_info ? "": port_info->portName());
+    return m_port_name;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -184,7 +184,7 @@ void DWidget::clear()
 {
     connect_button.disconnect();
 
-    port_info.reset();
+    m_port_name.clear();
     m_device.reset();
 
     lblPort.setText(getPortName());

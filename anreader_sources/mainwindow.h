@@ -24,7 +24,7 @@
 #include <tuple>
 
 
-#include "common.h"
+#include "common/common.h"
 #include "device/neptune_hil.h"
 #include "jumpstable.h"
 #include "jumpstablemodel.h"

@@ -9,7 +9,7 @@
 #include <QHeaderView>
 #include <memory>
 
-#include "common.h"
+#include "common/common.h"
 #include "models/datalistmodel.h"
 #include "delegates/lineeditdelegate.h"
 

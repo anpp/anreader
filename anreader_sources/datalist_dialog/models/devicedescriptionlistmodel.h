@@ -9,7 +9,7 @@
 #include <vector>
 #include <memory>
 
-#include "common.h"
+#include "common/common.h"
 
 typedef std::tuple<dtype, QString> t_device_description_item;
 typedef std::vector<t_device_description_item> t_devicetypelist;

@@ -4,7 +4,7 @@
 #include <QItemDelegate>
 #include <QComboBox>
 
-#include "common.h"
+#include "common/common.h"
 
 class ComboEditDelegate : public QItemDelegate
 {
