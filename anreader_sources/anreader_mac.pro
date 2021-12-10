@@ -16,6 +16,7 @@ QMAKE_CXXFLAGS += -std=c++14
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    common/stringlist_popup.cpp \
     csvparser.cpp \
     datalist_dialog/datalist_dialog.cpp \
     datalist_dialog/delegates/combo_popupwidget_delegate.cpp \
@@ -39,7 +40,8 @@ SOURCES += \
     settings.cpp
 
 HEADERS += \
-    common.h \
+    common/common.h \
+    common/stringlist_popup.h \
     csvparser.h \
     datalist_dialog/datalist_dialog.h \
     datalist_dialog/delegates/combo_popupwidget_delegate.h \
