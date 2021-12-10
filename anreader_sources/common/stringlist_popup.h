@@ -6,10 +6,6 @@
 #include "common.h"
 #include "ui_string_list.h"
 
-namespace Ui {
-class StringList;
-}
-
 
 class StringListPopup : public QDialog,
                         protected Ui::StringList
