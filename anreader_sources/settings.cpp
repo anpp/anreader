@@ -44,6 +44,8 @@ void Settings::loadSettingsByKind(kindset ks)
                 Setting *setting = s->second;
                 setting->value = qsettings.value("/" + key, setting->getValue());
             }
+            else
+                setSetting(key, qsettings.value("/" + key, ""), ks);
         }
     qsettings.endGroup();
 }
