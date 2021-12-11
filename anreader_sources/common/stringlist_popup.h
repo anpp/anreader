@@ -18,9 +18,13 @@ public:
     ~StringListPopup() {}
 
     const QString value() const { return m_strings.join(";"); }
+    void setValue(const QString& avalue);
 
 signals:
-
+    void accepted(bool);
+private slots:
+    void on_buttonBox_accepted();
+    void on_buttonBox_rejected();
 };
 
 #endif // STRINGLISTPOPUP_H

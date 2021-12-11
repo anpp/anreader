@@ -29,6 +29,7 @@ class Setting
 public:
     Setting(QString atitle, kindset akind, QVariant adefault, QVariant avalue, bool aisChanged):
         title(atitle), kind(akind), default_value(adefault), value(avalue), isChanged(aisChanged) {}
+    ~Setting() {}
 
     const QVariant& getValue() const { return (value.isNull() || !value.isValid())? default_value : value; }
 
@@ -62,6 +63,7 @@ public:
     const QVariant& getSetting(const QString& title, const kindset ks = kindset::all) const;
     bool isChanged(const QString& title, const kindset ks = kindset::all) const;
     void setSetting(const QString& title, QVariant value, const kindset ks = kindset::all);
+    void clear(const kindset ks);
 
 
     void load(){

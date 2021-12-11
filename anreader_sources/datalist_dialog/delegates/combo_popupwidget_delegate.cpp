@@ -47,6 +47,7 @@ void ComboPopupWidgetDelegate::updateEditorGeometry(QWidget *editor, const QStyl
 //===========================================================================================================
 DDComboBox::DDComboBox(QWidget *parent, const QString& strings) : QComboBox(parent), m_widget(strings), sg(this)
 {
+    m_current_text = strings;
     QListWidgetItem * item = new QListWidgetItem(&m_view);
 
     m_view.setItemWidget(item, &m_widget);
@@ -61,12 +62,29 @@ DDComboBox::DDComboBox(QWidget *parent, const QString& strings) : QComboBox(pare
     item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
     m_view.setSelectionMode( QAbstractItemView::NoSelection );
     //m_view.setStyleSheet("QListWidget{selection-background-color: transparent; background-color: transparent}");
+
+    connect(&m_widget, &StringListPopup::accepted, this, &DDComboBox::closePopup);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
 QString DDComboBox::currentText() const
 {
-    return m_widget.value();
+    return m_current_text;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+void DDComboBox::showPopup()
+{
+    m_widget.setFixedWidth(this->width());
+    QComboBox::showPopup();
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+void DDComboBox::keyPressEvent(QKeyEvent *e)
+{
+    e->ignore();
+    return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
@@ -78,4 +96,13 @@ bool DDComboBox::eventFilter(QObject *widget, QEvent *event)
     }
 
     return QWidget::eventFilter(widget, event);
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+void DDComboBox::closePopup(bool accepted)
+{
+    m_current_text = (accepted ? m_widget.value() : m_current_text);
+    setCurrentText(m_current_text);
+    m_widget.setValue(m_current_text);
+    hidePopup();
 }

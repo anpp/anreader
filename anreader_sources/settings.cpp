@@ -127,6 +127,17 @@ void Settings::setSetting(const QString& title, QVariant value, const kindset ks
         item->second->isChanged = (item->second->value != value);
         item->second->value = value;
     }
+    else
+        if(ks != kindset::all)
+            vec_settings.emplace_back(std::make_shared<Setting>(title, ks, value, value, false));
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+void Settings::clear(const kindset ks)
+{
+    auto new_end = std::remove_if(vec_settings.begin(), vec_settings.end(), [&] (const auto& item) {return item->kind == ks; });
+    vec_settings.erase(new_end, vec_settings.end());
 }
 
 

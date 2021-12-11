@@ -568,7 +568,15 @@ void MainWindow::devicetypes_list()
 
     if(dl_dialog->exec())
     {
+        settings.clear(kindset::device_types);
+        for(const auto& item: datalist)
+        {
+            dtype dt = std::get<static_cast<int>(DeviceDescriptionListModel_defs::DeviceType)>(item);
+            QString value = std::get<static_cast<int>(DeviceDescriptionListModel_defs::DeviceDescription)>(item);
 
+            settings.setSetting(sDeviceTypes[static_cast<int>(dt)], value, kindset::device_types);
+        }
+        settings.saveSettingsByKind(kindset::device_types);
     }
 }
 
