@@ -21,6 +21,7 @@ ListDeviceTypesWidget::ListDeviceTypesWidget(t_devicetypelist &datalist, QWidget
     m_listTable->horizontalHeader()->setStretchLastSection(true);
     m_listTable->setSelectionMode(QAbstractItemView::SingleSelection);
     m_listTable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    m_listTable->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
 }
 
 

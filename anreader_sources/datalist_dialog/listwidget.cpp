@@ -23,6 +23,7 @@ ListWidget::ListWidget(t_registry& datalist, QWidget *parent) : QWidget(parent),
     m_listTable->horizontalHeader()->setStretchLastSection(true);
     m_listTable->setSelectionMode(QAbstractItemView::SingleSelection);
     m_listTable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    m_listTable->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     m_listTable->setAlternatingRowColors(true);
     connect(m_listTable->selectionModel(), &QItemSelectionModel::currentRowChanged,  this, &ListWidget::rowChanged);
 }

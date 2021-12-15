@@ -159,12 +159,15 @@ dtype DevicesWidget::typeByDescription(const QString &description) const
     for(const auto& item: settings.map_set(kindset::device_types))
     {
         QString device_string_value = item.second->getValue().toString();
-        if(device_string_value.trimmed().trimmed() == description)
-        {
-            type = DWidget::typeByName(item.first);
-            if(dtype::unk != type)
-                break;
-        }
+        QStringList values = device_string_value.split(";");
+
+        for(auto& s: values)
+            if(s.trimmed() == description)
+            {
+                type = DWidget::typeByName(item.first);
+                if(dtype::unk != type)
+                    break;
+            }
     }
     //return type;
     return (type == dtype::Atlas ? dtype::N3: type);
