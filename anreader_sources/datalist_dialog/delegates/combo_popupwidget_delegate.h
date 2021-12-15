@@ -41,6 +41,7 @@ class DDComboBox : public QComboBox
     StringListPopup m_widget;
     QSizeGrip sg;
     QString m_current_text;
+    bool m_accepted = false;
 
 public:
     explicit DDComboBox(QWidget *parent = nullptr, const QString& strings = "");
@@ -49,6 +50,7 @@ public:
 
 protected:
     void showPopup() override;
+    void hidePopup() override;
     void keyPressEvent(QKeyEvent *e) override;
     virtual bool eventFilter(QObject *, QEvent *) override;
 

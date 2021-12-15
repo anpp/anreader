@@ -25,6 +25,9 @@ signals:
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
+    void on_btnAdd_clicked();
+    void on_btnDelete_clicked();
+    void on_listWidget_currentRowChanged(int currentRow);
 };
 
 #endif // STRINGLISTPOPUP_H

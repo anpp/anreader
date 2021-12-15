@@ -81,6 +81,14 @@ void DDComboBox::showPopup()
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
+void DDComboBox::hidePopup()
+{
+    m_current_text = (m_accepted ? m_widget.value() : m_current_text);
+    setEditText(m_current_text);
+    QComboBox::hidePopup();
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
 void DDComboBox::keyPressEvent(QKeyEvent *e)
 {
     e->ignore();
@@ -101,8 +109,6 @@ bool DDComboBox::eventFilter(QObject *widget, QEvent *event)
 //---------------------------------------------------------------------------------------------------------------------------
 void DDComboBox::closePopup(bool accepted)
 {
-    m_current_text = (accepted ? m_widget.value() : m_current_text);
-    setCurrentText(m_current_text);
-    m_widget.setValue(m_current_text);
+    m_accepted = accepted;
     hidePopup();
 }
