@@ -46,6 +46,12 @@ void ListWidget::removeFocusedItem()
     m_model.removeItem(currentRow);
 }
 
+//-----------------------------------------------------------------------------------------------------------------------------
+void ListWidget::setupCurrentRow()
+{
+    emit m_listTable->selectionModel()->currentRowChanged(QModelIndex(), QModelIndex());
+}
+
 
 //-----------------------------------------------------------------------------------------------------------------------------
 void ListWidget::rowChanged()

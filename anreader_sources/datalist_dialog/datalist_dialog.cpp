@@ -15,6 +15,8 @@ DataList_Dialog::DataList_Dialog(const QString& Title, t_registry& datalist, QWi
     connect(listwidget, &ListWidget::selectedItemUsed,  this, &DataList_Dialog::selectedItemUsed);
     connect(this, &DataList_Dialog::removeFocusedItem, listwidget, &ListWidget::removeFocusedItem);
     connect(this, &DataList_Dialog::addItem, listwidget, &ListWidget::addItem);
+
+    listwidget->setupCurrentRow();
 }
 
 
@@ -28,9 +30,11 @@ DataList_Dialog::DataList_Dialog(const QString &Title, t_devicetypelist &datalis
     this->setWindowTitle(Title);
     ui->centralLayout->addWidget(listwidget);
 
+    connect(listwidget, &ListDeviceTypesWidget::rowIsEnabled,  this, &DataList_Dialog::rowIsEnabled);
     connect(this, &DataList_Dialog::removeFocusedItem, listwidget, &ListDeviceTypesWidget::removeFocusedItem);
     connect(this, &DataList_Dialog::addItem, listwidget, &ListDeviceTypesWidget::addItem);
 
+    listwidget->setupCurrentRow();
 }
 
 
@@ -63,6 +67,14 @@ void DataList_Dialog::on_btnRemove_clicked()
 
 //---------------------------------------------------------------------------------------------------------------
 void DataList_Dialog::selectedItemUsed(bool value)
-{
+{    
     ui->btnRemove->setEnabled(!value);
 }
+
+
+//---------------------------------------------------------------------------------------------------------------
+void DataList_Dialog::rowIsEnabled(bool value)
+{
+    ui->btnRemove->setEnabled(value);
+}
+

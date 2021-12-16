@@ -31,6 +31,7 @@ public slots:
     void rowChanged();
     void addItem();
     void removeFocusedItem();
+    void setupCurrentRow();
 
 };
 

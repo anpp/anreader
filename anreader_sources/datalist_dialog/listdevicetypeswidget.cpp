@@ -22,6 +22,15 @@ ListDeviceTypesWidget::ListDeviceTypesWidget(t_devicetypelist &datalist, QWidget
     m_listTable->setSelectionMode(QAbstractItemView::SingleSelection);
     m_listTable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     m_listTable->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+
+    connect(m_listTable->selectionModel(), &QItemSelectionModel::currentRowChanged,  this, &ListDeviceTypesWidget::rowChanged);
+}
+
+
+//-----------------------------------------------------------------------------------------------------------------------------
+void ListDeviceTypesWidget::setupCurrentRow()
+{
+    emit m_listTable->selectionModel()->currentRowChanged(QModelIndex(), QModelIndex());
 }
 
 
@@ -40,4 +49,11 @@ void ListDeviceTypesWidget::removeFocusedItem()
 
     auto currentRow  = m_listTable->currentIndex().row();
     m_model.removeItem(currentRow);
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------
+void ListDeviceTypesWidget::rowChanged()
+{
+    const int row_index = m_listTable->currentIndex().row();
+    emit rowIsEnabled(row_index >= 0 && row_index < m_model.rowCount());
 }

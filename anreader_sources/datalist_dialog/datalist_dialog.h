@@ -26,6 +26,7 @@ private slots:
     void on_btnRemove_clicked();
 
     void selectedItemUsed(bool value);
+    void rowIsEnabled(bool value);
 
 private:
     Ui::DataList_Dialog *ui;

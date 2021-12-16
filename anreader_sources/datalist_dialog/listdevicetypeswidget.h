@@ -20,15 +20,18 @@ public:
     explicit ListDeviceTypesWidget(t_devicetypelist& datalist, QWidget *parent = nullptr);
 
     const QTableView& listTable() const { return *m_listTable; }
+    void setupCurrentRow();
 
 private:
     std::unique_ptr<QTableView> m_listTable = std::make_unique<QTableView>(this);
     DeviceDescriptionListModel m_model;
 signals:
+    void rowIsEnabled(bool enable);
 
 public slots:
     void addItem();
     void removeFocusedItem();
+    void rowChanged();
 
 };
 

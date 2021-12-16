@@ -109,10 +109,10 @@ void DataListModel::removeItem(const uint row)
 }
 
 //---------------------------------------------------------------------------------------------------------------
-bool DataListModel::isUsed(const uint row) const
+bool DataListModel::isUsed(const int row) const
 {
-    if(m_datalist.size() <= row)
-        return false;
+    if(row < 0 || m_datalist.size() <= static_cast<size_t>(row))
+        return true;
     return std::get<static_cast<int>(DataListModel_defs::Used)>(m_datalist[row]);
 }
 
