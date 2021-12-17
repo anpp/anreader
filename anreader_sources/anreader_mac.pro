@@ -37,7 +37,9 @@ SOURCES += \
     device_widgets/dwidget.cpp \
     jumpeditor_dialog/n3jumpeditor.cpp \
     device_widgets/n3widget.cpp \
-    settings.cpp
+    settings.cpp \
+    settings_dialog/settings_com_port.cpp \
+    settings_dialog/settings_editor.cpp
 
 HEADERS += \
     common/common.h \
@@ -61,7 +63,9 @@ HEADERS += \
     device_widgets/dwidget.h \
     jumpeditor_dialog/n3jumpeditor.h \
     device_widgets/n3widget.h \
-    settings.h
+    settings.h \
+    settings_dialog/settings_com_port.h \
+    settings_dialog/settings_editor.h
 
 TRANSLATIONS += \
     anreader_en.ts
