@@ -7,12 +7,27 @@
 #include <QObject>
 #include <QString>
 #include <QtGlobal>
-
+#include <QSerialPort>
 
 enum class dtype: uint {unk = 0, N3 = 1, Atlas = 2};
 const static QString sDeviceTypes[] = {"", "N3", "Atlas"};
 
 typedef std::map<QString, QString> map_DataList;
+
+struct COM_settings {
+    //QString name;
+    qint32 baudRate;
+    QString stringBaudRate;
+    QSerialPort::DataBits dataBits;
+    QString stringDataBits;
+    QSerialPort::Parity parity;
+    QString stringParity;
+    QSerialPort::StopBits stopBits;
+    QString stringStopBits;
+    QSerialPort::FlowControl flowControl;
+    QString stringFlowControl;
+};
+
 
 #if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
     //для XP

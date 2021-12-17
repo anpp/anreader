@@ -19,6 +19,37 @@ SettingsCOMPort::SettingsCOMPort(QWidget *parent) : QWidget(parent),
 
 
 //--------------------------------------------------------------------------------------------------------------------------------
+void SettingsCOMPort::updateSettings(COM_settings &settings)
+{
+    //settings.name = m_ui->serialPortInfoListBox->currentText();
+
+    if (baudRateBox->currentIndex() == 4) {
+        settings.baudRate = baudRateBox->currentText().toInt();
+    } else {
+        settings.baudRate = static_cast<QSerialPort::BaudRate>(
+                    baudRateBox->itemData(baudRateBox->currentIndex()).toInt());
+    }
+    settings.stringBaudRate = QString::number(settings.baudRate);
+
+    settings.dataBits = static_cast<QSerialPort::DataBits>(
+                dataBitsBox->itemData(dataBitsBox->currentIndex()).toInt());
+    settings.stringDataBits = dataBitsBox->currentText();
+
+    settings.parity = static_cast<QSerialPort::Parity>(
+                parityBox->itemData(parityBox->currentIndex()).toInt());
+    settings.stringParity = parityBox->currentText();
+
+    settings.stopBits = static_cast<QSerialPort::StopBits>(
+                stopBitsBox->itemData(stopBitsBox->currentIndex()).toInt());
+    settings.stringStopBits = stopBitsBox->currentText();
+
+    settings.flowControl = static_cast<QSerialPort::FlowControl>(
+                flowControlBox->itemData(flowControlBox->currentIndex()).toInt());
+    settings.stringFlowControl = flowControlBox->currentText();
+}
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
 void SettingsCOMPort::checkCustomBaudRatePolicy(int idx)
 {
     const bool isCustomBaudRate = !baudRateBox->itemData(idx).isValid();

@@ -22,6 +22,8 @@ class SettingsEditor : public QDialog
     QDialogButtonBox buttonBox;
     QTabWidget tw;
     SettingsCOMPort com_port_widget;
+
+    COM_settings m_com_settings;
 public:    
     explicit SettingsEditor(QWidget *parent = nullptr);
 
