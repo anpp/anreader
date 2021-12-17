@@ -63,7 +63,7 @@ DDComboBox::DDComboBox(QWidget *parent, const QString& strings) : QComboBox(pare
     m_view.setSelectionMode( QAbstractItemView::NoSelection );
     //m_view.setStyleSheet("QListWidget{selection-background-color: transparent; background-color: transparent}");
 
-    connect(&m_widget, &StringListPopup::accepted, this, &DDComboBox::closePopup);
+    connect(&m_widget, &StringListPopup::finish, this, &DDComboBox::closePopup);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------

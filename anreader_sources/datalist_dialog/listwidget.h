@@ -16,14 +16,14 @@
 class ListWidget : public QWidget
 {
     Q_OBJECT
-public:
-    explicit ListWidget(t_registry& datalist, QWidget *parent = nullptr);
 
-    const QTableView& listTable() const { return *m_listTable; }
-
-private:
     std::unique_ptr<QTableView> m_listTable = std::make_unique<QTableView>(this);
     DataListModel m_model;
+
+public:
+    explicit ListWidget(t_registry& datalist, QWidget *parent = nullptr);
+    const QTableView& listTable() const { return *m_listTable; }
+
 signals:
     void selectedItemUsed(bool value);
 

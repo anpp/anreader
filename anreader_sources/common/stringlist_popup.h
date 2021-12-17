@@ -21,7 +21,7 @@ public:
     void setValue(const QString& avalue);
 
 signals:
-    void accepted(bool);
+    void finish(bool);
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();

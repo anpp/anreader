@@ -30,14 +30,14 @@ void StringListPopup::on_buttonBox_accepted()
         if(!listWidget->item(i)->text().trimmed().isEmpty())
             m_strings << listWidget->item(i)->text();
 
-    emit accepted(true);
+    emit finish(true);
 }
 
 
 //---------------------------------------------------------------------------------------------------------------------------
 void StringListPopup::on_buttonBox_rejected()
 {
-    emit accepted(false);
+    emit finish(false);
 }
 
 

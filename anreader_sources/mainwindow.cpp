@@ -208,6 +208,13 @@ void MainWindow::createActions()
     m_deviceTypesAct->setToolTip(tr("Device types and descriptions..."));
     connect(m_deviceTypesAct, &QAction::triggered, this, &MainWindow::devicetypes_list);
 
+    const QIcon settingsIcon = QIcon(":/images/icons/menu/settings.png");
+    m_settingsAct = new QAction(settingsIcon, tr("Settings"), this);
+    m_actions.push_back(m_settingsAct);
+    m_settingsAct->setToolTip(tr("Settings..."));
+    connect(m_settingsAct, &QAction::triggered, this, &MainWindow::settings_edit);
+
+
     QToolBar *mainToolBar = addToolBar(tr("File"));
     mainToolBar->setIconSize(QSize(40, 40));
     mainToolBar->setObjectName("file toolbar");
@@ -236,6 +243,7 @@ void MainWindow::createActions()
     registryMenu->addAction(m_registryJumpTypesAct);
 
     configMenu->addAction(m_deviceTypesAct);
+    configMenu->addAction(m_settingsAct);
 
     if(m_toggleDevices)
         windowsMenu->addAction(m_toggleDevices);
@@ -578,6 +586,15 @@ void MainWindow::devicetypes_list()
         }
         settings.saveSettingsByKind(kindset::device_types);
     }
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+void MainWindow::settings_edit()
+{
+    std::unique_ptr<SettingsEditor> dl_settings = std::make_unique<SettingsEditor>(this);
+
+    dl_settings->exec();
 }
 
 

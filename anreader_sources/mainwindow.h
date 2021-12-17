@@ -34,6 +34,7 @@
 #include "jumpeditor_dialog/n3jumpeditor.h"
 #include "datalists.h"
 #include "datalist_dialog/datalist_dialog.h"
+#include "settings_dialog/settings_editor.h"
 
 enum MainWindow_defs: int {BaseWidht = 1100, BaseHeight = 500, StatusStateLabelWidth = 250};
 
@@ -115,6 +116,7 @@ private:
     QPointer<QAction> m_registryCanopiesAct;
     QPointer<QAction> m_registryJumpTypesAct;
     QPointer<QAction> m_deviceTypesAct;
+    QPointer<QAction> m_settingsAct;
     QVector<QPointer<QAction>> m_actions;
 
     QPointer<QAction> m_toggleDevices;
@@ -157,6 +159,7 @@ public slots:
     void canopies_list()  { open_DataListDialog(datakind::canopies, dl.canopies()); }
     void jumptypes_list() { open_DataListDialog(datakind::jump_types, dl.jumptypes()); }
     void devicetypes_list();
+    void settings_edit();
     void about();
     void documentWasModified();
     void enableActions(const bool enable);
