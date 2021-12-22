@@ -11,6 +11,7 @@
 
 #include "common/common.h"
 #include "settings_com_port.h"
+#include "../settings.h"
 
 class SettingsEditor : public QDialog
 {
@@ -23,9 +24,9 @@ class SettingsEditor : public QDialog
     QTabWidget tw;
     SettingsCOMPort com_port_widget;
 
-    COM_settings m_com_settings;
+    Settings &settings;
 public:    
-    explicit SettingsEditor(QWidget *parent = nullptr);
+    explicit SettingsEditor(Settings &s, QWidget *parent = nullptr);
 
 
 };

@@ -592,7 +592,7 @@ void MainWindow::devicetypes_list()
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::settings_edit()
 {
-    std::unique_ptr<SettingsEditor> dl_settings = std::make_unique<SettingsEditor>(this);
+    std::unique_ptr<SettingsEditor> dl_settings = std::make_unique<SettingsEditor>(settings, this);
 
     dl_settings->exec();
 }

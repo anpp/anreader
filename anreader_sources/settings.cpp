@@ -2,7 +2,7 @@
 #include <QDir>
 
 
-const static QString sSettingKind[] = {"", "appearance", "misc", "screen", "environment", "device_types"};
+const static QString sSettingKind[] = {"", "appearance", "misc", "screen", "environment", "device_types", "com_port"};
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -15,8 +15,15 @@ Settings::Settings(QMainWindow* widget_owner, const QString& organization, const
                     std::make_shared<Setting>("directory_for_save", kindset::environment, QDir::homePath(), QVariant(QVariant::String), false),
                     std::make_shared<Setting>("current_file", kindset::environment, QString(), QVariant(QVariant::String), false),
                     std::make_shared<Setting>("current_file_delimiter", kindset::environment, QString(";"), QVariant(QVariant::String), false),
+                    //
                     std::make_shared<Setting>("N3", kindset::device_types, QString("USB Serial Port Driver for Altimaster N3"), QVariant(QVariant::String), false),
                     std::make_shared<Setting>("Atlas", kindset::device_types, QString("USB Serial Port Driver"), QVariant(QVariant::String), false),
+                    //COM Port
+                    std::make_shared<Setting>("baudRate", kindset::com_port, QSerialPort::Baud57600, QVariant(QVariant::Int), false),
+                    std::make_shared<Setting>("dataBits", kindset::com_port, QSerialPort::Data8, QVariant(QVariant::Int), false),
+                    std::make_shared<Setting>("parity", kindset::com_port, QSerialPort::NoParity, QVariant(QVariant::Int), false),
+                    std::make_shared<Setting>("stopBits", kindset::com_port, QSerialPort::OneStop, QVariant(QVariant::Int), false),
+                    std::make_shared<Setting>("flowControl", kindset::com_port, QSerialPort::HardwareControl, QVariant(QVariant::Int), false)
                    };
 }
 
@@ -155,6 +162,76 @@ const mset &Settings::map_set(const kindset ks) const
 {
     setup_mapset(ks);
     return mapset_by_kind;
+}
+
+
+
+//----------------------------------------------------------------------------------------------------------------------
+const COM_settings &Settings::COMSettings()
+{
+    com_settings.baudRate = getSetting("baudRate", kindset::com_port).toInt();
+    com_settings.dataBits = static_cast<QSerialPort::DataBits>(getSetting("dataBits", kindset::com_port).toInt());
+    com_settings.parity = static_cast<QSerialPort::Parity>(getSetting("parity", kindset::com_port).toInt());
+    com_settings.stopBits = static_cast<QSerialPort::StopBits>(getSetting("stopBits", kindset::com_port).toInt());
+    com_settings.flowControl = static_cast<QSerialPort::FlowControl>(getSetting("flowControl", kindset::com_port).toInt());
+
+    com_settings.stringBaudRate = QString::number(com_settings.baudRate);
+    com_settings.stringDataBits = QString::number(com_settings.dataBits);
+
+    switch(com_settings.parity)
+    {
+    case QSerialPort::NoParity:
+        com_settings.stringParity = "None";
+        break;
+    case QSerialPort::QSerialPort::EvenParity:
+        com_settings.stringParity = "Even";
+        break;
+    case QSerialPort::OddParity:
+        com_settings.stringParity = "Odd";
+        break;
+    case QSerialPort::MarkParity:
+        com_settings.stringParity = "Mark";
+        break;
+    case QSerialPort::SpaceParity:
+        com_settings.stringParity = "Space";
+        break;
+    default:
+        break;
+    }
+
+    switch(com_settings.stopBits)
+    {
+    case QSerialPort::OneStop:
+        com_settings.stringStopBits = "1";
+        break;
+    #ifdef Q_OS_WIN
+    case QSerialPort::OneAndHalfStop:
+        com_settings.stringStopBits = "1.5";
+        break;
+    #endif
+    case QSerialPort::TwoStop:
+        com_settings.stringStopBits = "2";
+        break;
+    default:
+        break;
+    }
+
+    switch(com_settings.flowControl)
+    {
+    case QSerialPort::NoFlowControl:
+        com_settings.stringFlowControl = "None";
+        break;
+    case QSerialPort::HardwareControl:
+        com_settings.stringFlowControl = "RTS/CTS";
+        break;
+    case QSerialPort::SoftwareControl:
+        com_settings.stringFlowControl = "XON/XOFF";
+        break;
+    default:
+        break;
+    }
+
+    return com_settings;
 }
 
 

@@ -14,7 +14,23 @@
 #include "common/common.h"
 
 
-enum class kindset: int {all =0, appearance, misc, screen, environment, device_types};
+struct COM_settings {
+    //QString name;
+    qint32 baudRate;
+    QString stringBaudRate;
+    QSerialPort::DataBits dataBits;
+    QString stringDataBits;
+    QSerialPort::Parity parity;
+    QString stringParity;
+    QSerialPort::StopBits stopBits;
+    QString stringStopBits;
+    QSerialPort::FlowControl flowControl;
+    QString stringFlowControl;
+};
+
+
+
+enum class kindset: int {all =0, appearance, misc, screen, environment, device_types, com_port};
 
 class Settings;
 
@@ -47,7 +63,8 @@ class Settings {
     mutable mset mapset_by_kind;
 
     std::vector<ptrSetting> vec_settings;        
-    QVariant default_return;       
+    QVariant default_return;
+    COM_settings com_settings;
 
     void setup_mapset(const kindset ks) const;
 public:
@@ -71,6 +88,7 @@ public:
         loadSettingsByKind(kindset::misc);
         loadSettingsByKind(kindset::environment);
         loadSettingsByKind(kindset::device_types);
+        loadSettingsByKind(kindset::com_port);
         loadSettingsScreen();
     }
 
@@ -79,12 +97,15 @@ public:
         saveSettingsByKind(kindset::misc);
         saveSettingsByKind(kindset::environment);
         saveSettingsByKind(kindset::device_types);
+        saveSettingsByKind(kindset::com_port);
         saveSettingsScreen();
     }
 
 
     const QString& name(const kindset ks) const;
     const mset& map_set(const kindset ks) const;
+
+    const COM_settings& COMSettings();
 };
 
 #endif // SETTINGS

@@ -1,7 +1,7 @@
 #include "settings_editor.h"
 
 //-------------------------------------------------------------------------------------------------------------------------------------
-SettingsEditor::SettingsEditor(QWidget *parent) : QDialog(parent)
+SettingsEditor::SettingsEditor(Settings &s, QWidget *parent) : QDialog(parent), settings(s)
 {
     this->setWindowTitle(tr("Settings"));
     this->setMinimumSize(default_width, default_height);
@@ -17,6 +17,8 @@ void SettingsEditor::setup()
     layout->setMargin(margin);
 
     buttonBox.setStandardButtons(QDialogButtonBox::Cancel | QDialogButtonBox::Ok | QDialogButtonBox::Apply);
+
+    com_port_widget.setCurrentSettings(settings.COMSettings());
 
     tw.addTab(&com_port_widget, "COM port");
     tw.setTabsClosable(false);

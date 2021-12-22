@@ -39,18 +39,32 @@ public slots:
 
 
 
+
 class SerialPortThread : public QSerialPort
 {
     Q_OBJECT
+
+public:
+    struct port_settings {
+        qint32 baudRate;
+        QSerialPort::DataBits dataBits;
+        QSerialPort::Parity parity;
+        QSerialPort::StopBits stopBits;
+        QSerialPort::FlowControl flowControl;
+
+    };
+
 private:
     QThread thread;
     QThread worker_thread;
     WorkerPacketSender worker;
     int bytes_to_port = 1;
+    port_settings ps;
 
     void init();
     void delay(const unsigned long ms) const;
     void sendPacketToPort(const QByteArray &packet);
+    void setPortSettings(const port_settings& aps) { ps = aps; }
 
 
 public:

@@ -134,6 +134,7 @@ void SerialPortThread::sendRatePacket(QByteArray rate)
 }
 
 
+#include <QDebug>
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::sopen(QString com_port)
 {
@@ -143,11 +144,26 @@ void SerialPortThread::sopen(QString com_port)
         return;
     }
 
-    setBaudRate(QSerialPort::Baud57600);
-    setDataBits(QSerialPort::Data8);
-    setParity(QSerialPort::NoParity);
-    setStopBits(QSerialPort::OneStop);
-    setFlowControl(QSerialPort::HardwareControl);
+
+    ps.baudRate = QSerialPort::Baud57600;
+    ps.dataBits = QSerialPort::Data8;
+    ps.parity = QSerialPort::NoParity;
+    ps.stopBits = QSerialPort::OneStop;
+    ps.flowControl = QSerialPort::HardwareControl;
+
+    setBaudRate(ps.baudRate);
+    setDataBits(ps.dataBits);
+    setParity(ps.parity);
+    setStopBits(ps.stopBits);
+    setFlowControl(ps.flowControl);
+
+
+    qDebug() << "BaudRate: " << ps.baudRate;
+    qDebug() << "DataBits: " << ps.dataBits;
+    qDebug() << "Parity: " << ps.parity;
+    qDebug() << "StopBits: " << ps.stopBits;
+    qDebug() << "FlowControl: " << ps.flowControl;
+
     emit connected();
 }
 
