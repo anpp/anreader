@@ -19,6 +19,7 @@ class SettingsEditor : public QDialog
     enum SettingsEditor_defs: int {default_width = 500, default_height = 400, margin = 4};
 
     void setup();
+    void applySettings();
 
     QDialogButtonBox buttonBox;
     QTabWidget tw;
@@ -28,7 +29,9 @@ class SettingsEditor : public QDialog
 public:    
     explicit SettingsEditor(Settings &s, QWidget *parent = nullptr);
 
-
+private slots:
+    void accept_slot();
+    void clicked_slot(QAbstractButton*);
 };
 
 #endif // SETTINGSEDITOR_H

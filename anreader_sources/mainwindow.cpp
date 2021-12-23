@@ -553,7 +553,7 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
 
     std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(tr(sDataList_Titles[static_cast<uint>(dlk)].toStdString().c_str()), datalist, this);
 
-    if(dl_dialog->exec())
+    if(dl_dialog->exec() == QDialog::Accepted)
     {
         data.clear();
         for(const auto& item: datalist)
@@ -574,7 +574,7 @@ void MainWindow::devicetypes_list()
 
     std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(tr("Device types"), datalist, this);
 
-    if(dl_dialog->exec())
+    if(dl_dialog->exec() == QDialog::Accepted)
     {
         settings.clear(kindset::device_types);
         for(const auto& item: datalist)

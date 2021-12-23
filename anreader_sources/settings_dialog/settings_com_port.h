@@ -23,6 +23,7 @@ public:
     explicit SettingsCOMPort(QWidget *parent = nullptr);
 
     void setCurrentSettings(const COM_settings& current_settings);
+    const COM_settings& actualSettings();
 
 signals:
 

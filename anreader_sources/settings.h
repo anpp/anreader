@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <QSerialPort>
 
 #include "common/common.h"
 
@@ -64,7 +65,7 @@ class Settings {
 
     std::vector<ptrSetting> vec_settings;        
     QVariant default_return;
-    COM_settings com_settings;
+    std::unique_ptr<COM_settings> com_settings;
 
     void setup_mapset(const kindset ks) const;
 public:
@@ -105,7 +106,8 @@ public:
     const QString& name(const kindset ks) const;
     const mset& map_set(const kindset ks) const;
 
-    const COM_settings& COMSettings();
+    const COM_settings& COMSettings() const;
+    void setCOMSettings(const COM_settings& com_settings_struct);
 };
 
 #endif // SETTINGS

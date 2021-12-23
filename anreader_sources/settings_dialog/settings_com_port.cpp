@@ -30,6 +30,13 @@ void SettingsCOMPort::setCurrentSettings(const COM_settings &current_settings)
     updateSettings();
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------
+const COM_settings &SettingsCOMPort::actualSettings()
+{
+    updateSettings();
+    return m_com_settings;
+}
+
 
 //--------------------------------------------------------------------------------------------------------------------------------
 void SettingsCOMPort::updateSettings()
