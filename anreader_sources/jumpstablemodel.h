@@ -1,10 +1,8 @@
 #ifndef JUMPSTABLEMODEL_H
 #define JUMPSTABLEMODEL_H
 
-#include <QObject>
 #include <QAbstractTableModel>
 #include <QColor>
-#include <memory>
 
 
 #include "device/jumps/n3jump.h"

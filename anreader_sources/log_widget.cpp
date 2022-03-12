@@ -1,4 +1,7 @@
 #include "log_widget.h"
+#include <QTextEdit>
+#include <QVBoxLayout>
+#include <QDateTime>
 
 //----------------------------------------------------------------------------------------------------------------------
 LogWidget::LogWidget(QWidget *parent) : QWidget(parent)

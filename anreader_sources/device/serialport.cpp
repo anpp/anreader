@@ -1,4 +1,5 @@
 #include "serialport.h"
+#include <QCoreApplication>
 
 //----------------------------------------------------------------------------------------------------------------------
 void WorkerPacketSender::sendPacket()

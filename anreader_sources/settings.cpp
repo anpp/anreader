@@ -1,6 +1,6 @@
 #include "settings.h"
 #include <QDir>
-
+#include <QMainWindow>
 
 const static QString sSettingKind[] = {"", "appearance", "misc", "screen", "environment", "device_types", "com_port"};
 

@@ -2,8 +2,6 @@
 #define DATALISTS_H
 
 #include <QSettings>
-#include <QVariant>
-#include <memory>
 
 #include "common/common.h"
 

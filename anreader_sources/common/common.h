@@ -3,12 +3,6 @@
 
 #include <QDebug>
 
-#include <map>
-#include <QObject>
-#include <QString>
-#include <QtGlobal>
-
-
 enum class dtype: uint {unk = 0, N3 = 1, Atlas = 2};
 const static QString sDeviceTypes[] = {"", "N3", "Atlas"};
 
@@ -17,6 +11,8 @@ typedef std::map<QString, QString> map_DataList;
 
 #if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
     //для XP
+#include <QtGlobal>
+
 template <typename T>
 typename std::add_const<T>::type &qAsConst(T &t) {return t;}
 

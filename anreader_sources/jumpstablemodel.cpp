@@ -1,5 +1,5 @@
 #include "jumpstablemodel.h"
-#include <QColor>
+
 
 //----------------------------------------------------------------------------------------------------------------------
 QModelIndex JumpsTableModel::index(int row, int column, const QModelIndex &) const

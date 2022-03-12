@@ -1,17 +1,20 @@
 #include "devices_list_widget.h"
-
+#include <QHeaderView>
+#include <QVBoxLayout>
+#include <QListWidget>
+#include <QSerialPortInfo>
 
 //----------------------------------------------------------------------------------------------------------------------
 void WorkerEnumerator::stop()
 {
     isEnumerated = false;
-    //qDebug() << "thread stop";
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void WorkerEnumerator::enumerate()
 {
     isEnumerated = true;
+    QEventLoop event_loop;
 
     while(isEnumerated)
     {
@@ -54,8 +57,8 @@ void WorkerEnumerator::enumerate()
         }
 
         QThread::msleep(Enumerator::DelayMs);
+        event_loop.processEvents();
     }
-    //qDebug() << "thread exit";
     emit finished();
 }
 
@@ -103,7 +106,7 @@ void DevicesWidget::init()
     connect(&worker, &WorkerEnumerator::finished, &threadEnumerator, &QThread::quit, Qt::DirectConnection);
     connect(&worker, &WorkerEnumerator::attachDevice, this, &DevicesWidget::attach);
     connect(&worker, &WorkerEnumerator::detachDevice, this, &DevicesWidget::detach);
-    connect(this, &DevicesWidget::stopEnumerate, &worker, &WorkerEnumerator::stop, Qt::DirectConnection);
+    connect(this, &DevicesWidget::stopEnumerate, &worker, &WorkerEnumerator::stop);
 
 
     auto layout = new QVBoxLayout;

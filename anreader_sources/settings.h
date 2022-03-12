@@ -2,18 +2,12 @@
 #define SETTINGS
 
 #include <QSettings>
-#include <QWidget>
-#include <QSize>
-#include <QPoint>
-#include <QVariant>
-#include <QMainWindow>
-#include <vector>
-#include <map>
-#include <memory>
 #include <QSerialPort>
 
 #include "common/common.h"
 
+
+class QMainWindow;
 
 struct COM_settings {
     //QString name;

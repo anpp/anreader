@@ -2,10 +2,6 @@
 #define CUSTOMJUMP_H
 
 #include <QtCore>
-#include <QDateTime>
-#include <math.h>
-#include <memory>
-
 
 class CustomJump;
 

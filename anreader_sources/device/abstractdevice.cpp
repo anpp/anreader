@@ -1,4 +1,7 @@
 #include "abstractdevice.h"
+#include <QStateMachine>
+#include <QFinalState>
+#include <algorithm>
 
 const static QString StateNames[] = {QObject::tr("Disconnected"),
                                QObject::tr("Connected"),

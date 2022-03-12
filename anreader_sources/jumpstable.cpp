@@ -1,4 +1,5 @@
 #include "jumpstable.h"
+#include <QHeaderView>
 
 //----------------------------------------------------------------------------------------------------------------------
 void JumpsTable::resizeEvent(QResizeEvent *event)

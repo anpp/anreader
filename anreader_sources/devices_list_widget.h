@@ -1,15 +1,9 @@
 #ifndef COMENUMERATOR_H
 #define COMENUMERATOR_H
 
-#include <QWidget>
-#include <QListWidget>
-#include <QVBoxLayout>
+//#include <QWidget>
 #include <QThread>
-#include <QTimer>
-#include <QSerialPortInfo>
 #include <QTableWidget>
-#include <QHeaderView>
-#include <memory>
 
 #include "device_widgets/dwidget.h"
 #include "device_widgets/n3widget.h"

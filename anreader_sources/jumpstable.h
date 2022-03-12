@@ -1,11 +1,7 @@
 #ifndef JUMPSTABLE_H
 #define JUMPSTABLE_H
 
-#include <QObject>
-#include <QWidget>
 #include <QTableView>
-#include <QHeaderView>
-
 
 
 class JumpsTable : public QTableView

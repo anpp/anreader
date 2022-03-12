@@ -1,8 +1,10 @@
 #ifndef CSVPARSER_H
 #define CSVPARSER_H
 
-#include <QStringList>
 #include <memory>
+
+class QString;
+class QStringList;
 
 enum class CSVState {outQuote, inQuote, mayBeOutQuote};
 

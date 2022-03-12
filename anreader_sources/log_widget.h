@@ -2,10 +2,10 @@
 #define LOG_WIDGET_H
 
 #include <QWidget>
-#include <QTextEdit>
-#include <QVBoxLayout>
 #include <QPointer>
-#include <QDateTime>
+
+
+class QTextEdit;
 
 enum LogWidget_defs: int {MinimumHeight = 20};
 

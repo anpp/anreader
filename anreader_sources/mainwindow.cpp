@@ -129,87 +129,75 @@ void MainWindow::createActions()
     QMenu *configMenu = menuBar()->addMenu(tr("&Configuration"));
     QMenu *windowsMenu = menuBar()->addMenu(tr("&Windows"));
 
-    const QIcon newIcon = QIcon(":/images/icons/toolbar/new.png");
-    m_newAct = new QAction(newIcon, tr("&New"), this);
+    m_newAct = new QAction(QIcon(":/images/icons/toolbar/new.png"), tr("&New"), this);
     m_actions.push_back(m_newAct);
     m_newAct->setShortcuts(QKeySequence::New);
     m_newAct->setToolTip(tr("Create a new file"));
     connect(m_newAct, &QAction::triggered, this, &MainWindow::newFile);
 
-    const QIcon openIcon = QIcon(":/images/icons/toolbar/open.png");
-    m_openAct = new QAction(openIcon, tr("&Open..."), this);
+    m_openAct = new QAction(QIcon(":/images/icons/toolbar/open.png"), tr("&Open..."), this);
     m_actions.push_back(m_openAct);
     m_openAct->setShortcuts(QKeySequence::Open);
     m_openAct->setToolTip(tr("Open an existing file"));
     connect(m_openAct, &QAction::triggered, this, &MainWindow::open);    
 
-    const QIcon saveIcon = QIcon(":/images/icons/toolbar/save.png");
-    m_saveAct = new QAction(saveIcon, tr("&Save..."), this);
+    m_saveAct = new QAction(QIcon(":/images/icons/toolbar/save.png"), tr("&Save..."), this);
     m_actions.push_back(m_saveAct);
     m_saveAct->setShortcuts(QKeySequence::Save);
     m_saveAct->setToolTip(tr("Save the document to disk"));
     connect(m_saveAct, &QAction::triggered, this, &MainWindow::save);
 
-    m_saveAsAct = new QAction(saveIcon, tr("Save &As..."), this);
+    m_saveAsAct = new QAction(QIcon(":/images/icons/toolbar/save.png"), tr("Save &As..."), this);
     m_actions.push_back(m_saveAsAct);
     m_saveAsAct->setShortcuts(QKeySequence::SaveAs);
     m_saveAsAct->setToolTip(tr("Save the document under a new name"));
     connect(m_saveAsAct, &QAction::triggered, this, &MainWindow::saveAs);
 
-    const QIcon copyIcon = QIcon(":/images/icons/toolbar/copy.png");
-    m_copyAct = new QAction(copyIcon, tr("&Copy"), this);
+    m_copyAct = new QAction(QIcon(":/images/icons/toolbar/copy.png"), tr("&Copy"), this);
     m_actions.push_back(m_copyAct);
     m_copyAct->setShortcuts(QKeySequence::Copy);
     m_copyAct->setToolTip(tr("Copy selected jumps"));
     //m_copyAct->setShortcutVisibleInContextMenu(true);
     connect(m_copyAct, &QAction::triggered, this, &MainWindow::copy_selected);
 
-    const QIcon editIcon = QIcon(":/images/icons/toolbar/edit.png");
-    m_editAct = new QAction(editIcon, tr("&Edit"), this);
+    m_editAct = new QAction(QIcon(":/images/icons/toolbar/edit.png"), tr("&Edit"), this);
     m_actions.push_back(m_editAct);
     m_editAct->setShortcuts(QKeySequence::UnknownKey);
     m_editAct->setToolTip(tr("Edit selected jump..."));
     connect(m_editAct, &QAction::triggered, this, &MainWindow::edit_selected);   
 
-    const QIcon deleteIcon = QIcon(":/images/icons/toolbar/delete.png");
-    m_deleteAct = new QAction(deleteIcon, tr("&Delete"), this);
+    m_deleteAct = new QAction(QIcon(":/images/icons/toolbar/delete.png"), tr("&Delete"), this);
     m_actions.push_back(m_deleteAct);
     m_deleteAct->setShortcuts(QKeySequence::Delete);
     m_deleteAct->setToolTip(tr("Delete selected jumps"));
     connect(m_deleteAct, &QAction::triggered, this, &MainWindow::delete_selected);
 
-    const QIcon aircraftsIcon = QIcon(":/images/icons/menu/airplane.png");
-    m_registryAicraftsAct = new QAction(aircraftsIcon, tr("Aircrafts"), this);
+    m_registryAicraftsAct = new QAction(QIcon(":/images/icons/menu/airplane.png"), tr("Aircrafts"), this);
     m_actions.push_back(m_registryAicraftsAct);
     m_registryAicraftsAct->setToolTip(tr("Aircrafts..."));
     connect(m_registryAicraftsAct, &QAction::triggered, this, &MainWindow::aicrafts_list);
 
-    const QIcon dropzonesIcon = QIcon(":/images/icons/menu/dz.png");
-    m_registryDropZonesAct = new QAction(dropzonesIcon, tr("Dropzones"), this);
+    m_registryDropZonesAct = new QAction(QIcon(":/images/icons/menu/dz.png"), tr("Dropzones"), this);
     m_actions.push_back(m_registryDropZonesAct);
     m_registryDropZonesAct->setToolTip(tr("Dropzones..."));
     connect(m_registryDropZonesAct, &QAction::triggered, this, &MainWindow::dropzones_list);
 
-    const QIcon canopiesIcon = QIcon(":/images/icons/menu/canopy.png");
-    m_registryCanopiesAct = new QAction(canopiesIcon, tr("Canopies"), this);
+    m_registryCanopiesAct = new QAction(QIcon(":/images/icons/menu/canopy.png"), tr("Canopies"), this);
     m_actions.push_back(m_registryCanopiesAct);
     m_registryCanopiesAct->setToolTip(tr("Canopies..."));
     connect(m_registryCanopiesAct, &QAction::triggered, this, &MainWindow::canopies_list);
 
-    const QIcon jumptypesIcon = QIcon(":/images/icons/menu/jump.png");
-    m_registryJumpTypesAct = new QAction(jumptypesIcon, tr("Jump types"), this);
+    m_registryJumpTypesAct = new QAction(QIcon(":/images/icons/menu/jump.png"), tr("Jump types"), this);
     m_actions.push_back(m_registryJumpTypesAct);
     m_registryJumpTypesAct->setToolTip(tr("Jump types..."));
     connect(m_registryJumpTypesAct, &QAction::triggered, this, &MainWindow::jumptypes_list);
 
-    const QIcon deviceTypesIcon = QIcon(":/images/icons/menu/usb.png");
-    m_deviceTypesAct = new QAction(deviceTypesIcon, tr("Device types"), this);
+    m_deviceTypesAct = new QAction(QIcon(":/images/icons/menu/usb.png"), tr("Device types"), this);
     m_actions.push_back(m_deviceTypesAct);
     m_deviceTypesAct->setToolTip(tr("Device types and descriptions..."));
     connect(m_deviceTypesAct, &QAction::triggered, this, &MainWindow::devicetypes_list);
 
-    const QIcon settingsIcon = QIcon(":/images/icons/menu/settings.png");
-    m_settingsAct = new QAction(settingsIcon, tr("Settings"), this);
+    m_settingsAct = new QAction(QIcon(":/images/icons/menu/settings.png"), tr("Settings"), this);
     m_actions.push_back(m_settingsAct);
     m_settingsAct->setToolTip(tr("Settings..."));
     connect(m_settingsAct, &QAction::triggered, this, &MainWindow::settings_edit);

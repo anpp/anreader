@@ -1,14 +1,8 @@
 #ifndef SERIALPORT_H
 #define SERIALPORT_H
 
-#include <QObject>
 #include <QSerialPort>
-#include <QByteArray>
 #include <QThread>
-#include <QTimer>
-#include <QMutex>
-#include <QElapsedTimer>
-#include <QCoreApplication>
 
 
 Q_DECLARE_METATYPE(QSerialPort::SerialPortError)

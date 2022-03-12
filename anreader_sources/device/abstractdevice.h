@@ -4,21 +4,6 @@
 
 #include <QDebug>
 
-#include <QObject>
-#include <QThread>
-#include <QSerialPort>
-#include <QSerialPortInfo>
-#include <QDataStream>
-#include <iostream>
-#include <QStringList>
-#include <QString>
-#include <QMutex>
-#include <QStateMachine>
-#include <QFinalState>
-#include <QCoreApplication>
-#include <memory>
-#include <algorithm>
-
 
 #include "serialport.h"
 
