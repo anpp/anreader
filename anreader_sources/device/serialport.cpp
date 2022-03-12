@@ -1,5 +1,6 @@
 #include "serialport.h"
 #include <QCoreApplication>
+#include <QElapsedTimer>
 
 //----------------------------------------------------------------------------------------------------------------------
 void WorkerPacketSender::sendPacket()

@@ -2,6 +2,7 @@
 #define CUSTOMJUMP_H
 
 #include <QtCore>
+#include <memory>
 
 class CustomJump;
 
