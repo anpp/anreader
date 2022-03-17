@@ -7,6 +7,8 @@
 #include "common/common.h"
 #include "../settings.h"
 
+
+
 class SettingsCOMPort : public QWidget,
                         protected Ui::COMPortWidget
 {
@@ -16,7 +18,7 @@ class SettingsCOMPort : public QWidget,
 
      QIntValidator *m_intValidator = nullptr;
 
-     COM_settings m_com_settings;
+     std::unique_ptr<COM_settings> m_com_settings = std::make_unique<COM_settings>();
 
      void updateSettings();
 public:

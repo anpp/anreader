@@ -58,7 +58,7 @@ private:
     void init();
     void delay(const unsigned long ms) const;
     void sendPacketToPort(const QByteArray &packet);
-    void setPortSettings(const port_settings& aps) { ps = aps; }
+    void setPortSettings();
 
 
 public:

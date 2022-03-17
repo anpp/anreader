@@ -2,6 +2,8 @@
 #include <QCoreApplication>
 #include <QElapsedTimer>
 
+#include "../settings.h"
+
 //----------------------------------------------------------------------------------------------------------------------
 void WorkerPacketSender::sendPacket()
 {
@@ -70,6 +72,33 @@ void SerialPortThread::delay(const unsigned long ms) const
     }
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+void SerialPortThread::setPortSettings()
+{
+    //default settings
+    ps.baudRate = QSerialPort::Baud57600;
+    ps.dataBits = QSerialPort::Data8;
+    ps.parity = QSerialPort::NoParity;
+    ps.stopBits = QSerialPort::OneStop;
+    ps.flowControl = QSerialPort::HardwareControl;
+
+    if(Settings::Instance())
+    {
+        const COM_settings &com_settings = Settings::Instance()->COMSettings();
+        ps.baudRate = com_settings.baudRate;
+        ps.dataBits = com_settings.dataBits;
+        ps.parity = com_settings.parity;
+        ps.stopBits = com_settings.stopBits;
+        ps.flowControl = com_settings.flowControl;
+    }
+
+    setBaudRate(ps.baudRate);
+    setDataBits(ps.dataBits);
+    setParity(ps.parity);
+    setStopBits(ps.stopBits);
+    setFlowControl(ps.flowControl);
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::moveToInnerThread()
@@ -136,7 +165,6 @@ void SerialPortThread::sendRatePacket(QByteArray rate)
 }
 
 
-#include <QDebug>
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::sopen(QString com_port)
 {
@@ -146,25 +174,7 @@ void SerialPortThread::sopen(QString com_port)
         return;
     }
 
-
-    ps.baudRate = QSerialPort::Baud57600;
-    ps.dataBits = QSerialPort::Data8;
-    ps.parity = QSerialPort::NoParity;
-    ps.stopBits = QSerialPort::OneStop;
-    ps.flowControl = QSerialPort::HardwareControl;
-
-    setBaudRate(ps.baudRate);
-    setDataBits(ps.dataBits);
-    setParity(ps.parity);
-    setStopBits(ps.stopBits);
-    setFlowControl(ps.flowControl);
-
-
-    qDebug() << "BaudRate: " << ps.baudRate;
-    qDebug() << "DataBits: " << ps.dataBits;
-    qDebug() << "Parity: " << ps.parity;
-    qDebug() << "StopBits: " << ps.stopBits;
-    qDebug() << "FlowControl: " << ps.flowControl;
+    setPortSettings();
 
     emit connected();
 }

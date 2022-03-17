@@ -88,7 +88,7 @@ private:
     void setCurrentFile(const QString &fileName);
     bool saveQuestion();
     void fileWasModified(bool value);
-    QString delimiterCSV() { return settings.getSetting("current_file_delimiter").toString(); }
+    QString delimiterCSV() { return settings->getSetting("current_file_delimiter").toString(); }
     void open_DataListDialog(const datakind dlk, map_DataList& data);
     void selection_changed(bool enable = true);
     void editJump(uint row_index);
@@ -131,7 +131,7 @@ private:
     bool file_was_modified = false;
     QTimer timer_open_file;
 
-    Settings settings{this, "anreader", "anreader"};
+    std::shared_ptr<Settings> settings = Settings::Instance(this, "anreader", "anreader");
     DataLists dl{"anreader", "anreader"};
 
 //signals:

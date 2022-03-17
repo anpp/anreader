@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     initMainWindow();
     createActions();    
 
-    settings.load();
+    settings->load();
     dl.load();
 
     timer_open_file.setInterval(100);
@@ -62,15 +62,15 @@ void MainWindow::onCreate()
     #ifndef Q_OS_WIN64
         #ifndef Q_OS_WIN32
             #ifndef Q_OS_MACOS
-                settings.loadSettingsScreen();
+                settings->loadSettingsScreen();
             #endif
         #endif
     #endif
 
-    setCurrentFile(settings.getSetting("current_file").toString());
-    if(!settings.getSetting("current_file").toString().isEmpty())
+    setCurrentFile(settings->getSetting("current_file").toString());
+    if(!settings->getSetting("current_file").toString().isEmpty())
     {
-        if(openFromCSV(settings.getSetting("current_file").toString(), jumps_model, delimiterCSV()))
+        if(openFromCSV(settings->getSetting("current_file").toString(), jumps_model, delimiterCSV()))
         {
             prepareTableAfterLoad(*jtable);
             setCurrentFile(current_file);
@@ -86,7 +86,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     if(saveQuestion())
     {
-        settings.save();        
+        settings->save();
         event->accept();
     } else
     {
@@ -257,7 +257,7 @@ void MainWindow::createDevicesWidget()
     m_toggleDevices->setShortcut(QKeySequence("Ctrl+F11"));
 #endif
 
-    devices_window = std::make_unique<DevicesWidget>(settings, dock);
+    devices_window = std::make_unique<DevicesWidget>(*settings, dock);
     dock->setWidget(devices_window.get());
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 
@@ -295,7 +295,7 @@ void MainWindow::createLogWidget()
 //----------------------------------------------------------------------------------------------------------------------
 bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, const QString delimiter)
 {
-    settings.setSetting("current_file_delimiter", delimiter);
+    settings->setSetting("current_file_delimiter", delimiter);
 
     const auto& data = jm.items();
     if(!data.size()) return false;
@@ -370,7 +370,7 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
 {
     std::unique_ptr<QStringList> tokens;
 
-    settings.setSetting("current_file_delimiter", delimiter);
+    settings->setSetting("current_file_delimiter", delimiter);
 
     QFile file(filename);
     if (file.open(QFile::ReadOnly | QFile::Text))
@@ -475,7 +475,7 @@ void MainWindow::setCurrentFile(const QString &fileName)
     if(current_file.isEmpty() || current_file == "")
         shownName = tr("untitled");
 
-    settings.setSetting("current_file", current_file);
+    settings->setSetting("current_file", current_file);
     setWindowFilePath(shownName + " - anreader");
 
     fileWasModified(false);
@@ -557,22 +557,22 @@ void MainWindow::devicetypes_list()
 {
     t_devicetypelist datalist;
 
-    for(const auto& item: settings.map_set(kindset::device_types))
+    for(const auto& item: settings->map_set(kindset::device_types))
         datalist.push_back(std::make_tuple(DWidget::typeByName(item.first), item.second->getValue().toString()));
 
     std::unique_ptr<DataList_Dialog> dl_dialog = std::make_unique<DataList_Dialog>(tr("Device types"), datalist, this);
 
     if(dl_dialog->exec() == QDialog::Accepted)
     {
-        settings.clear(kindset::device_types);
+        settings->clear(kindset::device_types);
         for(const auto& item: datalist)
         {
             dtype dt = std::get<static_cast<int>(DeviceDescriptionListModel_defs::DeviceType)>(item);
             QString value = std::get<static_cast<int>(DeviceDescriptionListModel_defs::DeviceDescription)>(item);
 
-            settings.setSetting(sDeviceTypes[static_cast<int>(dt)], value, kindset::device_types);
+            settings->setSetting(sDeviceTypes[static_cast<int>(dt)], value, kindset::device_types);
         }
-        settings.saveSettingsByKind(kindset::device_types);
+        settings->saveSettingsByKind(kindset::device_types);
     }
 }
 
@@ -580,7 +580,7 @@ void MainWindow::devicetypes_list()
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::settings_edit()
 {
-    std::unique_ptr<SettingsEditor> dl_settings = std::make_unique<SettingsEditor>(settings, this);
+    std::unique_ptr<SettingsEditor> dl_settings = std::make_unique<SettingsEditor>(*settings, this);
 
     dl_settings->exec();
 }
@@ -706,7 +706,7 @@ void MainWindow::open()
 
     filters << commaFilter << defaultFilter;
 
-    QFileDialog fd(this, QObject::tr("Open file..."), settings.getSetting("directory_for_save").toString(), filters.join(";;"));
+    QFileDialog fd(this, QObject::tr("Open file..."), settings->getSetting("directory_for_save").toString(), filters.join(";;"));
     fd.selectNameFilter(defaultFilter);
 
     connect(&fd, &QFileDialog::filterSelected, this, [&selectedFilter](const QString &filter) {selectedFilter = filter; });
@@ -757,7 +757,7 @@ bool MainWindow::saveAs()
 
     filters << commaFilter << defaultFilter;
 
-    QFileDialog fd(this, QObject::tr("Save jumps to file..."), settings.getSetting("directory_for_save").toString(), filters.join(";;"));
+    QFileDialog fd(this, QObject::tr("Save jumps to file..."), settings->getSetting("directory_for_save").toString(), filters.join(";;"));
     fd.selectNameFilter(defaultFilter);
 
     connect(&fd, &QFileDialog::filterSelected, this, [&selectedFilter](const QString &filter) {selectedFilter = filter; });
@@ -768,7 +768,7 @@ bool MainWindow::saveAs()
     if(fd_result)
     {
         filename = fd.selectedFiles().at(0);
-        settings.setSetting("directory_for_save", filename);
+        settings->setSetting("directory_for_save", filename);
         if(saveAsCSV(filename, jumps_model, selectedFilter == defaultFilter ? ";" : ","))
             setCurrentFile(filename);
     }

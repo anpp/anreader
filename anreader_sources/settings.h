@@ -9,6 +9,7 @@
 
 class QMainWindow;
 
+
 struct COM_settings {
     //QString name;
     qint32 baudRate;
@@ -52,18 +53,23 @@ protected:
 typedef std::shared_ptr<Setting> ptrSetting;
 typedef std::map<QString, Setting*> mset;
 
-class Settings {    
+class Settings {
+    static std::shared_ptr<Settings> m_self;
     QMainWindow* owner;
     mutable QSettings qsettings;
     mutable mset mapset_by_kind;
 
     std::vector<ptrSetting> vec_settings;        
     QVariant default_return;
-    std::unique_ptr<COM_settings> com_settings;
+    std::unique_ptr<COM_settings> com_settings = std::make_unique<COM_settings>();
 
     void setup_mapset(const kindset ks) const;
-public:
+
+protected:
     Settings(QMainWindow* widget_owner, const QString &organization, const QString &application);
+public:
+    static std::shared_ptr<Settings> Instance(QMainWindow* widget_owner, const QString &organization, const QString &application);
+    static std::shared_ptr<Settings> Instance() {return m_self; }
     ~Settings();
 
     void loadSettingsByKind(kindset ks);

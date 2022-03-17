@@ -2,14 +2,15 @@
 #include <QDir>
 #include <QMainWindow>
 
+
 const static QString sSettingKind[] = {"", "appearance", "misc", "screen", "environment", "device_types", "com_port"};
 
+std::shared_ptr<Settings> Settings::m_self = nullptr;
 
 //----------------------------------------------------------------------------------------------------------------------
 Settings::Settings(QMainWindow* widget_owner, const QString& organization, const QString& application) :
     owner(widget_owner), qsettings(organization, application), default_return(false)
-{
-    com_settings = std::make_unique<COM_settings>();
+{    
     vec_settings = {
                     std::make_shared<Setting>("geometry", kindset::screen, 0, QVariant(QVariant::Int), false),
                     std::make_shared<Setting>("state", kindset::screen, 0, QVariant(QVariant::Int), false),
@@ -25,13 +26,21 @@ Settings::Settings(QMainWindow* widget_owner, const QString& organization, const
                     std::make_shared<Setting>("parity", kindset::com_port, QSerialPort::NoParity, QVariant(QVariant::Int), false),
                     std::make_shared<Setting>("stopBits", kindset::com_port, QSerialPort::OneStop, QVariant(QVariant::Int), false),
                     std::make_shared<Setting>("flowControl", kindset::com_port, QSerialPort::HardwareControl, QVariant(QVariant::Int), false)
-                   };
+    };
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+std::shared_ptr<Settings> Settings::Instance(QMainWindow *widget_owner, const QString &organization, const QString &application)
+{
+    if(!m_self)
+        m_self = std::shared_ptr<Settings>(new Settings(widget_owner, organization, application));
+    return m_self;
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 Settings::~Settings()
-{        
+{
 }
 
 
@@ -256,5 +265,7 @@ void Settings::setup_mapset(const kindset ks) const
         if(ks == setting->kind || ks == kindset::all)
             mapset_by_kind[setting.get()->title] = setting.get();
 }
+
+
 
 

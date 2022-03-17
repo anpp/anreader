@@ -33,6 +33,7 @@ public:
     virtual void create() = 0;
     void clear();
     int getId() const { return m_id; }
+
     static dtype typeByName(const QString& type_name);
 
 
@@ -44,6 +45,7 @@ private:
     QLabel lblPort;
 
     static int s_idGen;
+
     int m_id;
     int m_wtop_height = 0;
     int m_icon_height = 0;

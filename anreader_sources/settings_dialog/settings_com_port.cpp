@@ -1,4 +1,5 @@
 #include "settings_com_port.h"
+#include "../settings.h"
 #include <QIntValidator>
 #include <QSerialPort>
 #include <QLineEdit>
@@ -8,7 +9,7 @@
 SettingsCOMPort::SettingsCOMPort(QWidget *parent) : QWidget(parent),
                                                     m_intValidator(new QIntValidator(0, 4000000, this))
 {
-    setupUi(this);
+    setupUi(this);    
 
     baudRateBox->setInsertPolicy(QComboBox::NoInsert);
 
@@ -34,7 +35,7 @@ void SettingsCOMPort::setCurrentSettings(const COM_settings &current_settings)
 const COM_settings &SettingsCOMPort::actualSettings()
 {
     updateSettings();
-    return m_com_settings;
+    return *m_com_settings;
 }
 
 
@@ -44,28 +45,28 @@ void SettingsCOMPort::updateSettings()
     //settings.name = m_ui->serialPortInfoListBox->currentText();
 
     if (baudRateBox->currentIndex() == 4) {
-        m_com_settings.baudRate = baudRateBox->currentText().toInt();
+        m_com_settings->baudRate = baudRateBox->currentText().toInt();
     } else {
-        m_com_settings.baudRate = static_cast<QSerialPort::BaudRate>(
+        m_com_settings->baudRate = static_cast<QSerialPort::BaudRate>(
                     baudRateBox->itemData(baudRateBox->currentIndex()).toInt());
     }
-    m_com_settings.stringBaudRate = QString::number(m_com_settings.baudRate);
+    m_com_settings->stringBaudRate = QString::number(m_com_settings->baudRate);
 
-    m_com_settings.dataBits = static_cast<QSerialPort::DataBits>(
+    m_com_settings->dataBits = static_cast<QSerialPort::DataBits>(
                 dataBitsBox->itemData(dataBitsBox->currentIndex()).toInt());
-    m_com_settings.stringDataBits = dataBitsBox->currentText();
+    m_com_settings->stringDataBits = dataBitsBox->currentText();
 
-    m_com_settings.parity = static_cast<QSerialPort::Parity>(
+    m_com_settings->parity = static_cast<QSerialPort::Parity>(
                 parityBox->itemData(parityBox->currentIndex()).toInt());
-    m_com_settings.stringParity = parityBox->currentText();
+    m_com_settings->stringParity = parityBox->currentText();
 
-    m_com_settings.stopBits = static_cast<QSerialPort::StopBits>(
+    m_com_settings->stopBits = static_cast<QSerialPort::StopBits>(
                 stopBitsBox->itemData(stopBitsBox->currentIndex()).toInt());
-    m_com_settings.stringStopBits = stopBitsBox->currentText();
+    m_com_settings->stringStopBits = stopBitsBox->currentText();
 
-    m_com_settings.flowControl = static_cast<QSerialPort::FlowControl>(
+    m_com_settings->flowControl = static_cast<QSerialPort::FlowControl>(
                 flowControlBox->itemData(flowControlBox->currentIndex()).toInt());
-    m_com_settings.stringFlowControl = flowControlBox->currentText();
+    m_com_settings->stringFlowControl = flowControlBox->currentText();
 }
 
 
