@@ -19,6 +19,7 @@ public:
     void read_settings() override;
     void read_dropzones() override;
     void read_airplanes() override;
+    void read_datetime() override;
     void end_communication() override;
     uint n_iterations_by_jumps(const uint n_jumps) override;
 

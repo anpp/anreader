@@ -257,6 +257,11 @@ void Neptune::sendLastCommand()
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
         break;
 
+    case N3Commands::ReadDateTime:
+        command_bytes = *makeSigleByteCommand(last_command.m_command);
+        emit sendPacket(*outBuffer, last_command.m_delay_ms);
+        break;
+
     case N3Commands::ReadMemory:
 
         rawData = getRawData(last_command.m_address);
@@ -353,6 +358,9 @@ void Neptune::processData(QByteArray data)
     case N3Commands::ReadMemory:
         processReadMemory(data);
         break;
+    case N3Commands::ReadDateTime:
+        processReadDateTime(data);
+        break;
     case N3Commands::KeepAlive:
         processDefault(data);
         break;
@@ -428,6 +436,58 @@ void Neptune::processReadMemory(const QByteArray &data)
 
             emit readyStateSignal();
         }
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void Neptune::processReadDateTime(const QByteArray &data)
+{
+    inBuffer.append(data);
+
+    //вынести в общий код
+    if(state() == DeviceStates::Processing)
+    {
+        if(checkAcknowledgment(inBuffer))
+        {
+            inBuffer = inBuffer.mid(2, inBuffer.size() - 2);
+            emit receiveingStateSignal(); //надо перенести получение данных туда
+        }
+        else
+        {
+            if(inBuffer.size() == 1) //костыль!
+            {
+                inBuffer.clear();
+                return;
+            }
+            emit errorSignal("Acknowledgement error");
+            return;
+        }
+    }
+    //
+    if(static_cast<unsigned int>(inBuffer.size()) >= N3Constants::BlockSize)
+    {
+        emit sendPacket(QByteArray::fromHex("31"));
+
+        rawDateTime->append(inBuffer);
+        inBuffer.clear();
+
+        if(static_cast<unsigned int>(rawDateTime->size()) >= DateTimeSizeInBytes)
+        {
+            *rawDateTime = *cryptPacket(*rawDateTime, false);
+            *rawDateTime = rawDateTime->mid(sizeof(uint32_t), DateTimeSizeInBytes - sizeof(uint32_t));
+
+            qDebug() << rawDateTime->toHex();
+            int year = (int)rawDateTime->at(0) + (int)(rawDateTime->at(1) * 256);
+            int mounth = (int)rawDateTime->at(2);
+            int day = (int)rawDateTime->at(3);
+            int hour = (int)rawDateTime->at(5);
+            int min = (int)rawDateTime->at(6);
+            int sec = (int)rawDateTime->at(7);
+
+            qDebug() << "DateTime = " << year << "-" << mounth << "-" << day << " " << hour << ":" << min << ":" << sec;
+            emit readyStateSignal();
+        }
+
     }
 }
 

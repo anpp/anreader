@@ -48,6 +48,12 @@ void Neptune_HiL::read_airplanes()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void Neptune_HiL::read_datetime()
+{
+    executeCommand(N3Commands::ReadDateTime);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::end_communication()
 {
     executeCommand(N3Commands::EndComm);

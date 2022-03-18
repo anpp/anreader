@@ -39,6 +39,7 @@ public:
     virtual void read_settings() = 0;
     virtual void read_dropzones() = 0;
     virtual void read_airplanes() = 0;
+    virtual void read_datetime() = 0;
     virtual void end_communication() = 0;
     virtual uint n_iterations_by_jumps(const uint n_jumps) = 0;
     void clearJumps() { m_jumps.clear(); }
