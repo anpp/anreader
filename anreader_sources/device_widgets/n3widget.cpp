@@ -147,11 +147,11 @@ void N3Widget::read_summary_settings()
     disconnect(m_device.get(), &Neptune::allCommandsComplete, nullptr, nullptr);
     connect(m_device.get(), &Neptune::allCommandsComplete, this, &N3Widget::readed_summary_settings, Qt::QueuedConnection);
 
-    m_device->read_summary_jumps();
+    m_device->read_datetime();
+    m_device->read_summary_jumps();    
     m_device->read_settings();
     m_device->read_dropzones();
-    m_device->read_airplanes();
-    m_device->read_datetime();
+    m_device->read_airplanes();    
 }
 
 //----------------------------------------------------------------------------------------------------------------------

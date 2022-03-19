@@ -116,7 +116,7 @@ private:
     QByteArray rawDataSettings;
     QByteArray rawDZNames;
     QByteArray rawAPNames;
-    QByteArray rawDateTime[8];
+    QByteArray rawDateTime;
 
     mutable QByteArray* rawData = nullptr;
     int outBufferPosition{0};

@@ -258,7 +258,8 @@ void Neptune::sendLastCommand()
         break;
 
     case N3Commands::ReadDateTime:
-        command_bytes = *makeSigleByteCommand(last_command.m_command);
+        rawDateTime.clear();
+        outBuffer = makeSigleByteCommand(last_command.m_command);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
         break;
 
@@ -463,30 +464,31 @@ void Neptune::processReadDateTime(const QByteArray &data)
             return;
         }
     }
+
     //
     if(static_cast<unsigned int>(inBuffer.size()) >= N3Constants::BlockSize)
     {
         emit sendPacket(QByteArray::fromHex("31"));
 
-        rawDateTime->append(inBuffer);
+        rawDateTime.append(inBuffer);
         inBuffer.clear();
 
-        if(static_cast<unsigned int>(rawDateTime->size()) >= DateTimeSizeInBytes)
-        {
-            *rawDateTime = *cryptPacket(*rawDateTime, false);
-            *rawDateTime = rawDateTime->mid(sizeof(uint32_t), DateTimeSizeInBytes - sizeof(uint32_t));
+        rawDateTime = *cryptPacket(rawDateTime, false);
 
-            qDebug() << rawDateTime->toHex();
-            int year = (int)rawDateTime->at(0) + (int)(rawDateTime->at(1) * 256);
-            int mounth = (int)rawDateTime->at(2);
-            int day = (int)rawDateTime->at(3);
-            int hour = (int)rawDateTime->at(5);
-            int min = (int)rawDateTime->at(6);
-            int sec = (int)rawDateTime->at(7);
+        qDebug() << rawDateTime.toHex();
+        uchar b0 = (uchar)rawDateTime[0];
+        uchar b1 = (uchar)rawDateTime[1];
 
-            qDebug() << "DateTime = " << year << "-" << mounth << "-" << day << " " << hour << ":" << min << ":" << sec;
-            emit readyStateSignal();
-        }
+        int year = (int)(b0 + b1 * 256);
+        int mounth = (int)rawDateTime.at(2);
+        int day = (int)rawDateTime.at(3);
+        int hour = (int)rawDateTime.at(5);
+        int min = (int)rawDateTime.at(6);
+        int sec = (int)rawDateTime.at(7);
+
+        qDebug() << "DateTime = " << year << "-" << mounth << "-" << day << " " << hour << ":" << min << ":" << sec;
+        emit readyStateSignal();
+
 
     }
 }
