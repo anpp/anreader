@@ -306,6 +306,30 @@ void Neptune::sendLastCommand()
     }
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+bool Neptune::checkInBufer()
+{
+    if(state() == DeviceStates::Processing)
+    {
+        if(checkAcknowledgment(inBuffer))
+        {
+            inBuffer = inBuffer.mid(2, inBuffer.size() - 2);
+            emit receiveingStateSignal(); //надо перенести получение данных туда
+        }
+        else
+        {
+            if(inBuffer.size() == 1) //костыль!
+            {
+                inBuffer.clear();
+                return false;
+            }
+            emit errorSignal("Acknowledgement error");
+            return false;
+        }
+    }
+    return true;
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::processData(QByteArray data)
@@ -400,24 +424,8 @@ void Neptune::processReadMemory(const QByteArray &data)
     inBuffer.append(data);
 
     //qDebug() << data.toHex();
-    if(state() == DeviceStates::Processing)
-    {
-        if(checkAcknowledgment(inBuffer))
-        {
-            inBuffer = inBuffer.mid(2, inBuffer.size() - 2);
-            emit receiveingStateSignal(); //надо перенести получение данных туда
-        }
-        else
-        {
-            if(inBuffer.size() == 1) //костыль!
-            {
-                inBuffer.clear();
-                return;
-            }
-            emit errorSignal("Acknowledgement error");
-            return;
-        }
-    }
+    if(!checkInBufer())
+        return;
 
     if(static_cast<unsigned int>(inBuffer.size()) >= N3Constants::BlockSize)
     {
@@ -445,27 +453,9 @@ void Neptune::processReadDateTime(const QByteArray &data)
 {
     inBuffer.append(data);
 
-    //вынести в общий код
-    if(state() == DeviceStates::Processing)
-    {
-        if(checkAcknowledgment(inBuffer))
-        {
-            inBuffer = inBuffer.mid(2, inBuffer.size() - 2);
-            emit receiveingStateSignal(); //надо перенести получение данных туда
-        }
-        else
-        {
-            if(inBuffer.size() == 1) //костыль!
-            {
-                inBuffer.clear();
-                return;
-            }
-            emit errorSignal("Acknowledgement error");
-            return;
-        }
-    }
+    if(!checkInBufer())
+        return;
 
-    //
     if(static_cast<unsigned int>(inBuffer.size()) >= N3Constants::BlockSize)
     {
         emit sendPacket(QByteArray::fromHex("31"));
@@ -475,21 +465,11 @@ void Neptune::processReadDateTime(const QByteArray &data)
 
         rawDateTime = *cryptPacket(rawDateTime, false);
 
-        qDebug() << rawDateTime.toHex();
-        uchar b0 = (uchar)rawDateTime[0];
-        uchar b1 = (uchar)rawDateTime[1];
+        m_datetime->setDate(QDate((uchar)rawDateTime[0] + (uchar)rawDateTime[1] * 256, (uchar)rawDateTime[2], (uchar)rawDateTime[3]));
+        m_datetime->setTime(QTime((uchar)rawDateTime[5], (uchar)rawDateTime[6], (uchar)rawDateTime[7]));
 
-        int year = (int)(b0 + b1 * 256);
-        int mounth = (int)rawDateTime.at(2);
-        int day = (int)rawDateTime.at(3);
-        int hour = (int)rawDateTime.at(5);
-        int min = (int)rawDateTime.at(6);
-        int sec = (int)rawDateTime.at(7);
-
-        qDebug() << "DateTime = " << year << "-" << mounth << "-" << day << " " << hour << ":" << min << ":" << sec;
+        qDebug() << *m_datetime;
         emit readyStateSignal();
-
-
     }
 }
 

@@ -67,8 +67,8 @@ void MainWindow::onCreate()
         #endif
     #endif
 
-    setCurrentFile(settings->getSetting("current_file").toString());
-    if(!settings->getSetting("current_file").toString().isEmpty())
+    setCurrentFile(settings->getSetting("current_file").toString());    
+    if(!(current_file.isEmpty() || current_file == ""))
     {
         if(openFromCSV(settings->getSetting("current_file").toString(), jumps_model, delimiterCSV()))
         {

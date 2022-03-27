@@ -4,7 +4,6 @@
 
 #include <QDebug>
 
-
 #include "serialport.h"
 
 //#include "constants.h"
@@ -15,6 +14,7 @@
 #include "anames.h"
 
 
+class QDateTime;
 
 class AbstractDevice : public QObject
 {    
@@ -76,6 +76,7 @@ protected:
     QState *errorState = new QState();
 
     t_jumps m_jumps;
+    std::unique_ptr<QDateTime> m_datetime;
 
     mutable QTimer timeout_timer;
 

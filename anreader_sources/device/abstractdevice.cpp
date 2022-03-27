@@ -1,6 +1,7 @@
 #include "abstractdevice.h"
 #include <QStateMachine>
 #include <QFinalState>
+#include <QDateTime>
 #include <algorithm>
 
 const static QString StateNames[] = {QObject::tr("Disconnected"),
@@ -15,7 +16,8 @@ const static QString StateNames[] = {QObject::tr("Disconnected"),
 
 //----------------------------------------------------------------------------------------------------------------------
 AbstractDevice::AbstractDevice(QString portName, QObject *parent) : QObject(parent), m_ErrorMessage(""), m_COMPort(portName)
-{    
+{
+    m_datetime = std::make_unique<QDateTime>();
     initStateMachine();
     connect(this, &AbstractDevice::errorSignal, this, &AbstractDevice::slotError);
 
