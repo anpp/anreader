@@ -181,8 +181,7 @@ const QString &AbstractDevice::state_str() const
 //дата и время читаются из прибора один раз, потом возвращается как бы "живое" время, расчитанное
 const QDateTime &AbstractDevice::dateTime() const
 {
-    *m_datetime_temp = *m_datetime;
-    *m_datetime_temp = m_datetime_temp->addSecs(m_datetime_clock->secsTo(QDateTime::currentDateTime()));
+    *m_datetime_temp = m_datetime->addSecs(m_datetime_clock->secsTo(QDateTime::currentDateTime()));
 
     return *m_datetime_temp;
 }
