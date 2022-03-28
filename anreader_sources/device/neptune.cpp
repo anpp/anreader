@@ -258,6 +258,7 @@ void Neptune::sendLastCommand()
         break;
 
     case N3Commands::ReadDateTime:
+        m_NumBlocks = 1;
         rawDateTime.clear();
         outBuffer = makeSigleByteCommand(last_command.m_command);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
@@ -462,13 +463,15 @@ void Neptune::processReadDateTime(const QByteArray &data)
 
         rawDateTime.append(inBuffer);
         inBuffer.clear();
+        emit stepProgress();
 
         rawDateTime = *cryptPacket(rawDateTime, false);
 
-        m_datetime->setDate(QDate((uchar)rawDateTime[0] + (uchar)rawDateTime[1] * 256, (uchar)rawDateTime[2], (uchar)rawDateTime[3]));
-        m_datetime->setTime(QTime((uchar)rawDateTime[5], (uchar)rawDateTime[6], (uchar)rawDateTime[7]));
+        QDateTime dt;
+        dt.setDate(QDate((uchar)rawDateTime[0] + (uchar)rawDateTime[1] * 256, (uchar)rawDateTime[2], (uchar)rawDateTime[3]));
+        dt.setTime(QTime((uchar)rawDateTime[5], (uchar)rawDateTime[6], (uchar)rawDateTime[7]));
+        setDateTime(dt);
 
-        qDebug() << *m_datetime;
         emit readyStateSignal();
     }
 }

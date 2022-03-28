@@ -17,7 +17,10 @@ const static QString StateNames[] = {QObject::tr("Disconnected"),
 //----------------------------------------------------------------------------------------------------------------------
 AbstractDevice::AbstractDevice(QString portName, QObject *parent) : QObject(parent), m_ErrorMessage(""), m_COMPort(portName)
 {
+    m_datetime_temp = std::make_unique<QDateTime>();
+    m_datetime_clock = std::make_unique<QDateTime>();
     m_datetime = std::make_unique<QDateTime>();
+
     initStateMachine();
     connect(this, &AbstractDevice::errorSignal, this, &AbstractDevice::slotError);
 
@@ -123,6 +126,13 @@ void AbstractDevice::removeComPort()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void AbstractDevice::setDateTime(const QDateTime &a_datetime)
+{
+    *m_datetime = a_datetime;
+    *m_datetime_clock = QDateTime::currentDateTime();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 const QString &AbstractDevice::getErrorMessage() const
 {
     return m_ErrorMessage;
@@ -165,6 +175,16 @@ const ANames &AbstractDevice::airplanes() const
 const QString &AbstractDevice::state_str() const
 {
     return StateNames[state()];
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//дата и время читаются из прибора один раз, потом возвращается как бы "живое" время, расчитанное
+const QDateTime &AbstractDevice::dateTime() const
+{
+    *m_datetime_temp = *m_datetime;
+    *m_datetime_temp = m_datetime_temp->addSecs(m_datetime_clock->secsTo(QDateTime::currentDateTime()));
+
+    return *m_datetime_temp;
 }
 
 

@@ -6,17 +6,21 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QSpinBox>
+#include <QFrame>
+#include <QDateTimeEdit>
+#include <QAction>
 
 #include "dwidget.h"
 #include "device/neptune_hil.h"
 
 
 class N3Widget;
-
+class QTimer;
+class QAction;
 
 class DeviceFrame : public QFrame
 {
-    enum n3widget_defs: int {element_height = 34, n_rows = 7, spacing = 4};
+    enum n3widget_defs: int {element_height = 34, n_rows = 8, spacing = 4, line_height = 8, button_width = 70};
 public:
     explicit DeviceFrame(QWidget *parent = nullptr);
     ~DeviceFrame() {}
@@ -30,8 +34,16 @@ private:
     QTextEdit te_total_freefall_time;
     QTextEdit te_total_canopy_time;
 
+    QFrame line_horz1;
+    QFrame line_horz2;
+
+    QDateTimeEdit dte_clock;
+    QPushButton pb_set_clock;
+
     QSpinBox sb_number;
     QPushButton pb_read_jumps;
+
+    std::unique_ptr<QAction> m_clock_action;
 
 protected:
 
@@ -58,8 +70,7 @@ public:
     virtual void close() override;
     virtual void create() override;
 
-private:
-    void init();
+private:    
     virtual void setupConnects() override;
     void addDeviceFrame();
     void deleteDeviceFrame();
@@ -67,6 +78,7 @@ private:
     void read_last_jumps(unsigned int n_jumps);    
 
     DeviceFrame *device_frame = nullptr;
+    std::unique_ptr<QTimer> m_clock_timer;
 
 
 public slots:
@@ -74,6 +86,7 @@ public slots:
     void read_summary_settings();
     void readed_summary_settings();
     void read_jumps();
+    void clockUpdate();
 };
 
 #endif // N3WIDGET_H

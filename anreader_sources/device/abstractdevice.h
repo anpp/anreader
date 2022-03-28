@@ -51,12 +51,14 @@ public:
     const ANames& dropzones() const;
     const ANames& airplanes() const;
     const QString& state_str() const;
+    const QDateTime& dateTime() const;
 
 protected:    
     void startTimeoutTimer(const int ms) const;
     void stopTimeoutTimer() const;
     virtual void setupComPort();
     virtual void removeComPort();
+    void setDateTime(const QDateTime& a_clock);
 
     std::unique_ptr<SerialPortThread> sp;
 
@@ -75,8 +77,7 @@ protected:
     QState *receivingState = new QState(commonState);
     QState *errorState = new QState();
 
-    t_jumps m_jumps;
-    std::unique_ptr<QDateTime> m_datetime;
+    t_jumps m_jumps;    
 
     mutable QTimer timeout_timer;
 
@@ -87,6 +88,10 @@ private:
 
     QAbstractTransition *serialport_transition_common_disconnected{nullptr};
     QAbstractTransition *serialport_transition_error_disconnected{nullptr};
+
+    std::unique_ptr<QDateTime> m_datetime; //дата, прочитанная из прибора
+    std::unique_ptr<QDateTime> m_datetime_clock; // дата-время чтения даты из прибора
+    mutable std::unique_ptr<QDateTime> m_datetime_temp;
 
 signals:
     void sendPacket( QByteArray packet, const uint delayms = 0);

@@ -1,11 +1,19 @@
 #include "n3widget.h"
+#include <QTimer>
+
 
 //----------------------------------------------------------------------------------------------------------------------
 DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
 {
     QFormLayout *lForm = new QFormLayout;
     QVBoxLayout *lMain = new QVBoxLayout(this);
+    QHBoxLayout *lClock = new QHBoxLayout;
     QHBoxLayout *lButtons = new QHBoxLayout;
+
+    lForm->setContentsMargins(0, 0, 0, 0);
+    lClock->setContentsMargins(0, 0, 0, 0);
+    lButtons->setContentsMargins(0, 0, 0, 0);
+    lMain->setContentsMargins(n3widget_defs::spacing, lMain->contentsMargins().top(), n3widget_defs::spacing, lMain->contentsMargins().bottom());
 
     te_sn.setReadOnly(true);
     te_total_jumps.setReadOnly(true);
@@ -14,7 +22,14 @@ DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
     te_total_freefall_time.setReadOnly(true);
     te_total_canopy_time.setReadOnly(true);
 
-    lForm->setContentsMargins(0, 0, 0, 0);
+    line_horz1.setFrameShape(QFrame::HLine);
+    line_horz1.setFrameShadow(QFrame::Sunken);
+    line_horz1.setFixedHeight(n3widget_defs::line_height);
+
+    line_horz2.setFrameShape(QFrame::HLine);
+    line_horz2.setFrameShadow(QFrame::Sunken);
+    line_horz2.setFixedHeight(n3widget_defs::line_height);
+
     lForm->setSpacing(n3widget_defs::spacing);
     lForm->addRow("s/n", &te_sn);
     lForm->addRow(QObject::tr("Total jumps"), &te_total_jumps);
@@ -22,19 +37,39 @@ DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
     lForm->addRow(QObject::tr("Next jump"), &te_next_jump);
     lForm->addRow(QObject::tr("Freefall time"), &te_total_freefall_time);
     lForm->addRow(QObject::tr("Canopy time"), &te_total_canopy_time);
+
+    lMain->addLayout(lClock);
+    lMain->addWidget(&line_horz1);
     lMain->addLayout(lForm);
+    lMain->addWidget(&line_horz2);
     lMain->addLayout(lButtons);
 
     sb_number.setRange(0, 0);
     sb_number.setEnabled(false);
 
     pb_read_jumps.setText(QObject::tr("Read"));
+    pb_read_jumps.setMaximumWidth(n3widget_defs::button_width);
     pb_read_jumps.setEnabled(false);
+
+    pb_set_clock.setText(QObject::tr("Set"));
+    pb_set_clock.setMaximumWidth(n3widget_defs::button_width);
+    pb_set_clock.setEnabled(false);
+    dte_clock.setReadOnly(true);
+    dte_clock.setButtonSymbols(QAbstractSpinBox::NoButtons);
+
+    //m_clock_action = std::make_unique<QAction>(QIcon(), "123");
+    //dte_clock.addAction(m_clock_action.get());
+
+    lClock->addWidget(&dte_clock);
+    lClock->addWidget(&pb_set_clock);
 
     lButtons->addWidget(&sb_number);
     lButtons->addWidget(&pb_read_jumps);
 
-    this->setFixedHeight(n3widget_defs::element_height * n3widget_defs::n_rows + lForm->spacing() + lButtons->spacing() + lMain->spacing());
+    this->setFixedHeight(n3widget_defs::element_height * n3widget_defs::n_rows +
+                         lForm->spacing() + lButtons->spacing() + lMain->spacing() + lClock->spacing() +
+                         //lMain->contentsMargins().top() + lMain->contentsMargins().bottom() +
+                         line_horz1.height() + line_horz2.height());
 }
 
 
@@ -53,6 +88,8 @@ N3Widget::N3Widget(dtype device_type, QWidget *parent) : DWidget (device_type, p
 N3Widget::N3Widget(QWidget *parent) : DWidget (dtype::N3, parent)
 {    
     stateChanged();
+    m_clock_timer = std::make_unique<QTimer>();
+    connect(m_clock_timer.get(), &QTimer::timeout, this, &N3Widget::clockUpdate, Qt::QueuedConnection);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -78,6 +115,8 @@ void N3Widget::open()
 void N3Widget::close()
 {
     if(!m_device) return;
+
+    m_clock_timer->stop();
 
     if(m_device->state() == AbstractDevice::DeviceStates::Error)
         m_device->destroy_port();
@@ -147,11 +186,11 @@ void N3Widget::read_summary_settings()
     disconnect(m_device.get(), &Neptune::allCommandsComplete, nullptr, nullptr);
     connect(m_device.get(), &Neptune::allCommandsComplete, this, &N3Widget::readed_summary_settings, Qt::QueuedConnection);
 
-    m_device->read_datetime();
     m_device->read_summary_jumps();    
     m_device->read_settings();
     m_device->read_dropzones();
     m_device->read_airplanes();    
+    m_device->read_datetime();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -279,6 +318,8 @@ void N3Widget::readed_summary_settings()
         int last_jump = 0;
         emit giveLastJump(last_jump);
         device_frame->sb_number.setValue(summary.topJumpNumber() - last_jump);
+
+        m_clock_timer->start(1000);
     }
 }
 
@@ -287,6 +328,13 @@ void N3Widget::read_jumps()
 {
     if(device_frame != nullptr)
         read_last_jumps(static_cast<unsigned int>(device_frame->sb_number.value()));
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Widget::clockUpdate()
+{
+    device_frame->dte_clock.setDateTime(m_device->dateTime());
+    //qDebug() << device_frame->dte_clock.dateTime();
 }
 
 
