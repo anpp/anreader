@@ -416,6 +416,9 @@ void Neptune::processData(QByteArray data)
     case N3Commands::KeepAlive:
         processDefault(data);
         break;
+    case N3Commands::SetDateTime:
+        processDefault(data);
+        break;
 
     default:
         processDefault(data);
