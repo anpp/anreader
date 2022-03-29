@@ -254,6 +254,8 @@ void Neptune::sendLastCommand()
 
     memory_block_length = static_cast<quint16>(last_command.m_length + sizeof(uint32_t));
 
+    inBuffer.clear();
+
     switch(last_command.m_command){
     case N3Commands::EndComm:
         destroy_port();
@@ -273,19 +275,17 @@ void Neptune::sendLastCommand()
         break;
 
     case N3Commands::SetDateTime:
-        inBuffer.clear();
-
-        command_bytes[0] = 8;
+        command_bytes[0] = 9;
         command_bytes[1] = static_cast<char>(last_command.m_command);
-
-        command_bytes[2] = dateTime().time().hour();
-        command_bytes[3] = dateTime().time().minute();
-        command_bytes[4] = dateTime().time().second();
-        command_bytes[5] = (dateTime().date().year() & 0xFF);
-        command_bytes[6] = ((dateTime().date().year() >> 8) & 0xFF);
-        command_bytes[7] = dateTime().date().month();
-        command_bytes[8] = dateTime().date().day();
-        command_bytes[9] = calculateChecksum(command_bytes);
+        command_bytes[2] = (dateTime().date().year() & 0xFF);
+        command_bytes[3] = ((dateTime().date().year() >> 8) & 0xFF);
+        command_bytes[4] = dateTime().date().month();
+        command_bytes[5] = dateTime().date().day();
+        command_bytes[6] = 0;
+        command_bytes[7] = dateTime().time().hour();
+        command_bytes[8] = dateTime().time().minute();
+        command_bytes[9] = dateTime().time().second();
+        command_bytes[10] = calculateChecksum(command_bytes);
 
         outBuffer = cryptPacket(command_bytes, true);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
@@ -304,8 +304,6 @@ void Neptune::sendLastCommand()
 
         rawData->reserve(memory_block_length);
         rawData->clear();
-        inBuffer.clear();
-
 
         address_bytes = BytesOperations::UIntToBytes(last_command.m_address);
         length_bytes = BytesOperations::UIntToBytes(memory_block_length);
@@ -508,16 +506,23 @@ void Neptune::processReadDateTime(const QByteArray &data)
 void Neptune::processDefault(const QByteArray &data)
 {
     inBuffer.append(data);
-//qDebug() << inBuffer.toHex();
-    if(checkAcknowledgment(inBuffer, true))
-    {        
-        inBuffer.clear();
 
-        emit readyStateSignal();
+    if(state() == DeviceStates::Processing)
+    {
+        if(checkAcknowledgment(inBuffer))
+        {
+            inBuffer.clear();
+            emit readyStateSignal();
+        }
+        else
+        {
+            if(inBuffer.size() == 1)
+                return;
+
+            emit errorSignal("Acknowledgement error");
+            return;
+        }
     }
-    else
-        emit errorSignal("Acknowledgement error");
-
 }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -347,8 +347,8 @@ void N3Widget::clockUpdate()
 void N3Widget::set_datetime()
 {
     QDateTime dt;
-    dt.setDate(QDate(2018, 8, 01));
-    dt.setTime(QTime(15, 19));
+    dt.setDate(QDate(2018, 8, 23));
+    dt.setTime(QTime(16, 41));
     m_device->set_date_time(dt);
 }
 
