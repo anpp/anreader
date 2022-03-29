@@ -74,6 +74,7 @@ public:
     virtual const QString &deviceName() const override;
     virtual void open() override;
     virtual const QString getSerialNumber() const override;
+    virtual void set_date_time(const QDateTime& a_datetime) override;
 
 
 protected:

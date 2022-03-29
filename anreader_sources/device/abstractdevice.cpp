@@ -126,7 +126,7 @@ void AbstractDevice::removeComPort()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void AbstractDevice::setDateTime(const QDateTime &a_datetime)
+void AbstractDevice::set_date_time(const QDateTime &a_datetime)
 {
     *m_datetime = a_datetime;
     *m_datetime_clock = QDateTime::currentDateTime();

@@ -53,7 +53,7 @@ DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
 
     pb_set_clock.setText(QObject::tr("Set"));
     pb_set_clock.setMaximumWidth(n3widget_defs::button_width);
-    pb_set_clock.setEnabled(false);
+    //pb_set_clock.setEnabled(false);
     dte_clock.setReadOnly(true);
     dte_clock.setButtonSymbols(QAbstractSpinBox::NoButtons);
 
@@ -154,12 +154,13 @@ void N3Widget::addDeviceFrame()
     emit setHeight(this->height());
 
     connect(&device_frame->pb_read_jumps, &QPushButton::clicked, this, &N3Widget::read_jumps);
+    connect(&device_frame->pb_set_clock, &QPushButton::clicked, this, &N3Widget::set_datetime);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_read_jumps, &QPushButton::setEnabled);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void N3Widget::deleteDeviceFrame()
-{
+{    
     if(device_frame == nullptr) return;
 
     delete device_frame;
@@ -333,8 +334,22 @@ void N3Widget::read_jumps()
 //----------------------------------------------------------------------------------------------------------------------
 void N3Widget::clockUpdate()
 {
+    if(!device_frame)
+    {
+        m_clock_timer->stop();
+        return;
+    }
     device_frame->dte_clock.setDateTime(m_device->dateTime());
     //qDebug() << device_frame->dte_clock.dateTime();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Widget::set_datetime()
+{
+    QDateTime dt;
+    dt.setDate(QDate(2018, 8, 01));
+    dt.setTime(QTime(15, 19));
+    m_device->set_date_time(dt);
 }
 
 

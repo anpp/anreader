@@ -125,6 +125,14 @@ const QString Neptune::getSerialNumber() const
     return result;
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+void Neptune::set_date_time(const QDateTime &a_datetime)
+{
+    AbstractDevice::set_date_time(a_datetime);
+
+    executeCommand(N3Commands::SetDateTime);
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::setupComPort()
@@ -262,6 +270,26 @@ void Neptune::sendLastCommand()
         rawDateTime.clear();
         outBuffer = makeSigleByteCommand(last_command.m_command);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
+        break;
+
+    case N3Commands::SetDateTime:
+        inBuffer.clear();
+
+        command_bytes[0] = 8;
+        command_bytes[1] = static_cast<char>(last_command.m_command);
+
+        command_bytes[2] = dateTime().time().hour();
+        command_bytes[3] = dateTime().time().minute();
+        command_bytes[4] = dateTime().time().second();
+        command_bytes[5] = (dateTime().date().year() & 0xFF);
+        command_bytes[6] = ((dateTime().date().year() >> 8) & 0xFF);
+        command_bytes[7] = dateTime().date().month();
+        command_bytes[8] = dateTime().date().day();
+        command_bytes[9] = calculateChecksum(command_bytes);
+
+        outBuffer = cryptPacket(command_bytes, true);
+        emit sendPacket(*outBuffer, last_command.m_delay_ms);
+
         break;
 
     case N3Commands::ReadMemory:
@@ -422,7 +450,7 @@ void Neptune::processType0Record(const QByteArray &data)
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::processReadMemory(const QByteArray &data)
 {
-    inBuffer.append(data);
+    inBuffer.append(data);    
 
     //qDebug() << data.toHex();
     if(!checkInBufer())
@@ -470,7 +498,7 @@ void Neptune::processReadDateTime(const QByteArray &data)
         QDateTime dt;
         dt.setDate(QDate((uchar)rawDateTime[0] + (uchar)rawDateTime[1] * 256, (uchar)rawDateTime[2], (uchar)rawDateTime[3]));
         dt.setTime(QTime((uchar)rawDateTime[5], (uchar)rawDateTime[6], (uchar)rawDateTime[7]));
-        setDateTime(dt);
+        AbstractDevice::set_date_time(dt);
 
         emit readyStateSignal();
     }
@@ -480,14 +508,16 @@ void Neptune::processReadDateTime(const QByteArray &data)
 void Neptune::processDefault(const QByteArray &data)
 {
     inBuffer.append(data);
-
-    if(checkAcknowledgment(inBuffer))
-    {
+//qDebug() << inBuffer.toHex();
+    if(checkAcknowledgment(inBuffer, true))
+    {        
         inBuffer.clear();
+
         emit readyStateSignal();
     }
     else
         emit errorSignal("Acknowledgement error");
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------

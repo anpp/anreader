@@ -9,7 +9,7 @@ enum N3Constants: unsigned int {DelayInMs = 10000, TimeoutInMs = 20000, DelayBet
                                 KeepAliveDelay = 1000};
 
 enum N3Commands: unsigned char {None = 0, InitCommand = 1, AckSuccess = 0x31, AckRepeat = 0x34, AckReady = 0x35,
-                                ReadMemory = 0xA0, EndComm = 0xAF, KeepAlive = 0xA4, ReadDateTime = 0xA2};
+                                ReadMemory = 0xA0, EndComm = 0xAF, KeepAlive = 0xA4, ReadDateTime = 0xA2, SetDateTime = 0xA6};
 
 enum N3Addresses: unsigned int {Summary = 0x000A, DeviceSettings = 0x002C, SpeedGroups = 0x003A, DropZones = 0x0054, Airplanes = 0x0196, AlarmNames = 0x0196,
                            AlarmToneDirectory = 0x041A, AlarmToneData = 0x042C, AlarmSettings = 0x04CC, JumpDetails = 0x0520};

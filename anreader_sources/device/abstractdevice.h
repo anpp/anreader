@@ -40,8 +40,9 @@ public:
     virtual void read_dropzones() = 0;
     virtual void read_airplanes() = 0;
     virtual void read_datetime() = 0;
-    virtual void end_communication() = 0;
+    virtual void end_communication() = 0;    
     virtual uint n_iterations_by_jumps(const uint n_jumps) = 0;
+    virtual void set_date_time(const QDateTime& a_datetime);
     void clearJumps() { m_jumps.clear(); }
 
     virtual const QString getSerialNumber() const = 0;
@@ -57,8 +58,7 @@ protected:
     void startTimeoutTimer(const int ms) const;
     void stopTimeoutTimer() const;
     virtual void setupComPort();
-    virtual void removeComPort();
-    void setDateTime(const QDateTime& a_clock);
+    virtual void removeComPort();    
 
     std::unique_ptr<SerialPortThread> sp;
 
