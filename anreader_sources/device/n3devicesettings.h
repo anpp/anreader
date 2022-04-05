@@ -3,15 +3,16 @@
 
 #include "adevicesettings.h"
 
-enum ds_offsets: int      {altitudeMeasure = 0,
-                           speedMeasure = 1,
-                           temperatureMeasure = 2,
-                           displayFlipped = 3,
-                           logbookEnabled = 4,
-                           timeFormat = 5,
-                           dateFormat = 6,
-                           canopyDisplayEnabled = 7,
-                           climbDisplayMode = 8};
+enum ds_offsets: int      {altitudeMeasure = 2,
+                           speedMeasure = 3,
+                           temperatureMeasure = 4,
+                           displayFlipped = 5,
+                           logbookEnabled = 6,
+                           timeFormat = 7,
+                           dateFormat = 8,
+                           canopyDisplayEnabled = 9,
+                           climbDisplayMode = 10,
+                           canopyAlarmsMode = 14};
 
 
 class N3DeviceSettings : public ADeviceSettings
@@ -29,6 +30,7 @@ public:
     date_format         dateFormat() const override;
     bool                canopyDisplayEnabled() const override;
     climb_display_mode  climbDisplayMode() const override;
+    canopy_alarms_mode  canopyAlarmsMode() const override;
 
     //void setInfo(const QByteArray &info) override {bytes = info; }
 

@@ -55,9 +55,15 @@ climb_display_mode N3DeviceSettings::climbDisplayMode() const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+canopy_alarms_mode N3DeviceSettings::canopyAlarmsMode() const
+{
+    return getByte(ds_offsets::canopyAlarmsMode) == 0 ? canopy_alarms_mode::normal : canopy_alarms_mode::loud;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 uint8_t N3DeviceSettings::getByte(const int offset) const
 {
-    if(data.size() >= offset)
-        return data[offset];
+    if(m_data.size() >= offset)
+        return m_data[offset];
     return 0;
 }

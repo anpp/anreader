@@ -289,7 +289,15 @@ void Neptune::sendLastCommand()
 
         outBuffer = cryptPacket(command_bytes, true);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
+/*
+        command_bytes = command_bytes.fromHex("1c96ca312c342fd9032daeab55645c214115d449bdb074db4115d449bdb074db");
+        outBuffer = cryptPacket(command_bytes, false);
+        qDebug() << outBuffer->toHex();
 
+        command_bytes = command_bytes.fromHex("b4819618f741cde8479f5fb4396df0846474b1aea2b6c455feb551d89df65133 ");
+        outBuffer = cryptPacket(command_bytes, false);
+        qDebug() << outBuffer->toHex();
+*/
         break;
 
     case N3Commands::ReadMemory:

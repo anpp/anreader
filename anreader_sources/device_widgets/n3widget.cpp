@@ -286,17 +286,20 @@ void N3Widget::readed_summary_settings()
 
         const ADeviceSettings &settings = m_device->settings();
         emit afterConnect(*this);
-/*
-        qDebug() << settings.altitudeMeasure();
-        qDebug() << settings.speedMeasure();
-        qDebug() << settings.temperatureMeasure();
+
+        qDebug() << settings.data().toHex();
+
+        qDebug() << static_cast<int>(settings.altitudeMeasure());
+        qDebug() << static_cast<int>(settings.speedMeasure());
+        qDebug() << static_cast<int>(settings.temperatureMeasure());
         qDebug() << settings.dislpayIsFlipped();
         qDebug() << settings.logbookEnabled();
         qDebug() << settings.timeFormat();
-        qDebug() << settings.dateFormat();
-        qDebug() << settings.canopyDisplayEnabled();
-        qDebug() << settings.climbDisplayMode();
-*/
+        qDebug() << static_cast<int>(settings.dateFormat());
+        qDebug() << settings.canopyDisplayEnabled(); //Not Scaled = 1
+        qDebug() << static_cast<int>(settings.climbDisplayMode());
+        qDebug() << static_cast<int>(settings.canopyAlarmsMode());
+
 
         auto calc_time { [] (uint32_t secs) -> QString
             {
