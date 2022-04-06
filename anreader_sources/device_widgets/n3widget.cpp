@@ -8,12 +8,26 @@ DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
     QFormLayout *lForm = new QFormLayout;
     QVBoxLayout *lMain = new QVBoxLayout(this);
     QHBoxLayout *lClock = new QHBoxLayout;
-    QHBoxLayout *lButtons = new QHBoxLayout;
+    QHBoxLayout *lSettings = new QHBoxLayout;
+    QHBoxLayout *lReadJumps = new QHBoxLayout;
+
+    lSettings->addWidget(&tb_settings);
+    lSettings->addStretch();
+
+    //m_settings_action = std::make_unique<QAction>(QIcon(":/images/icons/buttons/edit.png"), "");
+    tb_settings.setToolTip(tr("Device settings..."));
+    tb_settings.setIconSize(QSize(32, 32));
+    tb_settings.setIcon(QIcon(":/images/icons/buttons/device_settings.png"));
+
 
     lForm->setContentsMargins(0, 0, 0, 0);
     lClock->setContentsMargins(0, 0, 0, 0);
-    lButtons->setContentsMargins(0, 0, 0, 0);
+    lReadJumps->setContentsMargins(0, 0, 0, 0);
+    lSettings->setContentsMargins(0, 0, 0, 0);
     lMain->setContentsMargins(n3widget_defs::spacing, lMain->contentsMargins().top(), n3widget_defs::spacing, lMain->contentsMargins().bottom());
+    lMain->setSpacing(n3widget_defs::spacing);
+    lReadJumps->setSpacing(n3widget_defs::spacing);
+    lClock->setSpacing(n3widget_defs::spacing);
 
     te_sn.setReadOnly(true);
     te_total_jumps.setReadOnly(true);
@@ -21,6 +35,10 @@ DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
     te_next_jump.setReadOnly(true);
     te_total_freefall_time.setReadOnly(true);
     te_total_canopy_time.setReadOnly(true);
+
+    line_horz0.setFrameShape(QFrame::HLine);
+    line_horz0.setFrameShadow(QFrame::Sunken);
+    line_horz0.setFixedHeight(n3widget_defs::line_height);
 
     line_horz1.setFrameShape(QFrame::HLine);
     line_horz1.setFrameShadow(QFrame::Sunken);
@@ -38,38 +56,43 @@ DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
     lForm->addRow(QObject::tr("Freefall time"), &te_total_freefall_time);
     lForm->addRow(QObject::tr("Canopy time"), &te_total_canopy_time);
 
-    lMain->addLayout(lClock);
-    lMain->addWidget(&line_horz1);
+    lMain->addWidget(&line_horz0);
     lMain->addLayout(lForm);
+    lMain->addWidget(&line_horz1);
+    lMain->addLayout(lSettings);
     lMain->addWidget(&line_horz2);
-    lMain->addLayout(lButtons);
+    lMain->addLayout(lClock);
+    lMain->addLayout(lReadJumps);
 
     sb_number.setRange(0, 0);
-    sb_number.setEnabled(false);
 
     pb_read_jumps.setText(QObject::tr("Read"));
+    pb_read_jumps.setToolTip(tr("Read jumps to main table"));
     pb_read_jumps.setMaximumWidth(n3widget_defs::button_width);
     pb_read_jumps.setEnabled(false);
 
-    pb_set_clock.setText(QObject::tr("Set"));
-    pb_set_clock.setMaximumWidth(n3widget_defs::button_width);
-    //pb_set_clock.setEnabled(false);
-    dte_clock.setReadOnly(true);
-    dte_clock.setButtonSymbols(QAbstractSpinBox::NoButtons);
 
-    //m_clock_action = std::make_unique<QAction>(QIcon(), "123");
-    //dte_clock.addAction(m_clock_action.get());
+    le_clock.setReadOnly(true);
 
-    lClock->addWidget(&dte_clock);
-    lClock->addWidget(&pb_set_clock);
+    pb_edit_clock.setText(tr("Edit"));
+    pb_edit_clock.setToolTip("Edit time...");
+    pb_edit_clock.setMaximumWidth(n3widget_defs::button_width);
 
-    lButtons->addWidget(&sb_number);
-    lButtons->addWidget(&pb_read_jumps);
+    m_set_clock_action = le_clock.addAction(QIcon(":/images/icons/buttons/clock.png"), QLineEdit::TrailingPosition);
+    m_set_clock_action->setToolTip(tr("Set current time"));
+
+
+    lClock->addWidget(&le_clock);
+    lClock->addWidget(&pb_edit_clock);
+
+    lReadJumps->addWidget(&sb_number);
+    lReadJumps->addWidget(&pb_read_jumps);
 
     this->setFixedHeight(n3widget_defs::element_height * n3widget_defs::n_rows +
-                         lForm->spacing() + lButtons->spacing() + lMain->spacing() + lClock->spacing() +
-                         //lMain->contentsMargins().top() + lMain->contentsMargins().bottom() +
-                         line_horz1.height() + line_horz2.height());
+                         lForm->spacing() + lReadJumps->spacing() + lMain->spacing() + lClock->spacing() +
+                         lMain->contentsMargins().top() + lMain->contentsMargins().bottom() +
+                         lSettings->spacing() +
+                         line_horz0.height() + line_horz2.height()+ line_horz2.height());
 }
 
 
@@ -154,14 +177,21 @@ void N3Widget::addDeviceFrame()
     emit setHeight(this->height());
 
     connect(&device_frame->pb_read_jumps, &QPushButton::clicked, this, &N3Widget::read_jumps);
-    connect(&device_frame->pb_set_clock, &QPushButton::clicked, this, &N3Widget::set_datetime);
+    connect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_datetime);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_read_jumps, &QPushButton::setEnabled);
+    connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_edit_clock, &QPushButton::setEnabled);
+    connect(this, &N3Widget::controls_is_enabled, &device_frame->le_clock, &QPushButton::setEnabled);
+    connect(this, &N3Widget::controls_is_enabled, &device_frame->sb_number, &QPushButton::setEnabled);
+    connect(this, &N3Widget::controls_is_enabled, &device_frame->tb_settings, &QPushButton::setEnabled);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void N3Widget::deleteDeviceFrame()
 {    
     if(device_frame == nullptr) return;
+
+    disconnect(&device_frame->pb_read_jumps, &QPushButton::clicked, this, &N3Widget::read_jumps);
+    disconnect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_datetime);
 
     delete device_frame;
     device_frame = nullptr;
@@ -317,7 +347,6 @@ void N3Widget::readed_summary_settings()
         device_frame->te_total_canopy_time.setText(calc_time(summary.totalCanopyTime()));
 
         device_frame->sb_number.setRange(0, summary.totalJumps());
-        device_frame->sb_number.setEnabled(true);
 
         int last_jump = 0;
         emit giveLastJump(last_jump);
@@ -342,8 +371,7 @@ void N3Widget::clockUpdate()
         m_clock_timer->stop();
         return;
     }
-    device_frame->dte_clock.setDateTime(m_device->dateTime());
-    //qDebug() << device_frame->dte_clock.dateTime();
+    device_frame->le_clock.setText(m_device->dateTime().toString("dd.MM.yyyy hh:mm"));
 }
 
 //----------------------------------------------------------------------------------------------------------------------

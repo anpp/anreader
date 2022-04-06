@@ -1,14 +1,14 @@
 #ifndef N3WIDGET_H
 #define N3WIDGET_H
 
-#include <QTextEdit>
 #include <QFormLayout>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QSpinBox>
 #include <QFrame>
-#include <QDateTimeEdit>
+#include <QLineEdit>
 #include <QAction>
+#include <QToolButton>
 
 #include "dwidget.h"
 #include "device/neptune_hil.h"
@@ -26,24 +26,28 @@ public:
     ~DeviceFrame() {}
 
 private:
-    QTextEdit te_sn;
-    QTextEdit te_total_jumps;
-    QTextEdit te_top_jump;
-    QTextEdit te_next_jump;
+    QLineEdit te_sn;
+    QLineEdit te_total_jumps;
+    QLineEdit te_top_jump;
+    QLineEdit te_next_jump;
 
-    QTextEdit te_total_freefall_time;
-    QTextEdit te_total_canopy_time;
+    QLineEdit te_total_freefall_time;
+    QLineEdit te_total_canopy_time;
 
+    QFrame line_horz0;
     QFrame line_horz1;
     QFrame line_horz2;
 
-    QDateTimeEdit dte_clock;
-    QPushButton pb_set_clock;
+    QToolButton tb_settings;
+
+    QLineEdit le_clock;
+    QPushButton pb_edit_clock;
 
     QSpinBox sb_number;
     QPushButton pb_read_jumps;
 
-    std::unique_ptr<QAction> m_clock_action;
+    QAction* m_set_clock_action = nullptr;
+    std::unique_ptr<QAction> m_settings_action;
 
 protected:
 

@@ -25,5 +25,9 @@
         <file>images/icons/menu/dz.png</file>
         <file>images/icons/menu/jump.png</file>
         <file>images/icons/menu/usb.png</file>
+        <file>images/icons/buttons/clock.png</file>
+        <file>images/icons/buttons/edit.png</file>
+        <file>images/icons/buttons/device_settings.png</file>
+        <file>images/icons/menu/settings.png</file>
     </qresource>
 </RCC>
