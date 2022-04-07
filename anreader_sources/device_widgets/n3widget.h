@@ -91,7 +91,8 @@ public slots:
     void readed_summary_settings();
     void read_jumps();
     void clockUpdate();
-    void set_datetime();
+    void set_current_datetime();
+    void choice_datetime();
 };
 
 #endif // N3WIDGET_H

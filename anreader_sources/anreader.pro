@@ -39,7 +39,8 @@ SOURCES += \
     device_widgets/n3widget.cpp \
     settings.cpp \
     settings_dialog/settings_com_port.cpp \
-    settings_dialog/settings_editor.cpp
+    settings_dialog/settings_editor.cpp \
+    device_widgets/choice_datetime_dialog.cpp
 
 HEADERS += \
     common/common.h \
@@ -65,7 +66,8 @@ HEADERS += \
     device_widgets/n3widget.h \
     settings.h \
     settings_dialog/settings_com_port.h \
-    settings_dialog/settings_editor.h
+    settings_dialog/settings_editor.h \
+    device_widgets/choice_datetime_dialog.h
 
 TRANSLATIONS += \
     anreader_en.ts
@@ -93,6 +95,7 @@ FORMS += \
     common/string_list.ui \
     datalist_dialog/datalist_dialog.ui \
     jumpeditor_dialog/n3jumpeditor.ui \
-    settings_dialog/settings_com_port.ui
+    settings_dialog/settings_com_port.ui \
+    device_widgets/choice_datetime_dialog.ui
 
 

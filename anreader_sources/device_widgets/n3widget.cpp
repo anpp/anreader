@@ -1,4 +1,5 @@
 #include "n3widget.h"
+#include "choice_datetime_dialog.h"
 #include <QTimer>
 
 
@@ -78,7 +79,7 @@ DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
     pb_edit_clock.setToolTip("Edit time...");
     pb_edit_clock.setMaximumWidth(n3widget_defs::button_width);
 
-    m_set_clock_action = le_clock.addAction(QIcon(":/images/icons/buttons/clock.png"), QLineEdit::TrailingPosition);
+    m_set_clock_action = le_clock.addAction(QIcon(":/images/icons/buttons/accept.png"), QLineEdit::TrailingPosition);
     m_set_clock_action->setToolTip(tr("Set current time"));
 
 
@@ -177,7 +178,9 @@ void N3Widget::addDeviceFrame()
     emit setHeight(this->height());
 
     connect(&device_frame->pb_read_jumps, &QPushButton::clicked, this, &N3Widget::read_jumps);
-    connect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_datetime);
+    connect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_current_datetime);
+    connect(&device_frame->pb_edit_clock, &QPushButton::clicked, this, &N3Widget::choice_datetime);
+
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_read_jumps, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_edit_clock, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->le_clock, &QPushButton::setEnabled);
@@ -191,7 +194,8 @@ void N3Widget::deleteDeviceFrame()
     if(device_frame == nullptr) return;
 
     disconnect(&device_frame->pb_read_jumps, &QPushButton::clicked, this, &N3Widget::read_jumps);
-    disconnect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_datetime);
+    disconnect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_current_datetime);
+    disconnect(&device_frame->pb_edit_clock, &QPushButton::clicked, this, &N3Widget::choice_datetime);
 
     delete device_frame;
     device_frame = nullptr;
@@ -375,11 +379,26 @@ void N3Widget::clockUpdate()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3Widget::set_datetime()
+void N3Widget::set_current_datetime()
 {
     QDateTime dt;
     dt = QDateTime::currentDateTime();
     m_device->set_date_time(dt);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Widget::choice_datetime()
+{
+    if(!m_device)
+        return;
+
+    std::unique_ptr<ChoiceDateTimeDialog> cdtDialog = std::make_unique<ChoiceDateTimeDialog>(m_device->dateTime(), this);
+    if(QDialog::Accepted == cdtDialog->exec())
+    {
+        if(m_device)
+            m_device->set_date_time(cdtDialog->datetime());
+    }
+
 }
 
 

@@ -250,6 +250,7 @@ void MainWindow::createDevicesWidget()
     dock->setObjectName("devices_widget_dock");
     dock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetClosable);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    dock->setWindowIcon(QIcon(":/images/icons/chip.png"));
     m_toggleDevices = dock->toggleViewAction();
 #ifndef Q_OS_MACOS
     m_toggleDevices->setShortcut(QKeySequence("F11"));
@@ -257,7 +258,7 @@ void MainWindow::createDevicesWidget()
     m_toggleDevices->setShortcut(QKeySequence("Ctrl+F11"));
 #endif
 
-    devices_window = std::make_unique<DevicesWidget>(*settings, dock);
+    devices_window = std::make_unique<DevicesWidget>(*settings, dock);    
     dock->setWidget(devices_window.get());
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 
@@ -883,6 +884,11 @@ void MainWindow::enableActions(const bool enable)
     if(jtable) jtable->setEnabled(enable);
 
     selection_changed(enable);
+
+    QApplication::restoreOverrideCursor();
+    if(!enable)
+        QApplication::setOverrideCursor(Qt::BusyCursor);
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------

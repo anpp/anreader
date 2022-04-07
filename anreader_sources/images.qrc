@@ -29,5 +29,7 @@
         <file>images/icons/buttons/edit.png</file>
         <file>images/icons/buttons/device_settings.png</file>
         <file>images/icons/menu/settings.png</file>
+        <file>images/icons/chip.png</file>
+        <file>images/icons/buttons/accept.png</file>
     </qresource>
 </RCC>
