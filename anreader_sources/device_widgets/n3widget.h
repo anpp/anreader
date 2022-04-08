@@ -20,7 +20,7 @@ class QAction;
 
 class DeviceFrame : public QFrame
 {
-    enum n3widget_defs: int {element_height = 34, n_rows = 8, spacing = 4, line_height = 8, button_width = 70};
+    enum n3widget_defs: int {element_height = 34, n_rows = 8, spacing = 4, line_height = 8, button_height = 24};
 public:
     explicit DeviceFrame(QWidget *parent = nullptr);
     ~DeviceFrame() {}
@@ -41,10 +41,10 @@ private:
     QToolButton tb_settings;
 
     QLineEdit le_clock;
-    QPushButton pb_edit_clock;
+    QToolButton pb_edit_clock;
 
     QSpinBox sb_number;
-    QPushButton pb_read_jumps;
+    QToolButton pb_read_jumps;
 
     QAction* m_set_clock_action = nullptr;
     std::unique_ptr<QAction> m_settings_action;

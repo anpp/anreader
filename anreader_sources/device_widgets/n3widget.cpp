@@ -15,7 +15,6 @@ DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
     lSettings->addWidget(&tb_settings);
     lSettings->addStretch();
 
-    //m_settings_action = std::make_unique<QAction>(QIcon(":/images/icons/buttons/edit.png"), "");
     tb_settings.setToolTip(tr("Device settings..."));
     tb_settings.setIconSize(QSize(32, 32));
     tb_settings.setIcon(QIcon(":/images/icons/buttons/device_settings.png"));
@@ -67,17 +66,17 @@ DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
 
     sb_number.setRange(0, 0);
 
-    pb_read_jumps.setText(QObject::tr("Read"));
+    pb_read_jumps.setIconSize(QSize(n3widget_defs::button_height, n3widget_defs::button_height));
+    pb_read_jumps.setIcon(QIcon(":/images/icons/buttons/export_jumps.png"));
     pb_read_jumps.setToolTip(tr("Read jumps to main table"));
-    pb_read_jumps.setMaximumWidth(n3widget_defs::button_width);
     pb_read_jumps.setEnabled(false);
 
 
     le_clock.setReadOnly(true);
 
-    pb_edit_clock.setText(tr("Edit"));
+    pb_edit_clock.setIconSize(QSize(n3widget_defs::button_height, n3widget_defs::button_height));
+    pb_edit_clock.setIcon(QIcon(":/images/icons/buttons/calendar.png"));
     pb_edit_clock.setToolTip("Edit time...");
-    pb_edit_clock.setMaximumWidth(n3widget_defs::button_width);
 
     m_set_clock_action = le_clock.addAction(QIcon(":/images/icons/buttons/accept.png"), QLineEdit::TrailingPosition);
     m_set_clock_action->setToolTip(tr("Set current time"));
@@ -276,8 +275,7 @@ void N3Widget::stateChanged()
 
     if(m_device)
     {
-        AbstractDevice::DeviceStates state = m_device->state();
-        switch (state) {
+        switch (m_device->state()) {
         case AbstractDevice::DeviceStates::Connected:
             setImage("n3_com2.png");
             break;
@@ -383,7 +381,8 @@ void N3Widget::set_current_datetime()
 {
     QDateTime dt;
     dt = QDateTime::currentDateTime();
-    m_device->set_date_time(dt);
+    if(m_device)
+        m_device->set_date_time(dt);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

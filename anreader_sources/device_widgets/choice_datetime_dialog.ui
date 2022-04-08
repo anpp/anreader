@@ -26,7 +26,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Choice date &amp; time</string>
+   <string>Choice of date &amp; time</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../images.qrc">
@@ -72,7 +72,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="../images.qrc">:/images/icons/buttons/clock.png</pixmap>
+          <pixmap resource="../images.qrc">:/images/icons/buttons/calendar.png</pixmap>
          </property>
         </widget>
        </item>
