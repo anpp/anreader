@@ -240,6 +240,12 @@
                </item>
                <item row="0" column="1">
                 <widget class="QComboBox" name="cbSpeed">
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -252,6 +258,12 @@
                </item>
                <item row="1" column="1">
                 <widget class="QComboBox" name="cbAlt">
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -264,6 +276,12 @@
                </item>
                <item row="2" column="1">
                 <widget class="QComboBox" name="cbTemp">
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -276,6 +294,12 @@
                </item>
                <item row="3" column="1">
                 <widget class="QComboBox" name="cbDateFormat">
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -288,6 +312,12 @@
                </item>
                <item row="4" column="1">
                 <widget class="QComboBox" name="cbTimeFormat">
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -432,6 +462,12 @@
                </item>
                <item row="0" column="1">
                 <widget class="QComboBox" name="cbCanopyDisp">
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -444,6 +480,12 @@
                </item>
                <item row="1" column="1">
                 <widget class="QComboBox" name="cbAirDisp">
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -456,6 +498,12 @@
                </item>
                <item row="2" column="1">
                 <widget class="QComboBox" name="cbDisplay">
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -576,6 +624,12 @@
                </item>
                <item row="0" column="1">
                 <widget class="QComboBox" name="cbLogBook">
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -588,6 +642,12 @@
                </item>
                <item row="1" column="1">
                 <widget class="QComboBox" name="cbCanopyAlarm">
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>

@@ -41,7 +41,7 @@ SOURCES += \
     settings.cpp \
     settings_dialog/settings_com_port.cpp \
     settings_dialog/settings_editor.cpp \
-    device_widgets/choice_datetime_dialog.h
+    device_widgets/choice_datetime_dialog.cpp
 
 HEADERS += \
     common/common.h \
