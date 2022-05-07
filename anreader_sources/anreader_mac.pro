@@ -91,3 +91,6 @@ FORMS += \
     jumpeditor_dialog/n3jumpeditor.ui \
     settings_dialog/settings_com_port.ui \
     device_widgets/choice_datetime_dialog.ui
+
+
+
