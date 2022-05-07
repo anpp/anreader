@@ -27,6 +27,7 @@ SOURCES += \
     datalist_dialog/listdevicetypeswidget.cpp \
     datalist_dialog/listwidget.cpp \
     datalists.cpp \
+    device_widgets/n3_main_settings_dialog.cpp \
     devices_list_widget.cpp \
     jumpeditor_dialog/combolist_model.cpp \
     log_widget.cpp \
@@ -39,7 +40,8 @@ SOURCES += \
     device_widgets/n3widget.cpp \
     settings.cpp \
     settings_dialog/settings_com_port.cpp \
-    settings_dialog/settings_editor.cpp
+    settings_dialog/settings_editor.cpp \
+    device_widgets/choice_datetime_dialog.h
 
 HEADERS += \
     common/common.h \
@@ -54,6 +56,7 @@ HEADERS += \
     datalist_dialog/listdevicetypeswidget.h \
     datalist_dialog/listwidget.h \
     datalists.h \
+    device_widgets/n3_main_settings_dialog.h \
     devices_list_widget.h \
     jumpeditor_dialog/combolist_model.h \
     log_widget.h \
@@ -65,7 +68,8 @@ HEADERS += \
     device_widgets/n3widget.h \
     settings.h \
     settings_dialog/settings_com_port.h \
-    settings_dialog/settings_editor.h
+    settings_dialog/settings_editor.h \
+    device_widgets/choice_datetime_dialog.h
 
 TRANSLATIONS += \
     anreader_en.ts
