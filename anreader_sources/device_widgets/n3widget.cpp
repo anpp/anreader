@@ -1,5 +1,6 @@
 #include "n3widget.h"
 #include "choice_datetime_dialog.h"
+#include "mainwindow.h"
 #include <QTimer>
 
 
@@ -113,6 +114,16 @@ N3Widget::N3Widget(QWidget *parent) : DWidget (dtype::N3, parent)
     stateChanged();
     m_clock_timer = std::make_unique<QTimer>();
     connect(m_clock_timer.get(), &QTimer::timeout, this, &N3Widget::clockUpdate, Qt::QueuedConnection);
+
+    connect(this, &DWidget::newTextOfState, MainWindow::instance(), &MainWindow::setStatusText);
+    connect(this, &DWidget::setProgress, MainWindow::instance(), &MainWindow::initProgress);
+    connect(this, &DWidget::stepProgress, MainWindow::instance(), &MainWindow::stepProgress);
+    connect(this, &DWidget::receivedData, MainWindow::instance(), &MainWindow::finish);
+    connect(this, &DWidget::afterConnect, MainWindow::instance(), &MainWindow::afterConnect);
+    connect(this, &DWidget::controls_is_enabled, MainWindow::instance(), &MainWindow::enableActions);
+    connect(this, &DWidget::log, MainWindow::instance(), &MainWindow::log);
+    connect(this, &DWidget::giveLastJump, MainWindow::instance(), &MainWindow::takeLastJump);
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------

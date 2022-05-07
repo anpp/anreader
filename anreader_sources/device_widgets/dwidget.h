@@ -80,7 +80,7 @@ signals:
     void setHeight(int height);
     void receivedData(const DWidget& widget);
     void afterConnect(const DWidget& widget);
-    void controls_is_enabled(const bool);    
+    void controls_is_enabled(const bool);
     void giveLastJump(int &value);
     void log(const QString&);
 

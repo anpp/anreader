@@ -71,11 +71,18 @@ public slots:
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-public:
-    MainWindow(QWidget *parent = nullptr);
+
+    static MainWindow* m_self;
+public:   
+    static MainWindow* instance(QWidget *parent = nullptr) {
+        if(nullptr == m_self)
+            m_self = new MainWindow(parent);
+        return m_self;
+    }
     ~MainWindow();
 
 protected:
+    MainWindow(QWidget *parent = nullptr);
     void closeEvent(QCloseEvent *event);
 
 private:    
@@ -134,7 +141,8 @@ private:
     std::shared_ptr<Settings> settings = Settings::Instance(this, "anreader", "anreader");
     DataLists dl{"anreader", "anreader"};
 
-//signals:
+signals:
+    void takeLastJump(int &value);
 
 public slots:
     void createStatusFrame(const int id);

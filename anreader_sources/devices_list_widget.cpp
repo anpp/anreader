@@ -1,4 +1,5 @@
 #include "devices_list_widget.h"
+#include "mainwindow.h"
 #include <QHeaderView>
 #include <QVBoxLayout>
 #include <QListWidget>
@@ -131,15 +132,9 @@ void DevicesWidget::init()
 //----------------------------------------------------------------------------------------------------------------------
 void DevicesWidget::createDevice(ptrWidget device_widget)
 {
-    connect(device_widget, &DWidget::newTextOfState, this, &DevicesWidget::newTextOfState);
-    connect(device_widget, &DWidget::setProgress, this, &DevicesWidget::setProgress);
-    connect(device_widget, &DWidget::stepProgress, this, &DevicesWidget::stepProgress);
     connect(device_widget, &DWidget::setHeight, this, &DevicesWidget::setHeightRow);
-    connect(device_widget, &DWidget::receivedData, this, &DevicesWidget::receivedData);
-    connect(device_widget, &DWidget::afterConnect, this, &DevicesWidget::afterConnect);
-    connect(device_widget, &DWidget::controls_is_enabled, this, &DevicesWidget::controls_is_enabled);
-    connect(device_widget, &DWidget::log, this, &DevicesWidget::log);
-    connect(device_widget, &DWidget::giveLastJump, this, &DevicesWidget::giveLastJump);
+    connect(this, &DevicesWidget::createStatusFrame, MainWindow::instance(), &MainWindow::createStatusFrame);
+    connect(this, &DevicesWidget::log, MainWindow::instance(), &MainWindow::log);
 
     devices.emplace_back(device_widget);
     int row_count = table_devices.rowCount();

@@ -12,7 +12,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("anreader");
     QCoreApplication::setApplicationVersion("0.9");
 
-    MainWindow w;
-    w.show();
-    return a.exec();
+    MainWindow *w = MainWindow::instance();
+    w->show();
+    int result = a.exec();
+    delete w;
+    return result;
 }

@@ -3,6 +3,9 @@
 
 const static QString sDataList_Titles[] = {QObject::tr("Aircrafts"), QObject::tr("Dropzones"), QObject::tr("Canopies"), QObject::tr("Jump types")};
 
+MainWindow* MainWindow::m_self = nullptr;
+
+
 //----------------------------------------------------------------------------------------------------------------------
 StatusFrame::StatusFrame(QWidget *parent) : QWidget (parent)
 {
@@ -30,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       jumps_model(dl)
 {
-
+    m_self = this;
     this->resize(MainWindow_defs::BaseWidht, MainWindow_defs::BaseHeight);    
     setWindowIcon(QIcon(":/images/icons/main/anreader.ico"));
     //QApplication::setStyle("fusion");
@@ -262,15 +265,7 @@ void MainWindow::createDevicesWidget()
     dock->setWidget(devices_window.get());
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 
-    connect(devices_window.get(), &DevicesWidget::createStatusFrame, this, &MainWindow::createStatusFrame);
-    connect(devices_window.get(), &DevicesWidget::newTextOfState, this, &MainWindow::setStatusText);
-    connect(devices_window.get(), &DevicesWidget::setProgress, this, &MainWindow::initProgress);
-    connect(devices_window.get(), &DevicesWidget::stepProgress, this, &MainWindow::stepProgress);
-    connect(devices_window.get(), &DevicesWidget::receivedData, this, &MainWindow::finish);
-    connect(devices_window.get(), &DevicesWidget::afterConnect, this, &MainWindow::afterConnect);
-    connect(devices_window.get(), &DevicesWidget::controls_is_enabled, this, &MainWindow::enableActions);
-    connect(devices_window.get(), &DevicesWidget::log, this, &MainWindow::log);
-    connect(devices_window.get(), &DevicesWidget::giveLastJump, &jumps_model, &JumpsTableModel::takeLastJump);
+    connect(this, &MainWindow::takeLastJump, &jumps_model, &JumpsTableModel::takeLastJump);
 
     devices_window->createDefaults();
 }
