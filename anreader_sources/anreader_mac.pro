@@ -87,5 +87,7 @@ RESOURCES += \
 FORMS += \
     common/string_list.ui \
     datalist_dialog/datalist_dialog.ui \
+    device_widgets/n3_main_settings_dialog.ui \
     jumpeditor_dialog/n3jumpeditor.ui \
-    settings_dialog/settings_com_port.ui
+    settings_dialog/settings_com_port.ui \
+    device_widgets/choice_datetime_dialog.ui
