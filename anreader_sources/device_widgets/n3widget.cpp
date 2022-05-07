@@ -1,6 +1,7 @@
 #include "n3widget.h"
 #include "choice_datetime_dialog.h"
 #include "mainwindow.h"
+#include "n3_main_settings_dialog.h"
 #include <QTimer>
 
 
@@ -18,8 +19,7 @@ DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
 
     tb_settings.setToolTip(tr("Device settings..."));
     tb_settings.setIconSize(QSize(32, 32));
-    tb_settings.setIcon(QIcon(":/images/icons/buttons/device_settings.png"));
-
+    tb_settings.setIcon(QIcon(":/images/icons/buttons/device_settings.png"));    
 
     lForm->setContentsMargins(0, 0, 0, 0);
     lClock->setContentsMargins(0, 0, 0, 0);
@@ -190,6 +190,7 @@ void N3Widget::addDeviceFrame()
     connect(&device_frame->pb_read_jumps, &QPushButton::clicked, this, &N3Widget::read_jumps);
     connect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_current_datetime);
     connect(&device_frame->pb_edit_clock, &QPushButton::clicked, this, &N3Widget::choice_datetime);
+    connect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::N3Settings);
 
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_read_jumps, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_edit_clock, &QPushButton::setEnabled);
@@ -206,6 +207,7 @@ void N3Widget::deleteDeviceFrame()
     disconnect(&device_frame->pb_read_jumps, &QPushButton::clicked, this, &N3Widget::read_jumps);
     disconnect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_current_datetime);
     disconnect(&device_frame->pb_edit_clock, &QPushButton::clicked, this, &N3Widget::choice_datetime);
+    disconnect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::N3Settings);
 
     delete device_frame;
     device_frame = nullptr;
@@ -409,6 +411,16 @@ void N3Widget::choice_datetime()
             m_device->set_date_time(cdtDialog->datetime());
     }
 
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Widget::N3Settings()
+{
+    if(!m_device)
+        return;
+
+    std::unique_ptr<N3MainSettingsDialog> sd = std::make_unique<N3MainSettingsDialog>(this);
+    sd->exec();
 }
 
 

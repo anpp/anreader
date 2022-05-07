@@ -27,6 +27,7 @@ SOURCES += \
     datalist_dialog/listdevicetypeswidget.cpp \
     datalist_dialog/listwidget.cpp \
     datalists.cpp \
+    device_widgets/n3_main_settings_dialog.cpp \
     devices_list_widget.cpp \
     jumpeditor_dialog/combolist_model.cpp \
     log_widget.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     datalist_dialog/listdevicetypeswidget.h \
     datalist_dialog/listwidget.h \
     datalists.h \
+    device_widgets/n3_main_settings_dialog.h \
     devices_list_widget.h \
     jumpeditor_dialog/combolist_model.h \
     log_widget.h \
@@ -77,7 +79,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-include(device/device.pro)
+include(device/device.pri)
 
 RESOURCES += \
     images.qrc
@@ -94,6 +96,7 @@ win32:{
 FORMS += \
     common/string_list.ui \
     datalist_dialog/datalist_dialog.ui \
+    device_widgets/n3_main_settings_dialog.ui \
     jumpeditor_dialog/n3jumpeditor.ui \
     settings_dialog/settings_com_port.ui \
     device_widgets/choice_datetime_dialog.ui

@@ -47,7 +47,6 @@ private:
     QToolButton pb_read_jumps;
 
     QAction* m_set_clock_action = nullptr;
-    std::unique_ptr<QAction> m_settings_action;
 
 protected:
 
@@ -93,6 +92,7 @@ public slots:
     void clockUpdate();
     void set_current_datetime();
     void choice_datetime();
+    void N3Settings();
 };
 
 #endif // N3WIDGET_H
