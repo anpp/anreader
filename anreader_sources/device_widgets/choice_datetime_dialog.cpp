@@ -27,4 +27,3 @@ void ChoiceDateTimeDialog::on_tbCurrentTime_clicked()
 {
     ui->dteTime->setDateTime(QDateTime::currentDateTime());
 }
-
