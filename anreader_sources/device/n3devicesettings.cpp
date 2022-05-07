@@ -31,9 +31,9 @@ bool N3DeviceSettings::logbookEnabled() const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-int N3DeviceSettings::timeFormat() const
+time_format N3DeviceSettings::timeFormat() const
 {
-    return getByte(ds_offsets::timeFormat) == 0 ? 12 : 24;
+    return getByte(ds_offsets::timeFormat) == 0 ? time_format::h12 : time_format::h24;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

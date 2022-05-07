@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>403</width>
-    <height>501</height>
+    <width>405</width>
+    <height>507</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -85,7 +85,7 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <property name="spacing">
-            <number>4</number>
+            <number>6</number>
            </property>
            <property name="leftMargin">
             <number>4</number>
@@ -103,6 +103,9 @@
             <layout class="QVBoxLayout" name="verticalLayout_4">
              <item>
               <layout class="QFormLayout" name="formLayout">
+               <property name="horizontalSpacing">
+                <number>10</number>
+               </property>
                <property name="leftMargin">
                 <number>6</number>
                </property>
@@ -236,7 +239,7 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox">
+                <widget class="QComboBox" name="cbSpeed">
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -248,7 +251,7 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QComboBox" name="comboBox_2">
+                <widget class="QComboBox" name="cbAlt">
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -260,7 +263,7 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QComboBox" name="comboBox_3">
+                <widget class="QComboBox" name="cbTemp">
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -272,7 +275,7 @@
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QComboBox" name="comboBox_4">
+                <widget class="QComboBox" name="cbDateFormat">
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -284,7 +287,7 @@
                 </widget>
                </item>
                <item row="4" column="1">
-                <widget class="QComboBox" name="comboBox_5">
+                <widget class="QComboBox" name="cbTimeFormat">
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -322,7 +325,7 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <property name="spacing">
-            <number>4</number>
+            <number>6</number>
            </property>
            <property name="leftMargin">
             <number>4</number>
@@ -340,6 +343,9 @@
             <layout class="QVBoxLayout" name="verticalLayout_6">
              <item>
               <layout class="QFormLayout" name="formLayout_2">
+               <property name="horizontalSpacing">
+                <number>10</number>
+               </property>
                <property name="leftMargin">
                 <number>6</number>
                </property>
@@ -425,7 +431,7 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox_6">
+                <widget class="QComboBox" name="cbCanopyDisp">
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -437,7 +443,7 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QComboBox" name="comboBox_7">
+                <widget class="QComboBox" name="cbAirDisp">
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -449,7 +455,7 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QComboBox" name="comboBox_8">
+                <widget class="QComboBox" name="cbDisplay">
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -487,7 +493,7 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
            <property name="spacing">
-            <number>4</number>
+            <number>6</number>
            </property>
            <property name="leftMargin">
             <number>4</number>
@@ -505,6 +511,9 @@
             <layout class="QVBoxLayout" name="verticalLayout_8">
              <item>
               <layout class="QFormLayout" name="formLayout_3">
+               <property name="horizontalSpacing">
+                <number>10</number>
+               </property>
                <property name="leftMargin">
                 <number>6</number>
                </property>
@@ -566,7 +575,7 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox_9">
+                <widget class="QComboBox" name="cbLogBook">
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -578,7 +587,7 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QComboBox" name="comboBox_10">
+                <widget class="QComboBox" name="cbCanopyAlarm">
                  <property name="font">
                   <font>
                    <family>MS Shell Dlg 2</family>
@@ -606,10 +615,13 @@
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::MinimumExpanding</enum>
+     </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>40</height>
+       <height>0</height>
       </size>
      </property>
     </spacer>

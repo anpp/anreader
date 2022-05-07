@@ -18,7 +18,7 @@ class SettingsCOMPort : public QWidget,
 
      QIntValidator *m_intValidator = nullptr;
 
-     std::unique_ptr<COM_settings> m_com_settings = std::make_unique<COM_settings>();
+     std::unique_ptr<COM_settings> m_com_settings = std::make_unique<COM_settings>();;
 
      void updateSettings();
 public:

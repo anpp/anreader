@@ -1,4 +1,5 @@
 #include "n3widget.h"
+#include "device/neptune_hil.h"
 #include "choice_datetime_dialog.h"
 #include "mainwindow.h"
 #include "n3_main_settings_dialog.h"
@@ -339,7 +340,7 @@ void N3Widget::readed_summary_settings()
         qDebug() << static_cast<int>(settings.temperatureMeasure());
         qDebug() << settings.dislpayIsFlipped();
         qDebug() << settings.logbookEnabled();
-        qDebug() << settings.timeFormat();
+        qDebug() << static_cast<int>(settings.timeFormat());
         qDebug() << static_cast<int>(settings.dateFormat());
         qDebug() << settings.canopyDisplayEnabled(); //Not Scaled = 1
         qDebug() << static_cast<int>(settings.climbDisplayMode());
@@ -419,7 +420,7 @@ void N3Widget::N3Settings()
     if(!m_device)
         return;
 
-    std::unique_ptr<N3MainSettingsDialog> sd = std::make_unique<N3MainSettingsDialog>(this);
+    std::unique_ptr<N3MainSettingsDialog> sd = std::make_unique<N3MainSettingsDialog>(static_cast<const N3DeviceSettings&>(m_device->settings()), this);
     sd->exec();
 }
 

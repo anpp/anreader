@@ -11,7 +11,6 @@
 #include <QToolButton>
 
 #include "dwidget.h"
-#include "device/neptune_hil.h"
 
 
 class N3Widget;

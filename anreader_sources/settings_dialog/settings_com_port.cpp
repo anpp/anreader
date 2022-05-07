@@ -1,5 +1,5 @@
 #include "settings_com_port.h"
-#include "../settings.h"
+//#include "../settings.h"
 #include <QIntValidator>
 #include <QSerialPort>
 #include <QLineEdit>
@@ -9,7 +9,7 @@
 SettingsCOMPort::SettingsCOMPort(QWidget *parent) : QWidget(parent),
                                                     m_intValidator(new QIntValidator(0, 4000000, this))
 {
-    setupUi(this);    
+    setupUi(this);        
 
     baudRateBox->setInsertPolicy(QComboBox::NoInsert);
 

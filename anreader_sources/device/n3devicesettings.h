@@ -26,7 +26,7 @@ public:
     temperature_measure temperatureMeasure() const override;
     bool                dislpayIsFlipped() const override;
     bool                logbookEnabled() const override;
-    int                 timeFormat() const override;
+    time_format         timeFormat() const override;
     date_format         dateFormat() const override;
     bool                canopyDisplayEnabled() const override;
     climb_display_mode  climbDisplayMode() const override;
