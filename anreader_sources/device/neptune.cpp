@@ -173,7 +173,8 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
     uint jump_number = BytesOperations::bytesToUInt16(*raw_jump, 0);
 
     int mounth = ((raw_jump->at(2) & 0x7F));
-    mounth = ((mounth < 24) && (software_revision < 4 && product_type == N3Types::N3))? mounth + 128 : mounth;
+    //mounth = ((mounth < 24) && (software_revision < 4 && product_type == N3Types::N3))? mounth + 128 : mounth; //???
+    mounth = ((software_revision < 4 && product_type == N3Types::N3))? mounth + 128 : mounth;
     mounth = (product_type == N3Types::Atlas ? mounth + 8 : mounth);
     mounth = mounth == 0 ? 1 : mounth;
 
