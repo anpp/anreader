@@ -45,6 +45,8 @@ public:
     virtual void end_communication() = 0;    
     virtual uint n_iterations_by_jumps(const uint n_jumps) = 0;
     virtual void set_date_time(const QDateTime& a_datetime);
+    virtual int revision() const = 0;
+    virtual int product_type() const = 0;
     void clearJumps() { m_jumps.clear(); }
 
     virtual const QString getSerialNumber() const = 0;

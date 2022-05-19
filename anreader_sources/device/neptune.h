@@ -75,6 +75,8 @@ public:
     virtual void open() override;
     virtual const QString getSerialNumber() const override;
     virtual void set_date_time(const QDateTime& a_datetime) override;
+    virtual int revision() const override { return m_software_revision; }
+    virtual int product_type() const override { return static_cast<int>(m_product_type); }
 
 
 protected:
@@ -82,8 +84,8 @@ protected:
     void executeCommand(N3Commands command, unsigned int address = 0, unsigned int length = 0, quint16 delay_ms = N3Constants::DelayBetweenCommands);
     virtual std::unique_ptr<QByteArray> jump_at(uint index) const override;
     std::unique_ptr<CustomJump> jump_from_raw(uint index) const;
-    int software_revision{0};
-    N3Types product_type = N3Types::Unknown;
+    int m_software_revision{0};
+    N3Types m_product_type = N3Types::Unknown;
 
 private:
     void init();

@@ -4,10 +4,11 @@
 #include "mainwindow.h"
 #include "n3_main_settings_dialog.h"
 #include <QTimer>
+#include <QCheckBox>
 
 
 //----------------------------------------------------------------------------------------------------------------------
-DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
+DeviceFrame::DeviceFrame(QWidget *parent, bool correctDate) : QFrame (parent)
 {
     QFormLayout *lForm = new QFormLayout;
     QVBoxLayout *lMain = new QVBoxLayout(this);
@@ -90,11 +91,20 @@ DeviceFrame::DeviceFrame(QWidget *parent) : QFrame (parent)
     lReadJumps->addWidget(&sb_number);
     lReadJumps->addWidget(&pb_read_jumps);
 
+    if(correctDate)
+    {
+        m_cbCorrectDate = new QCheckBox(tr("Fixing jumps's dates"), this);
+        m_cbCorrectDate->setToolTip("Fixing jumps's dates for N3 software revision 3");
+        m_cbCorrectDate->setChecked(true);
+        lMain->addWidget(m_cbCorrectDate);
+    }
+
     this->setFixedHeight(n3widget_defs::element_height * n3widget_defs::n_rows +
                          lForm->spacing() + lReadJumps->spacing() + lMain->spacing() + lClock->spacing() +
                          lMain->contentsMargins().top() + lMain->contentsMargins().bottom() +
                          lSettings->spacing() +
-                         line_horz0.height() + line_horz2.height()+ line_horz2.height());
+                         line_horz0.height() + line_horz2.height()+ line_horz2.height() +
+                         (m_cbCorrectDate? m_cbCorrectDate->height() : 0));
 }
 
 
@@ -221,7 +231,10 @@ void N3Widget::deleteDeviceFrame()
 //----------------------------------------------------------------------------------------------------------------------
 void N3Widget::makeFrame()
 {
-    device_frame = new DeviceFrame(this);
+    if(!m_device) return;
+
+    device_frame = new DeviceFrame(this,
+                       (static_cast<N3Types>(m_device->product_type()) == N3Types::N3 && m_device->revision() < 4));
     device_frame->te_sn.setText(m_device->getSerialNumber());
 }
 

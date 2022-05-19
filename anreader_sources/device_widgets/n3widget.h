@@ -16,12 +16,13 @@
 class N3Widget;
 class QTimer;
 class QAction;
+class QCheckBox;
 
 class DeviceFrame : public QFrame
 {
     enum n3widget_defs: int {element_height = 34, n_rows = 8, spacing = 4, line_height = 8, button_height = 24};
 public:
-    explicit DeviceFrame(QWidget *parent = nullptr);
+    explicit DeviceFrame(QWidget *parent = nullptr, bool correctDate = false);
     ~DeviceFrame() {}
 
 private:
@@ -46,6 +47,8 @@ private:
     QToolButton pb_read_jumps;
 
     QAction* m_set_clock_action = nullptr;
+
+    QCheckBox* m_cbCorrectDate = nullptr;
 
 protected:
 

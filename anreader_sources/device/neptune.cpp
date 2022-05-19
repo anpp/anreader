@@ -92,7 +92,7 @@ Neptune::~Neptune()
 //----------------------------------------------------------------------------------------------------------------------
 const QString &Neptune::deviceName() const
 {
-    return N3TypeNames[static_cast<int>(product_type)];
+    return N3TypeNames[static_cast<int>(m_product_type)];
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -176,12 +176,12 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
     uint jump_number = BytesOperations::bytesToUInt16(*raw_jump, 0);
 
     int mounth = ((raw_jump->at(2) & 0x7F));    
-    mounth = ((software_revision < 4 && product_type == N3Types::N3))? mounth + 128 : mounth;
-    mounth = (product_type == N3Types::Atlas ? mounth + 8 : mounth);
+    mounth = ((m_software_revision < 4 && m_product_type == N3Types::N3))? mounth + 128 : mounth;
+    mounth = (m_product_type == N3Types::Atlas ? mounth + 8 : mounth);
     mounth = mounth == 0 ? 1 : mounth;
 
-
-    QDate date((software_revision >= 4 && product_type != N3Types::Atlas? 2015 : product_type == N3Types::Atlas ? 2017 : 2007) + (mounth - 1) / 12,
+//для старых прыжков прошитого n3 надо отнимать 96 месяцев (это надо сделать в интерфейсе)
+    QDate date((m_software_revision >= 4 && m_product_type != N3Types::Atlas? 2015 : m_product_type == N3Types::Atlas ? 2017 : 2007) + (mounth - 1) / 12,
             mounth % 12 == 0 ? 12 : mounth % 12,
             (raw_jump->at(13) >> 2) & 0b11111);
     QTime time((BytesOperations::bytesToUInt16(*raw_jump, 6) >> 6) & 0b11111,
@@ -447,7 +447,7 @@ void Neptune::processType0Record(const QByteArray &data)
     {
         emit log("Type0 record: " + Type0Record);
         if (verifyType0Record()) {
-            setEncryptionKey(product_type == N3Types::Atlas ? atlas_key : (software_revision >= 4 ? new_key: old_key));
+            setEncryptionKey(m_product_type == N3Types::Atlas ? atlas_key : (m_software_revision >= 4 ? new_key: old_key));
             emit log("s/n: " + getSerialNumber());
 
             keep_alive_worker.keep_alive_command = *makeSigleByteCommand(N3Commands::KeepAlive); //один раз за коннект пусть копируется
@@ -717,12 +717,12 @@ bool Neptune::verifyType0Record()
     }
 
     if(Type0Record.at(15) <= 7)
-        product_type = static_cast<N3Types>(Type0Record.at(15));
-    software_revision = Type0Record[4];
+        m_product_type = static_cast<N3Types>(Type0Record.at(15));
+    m_software_revision = Type0Record[4];
 
-    emit log("Software revision: " + QString::number(software_revision));
-    emit log("Product type: " + QString::number(Type0Record.at(15)) + " - " + N3TypeNames[static_cast<int>(product_type)]);
-    return (N3Types::Unknown != product_type);
+    emit log("Software revision: " + QString::number(m_software_revision));
+    emit log("Product type: " + QString::number(Type0Record.at(15)) + " - " + N3TypeNames[static_cast<int>(m_product_type)]);
+    return (N3Types::Unknown != m_product_type);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
