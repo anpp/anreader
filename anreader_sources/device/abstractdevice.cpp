@@ -1,5 +1,8 @@
 #include "abstractdevice.h"
+
+#include <QCoreApplication>
 #include <QStateMachine>
+#include <QSignalTransition>
 #include <QFinalState>
 #include <QDateTime>
 #include <algorithm>
@@ -21,10 +24,22 @@ AbstractDevice::AbstractDevice(QString portName, QObject *parent) : QObject(pare
     m_datetime_clock = std::make_unique<QDateTime>();
     m_datetime = std::make_unique<QDateTime>();
 
+    sm = std::make_unique<QStateMachine>();
+
+    commonState = std::make_unique<QState>();
+    disconnectedState = std::make_unique<QState>(commonState.get());
+    connectedState = std::make_unique<QState>(commonState.get());
+    initializingState = std::make_unique<QState>(commonState.get());
+    readyState = std::make_unique<QState>(commonState.get());
+    processingState = std::make_unique<QState>(commonState.get());
+    receivingState = std::make_unique<QState>(commonState.get());
+    errorState = std::make_unique<QState>();
+
+
     initStateMachine();
     connect(this, &AbstractDevice::errorSignal, this, &AbstractDevice::slotError);
 
-    sm.start();
+    sm->start();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -35,45 +50,45 @@ AbstractDevice::~AbstractDevice()
 //----------------------------------------------------------------------------------------------------------------------
 void AbstractDevice::initStateMachine()
 {
-    commonState->setInitialState(disconnectedState);
+    commonState->setInitialState(disconnectedState.get());
 
-    sm.addState(commonState);
-    sm.addState(errorState);
+    sm->addState(commonState.get());
+    sm->addState(errorState.get());
 
-    sm.setInitialState(commonState);
+    sm->setInitialState(commonState.get());
 
-    commonState->addTransition(this, &AbstractDevice::errorStateSignal, errorState);
-    commonState->addTransition(this, &AbstractDevice::disconnectStateSignal, disconnectedState);
-    errorState->addTransition(this, &AbstractDevice::disconnectStateSignal, disconnectedState);
+    commonState->addTransition(this, &AbstractDevice::errorStateSignal, errorState.get());
+    commonState->addTransition(this, &AbstractDevice::disconnectStateSignal, disconnectedState.get());
+    errorState->addTransition(this, &AbstractDevice::disconnectStateSignal, disconnectedState.get());
 
-    disconnectedState->addTransition(this, &AbstractDevice::connectStateSignal, connectedState);
-    connectedState->addTransition(this, &AbstractDevice::initializeStateSignal, initializingState);
-    initializingState->addTransition(this, &AbstractDevice::readyStateSignal, readyState);
-    readyState->addTransition(this, &AbstractDevice::processingStateSignal, processingState);
+    disconnectedState->addTransition(this, &AbstractDevice::connectStateSignal, connectedState.get());
+    connectedState->addTransition(this, &AbstractDevice::initializeStateSignal, initializingState.get());
+    initializingState->addTransition(this, &AbstractDevice::readyStateSignal, readyState.get());
+    readyState->addTransition(this, &AbstractDevice::processingStateSignal, processingState.get());
 
-    processingState->addTransition(this, &AbstractDevice::receiveingStateSignal, receivingState);
-    processingState->addTransition(this, &AbstractDevice::readyStateSignal, readyState);
-    receivingState->addTransition(this, &AbstractDevice::readyStateSignal, readyState);
-    receivingState->addTransition(this, &AbstractDevice::processingStateSignal, processingState);
+    processingState->addTransition(this, &AbstractDevice::receiveingStateSignal, receivingState.get());
+    processingState->addTransition(this, &AbstractDevice::readyStateSignal, readyState.get());
+    receivingState->addTransition(this, &AbstractDevice::readyStateSignal, readyState.get());
+    receivingState->addTransition(this, &AbstractDevice::processingStateSignal, processingState.get());
 
-    connect(connectedState, &QState::entered, this, &AbstractDevice::slotConnected);
-    connect(initializingState, &QState::entered, this, &AbstractDevice::slotInitializing);
-    connect(readyState, &QState::entered, this, &AbstractDevice::slotReady);
-    connect(processingState, &QState::entered, this, &AbstractDevice::slotProcessing);
-    connect(receivingState, &QState::entered, this, &AbstractDevice::slotReceiving);
-    connect(errorState, &QState::entered, this, &AbstractDevice::slotStateError);
-    connect(disconnectedState, &QState::entered, this, &AbstractDevice::slotDisconnected);
+    connect(connectedState.get(), &QState::entered, this, &AbstractDevice::slotConnected);
+    connect(initializingState.get(), &QState::entered, this, &AbstractDevice::slotInitializing);
+    connect(readyState.get(), &QState::entered, this, &AbstractDevice::slotReady);
+    connect(processingState.get(), &QState::entered, this, &AbstractDevice::slotProcessing);
+    connect(receivingState.get(), &QState::entered, this, &AbstractDevice::slotReceiving);
+    connect(errorState.get(), &QState::entered, this, &AbstractDevice::slotStateError);
+    connect(disconnectedState.get(), &QState::entered, this, &AbstractDevice::slotDisconnected);
 
-    connect(readyState, &QState::exited, this, &AbstractDevice::slotReadyExit);
+    connect(readyState.get(), &QState::exited, this, &AbstractDevice::slotReadyExit);
 
 
-    connectedState->assignProperty(&sm, "state", DeviceStates::Connected);
-    initializingState->assignProperty(&sm, "state", DeviceStates::Initializing);
-    readyState->assignProperty(&sm, "state", DeviceStates::Ready);
-    processingState->assignProperty(&sm, "state", DeviceStates::Processing);
-    receivingState->assignProperty(&sm, "state", DeviceStates::Receiving);
-    errorState->assignProperty(&sm, "state", DeviceStates::Error);
-    disconnectedState->assignProperty(&sm, "state", DeviceStates::Disconnected);
+    connectedState->assignProperty(sm.get(), "state", DeviceStates::Connected);
+    initializingState->assignProperty(sm.get(), "state", DeviceStates::Initializing);
+    readyState->assignProperty(sm.get(), "state", DeviceStates::Ready);
+    processingState->assignProperty(sm.get(), "state", DeviceStates::Processing);
+    receivingState->assignProperty(sm.get(), "state", DeviceStates::Receiving);
+    errorState->assignProperty(sm.get(), "state", DeviceStates::Error);
+    disconnectedState->assignProperty(sm.get(), "state", DeviceStates::Disconnected);
 
 }
 
@@ -96,8 +111,8 @@ void AbstractDevice::stopTimeoutTimer() const
 //----------------------------------------------------------------------------------------------------------------------
 void AbstractDevice::setupComPort()
 {
-    serialport_transition_common_disconnected = commonState->addTransition(sp.get(), &SerialPortThread::aboutToClose, disconnectedState);
-    serialport_transition_error_disconnected = errorState->addTransition(sp.get(), &SerialPortThread::aboutToClose, disconnectedState);    
+    serialport_transition_common_disconnected = commonState->addTransition(sp.get(), &SerialPortThread::aboutToClose, disconnectedState.get());
+    serialport_transition_error_disconnected = errorState->addTransition(sp.get(), &SerialPortThread::aboutToClose, disconnectedState.get());
 
     connect(sp.get(), &SerialPortThread::errorSignal, this, &AbstractDevice::errorSignal);
     connect(this, &AbstractDevice::sopen, sp.get(), &SerialPortThread::sopen);
@@ -141,8 +156,8 @@ const QString &AbstractDevice::getErrorMessage() const
 //----------------------------------------------------------------------------------------------------------------------
 AbstractDevice::DeviceStates AbstractDevice::state() const
 {
-    if(sm.property("state").isValid())
-        return static_cast<DeviceStates>(sm.property("state").toInt());
+    if(sm->property("state").isValid())
+        return static_cast<DeviceStates>(sm->property("state").toInt());
     else {
         return  DeviceStates::Unk;
     }
@@ -258,7 +273,7 @@ void AbstractDevice::slotSerialPortError(QSerialPort::SerialPortError error)
 //----------------------------------------------------------------------------------------------------------------------
 void AbstractDevice::open()
 {
-    if(!sm.isRunning()) return;
+    if(!sm->isRunning()) return;
 
     if(!sp)
     {

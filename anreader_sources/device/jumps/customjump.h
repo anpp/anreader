@@ -1,7 +1,10 @@
 #ifndef CUSTOMJUMP_H
 #define CUSTOMJUMP_H
 
-#include <QtCore>
+#include <QString>
+#include <QVariant>
+#include <QDateTime>
+#include <vector>
 #include <memory>
 
 class CustomJump;

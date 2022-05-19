@@ -3,6 +3,7 @@
 
 #include <QByteArray>
 
+
 class ASummaryInfo
 {
 public:

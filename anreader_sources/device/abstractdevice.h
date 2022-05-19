@@ -3,18 +3,20 @@
 
 
 #include <QDebug>
+#include <QTimer>
 
 #include "serialport.h"
 
-//#include "constants.h"
 #include "jumps/customjump.h"
-#include "bytes_operations.h"
 #include "asummaryinfo.h"
 #include "adevicesettings.h"
 #include "anames.h"
 
 
 class QDateTime;
+class QStateMachine;
+class QState;
+class QAbstractTransition;
 
 class AbstractDevice : public QObject
 {    
@@ -67,15 +69,15 @@ protected:
     std::unique_ptr<ANames> m_dropzones;
     std::unique_ptr<ANames> m_airplanes;
 
-    QStateMachine sm;
-    QState *commonState = new QState();
-    QState *disconnectedState = new QState(commonState);
-    QState *connectedState = new QState(commonState);
-    QState *initializingState = new QState(commonState);
-    QState *readyState = new QState(commonState);
-    QState *processingState = new QState(commonState);
-    QState *receivingState = new QState(commonState);
-    QState *errorState = new QState();
+    std::unique_ptr<QStateMachine> sm;
+    std::unique_ptr<QState> commonState;
+    std::unique_ptr<QState> disconnectedState;
+    std::unique_ptr<QState> connectedState;
+    std::unique_ptr<QState> initializingState;
+    std::unique_ptr<QState> readyState;
+    std::unique_ptr<QState> processingState;
+    std::unique_ptr<QState> receivingState;
+    std::unique_ptr<QState> errorState;
 
     t_jumps m_jumps;    
 

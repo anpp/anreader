@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QSerialPortInfo>
 #include <QPushButton>
+#include <QPointer>
 #include <memory>
 
 #include "device/abstractdevice.h"
