@@ -177,7 +177,7 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
 
     int month = ((raw_jump->at(2) & 0x7F));
     month = (m_product_type == N3Types::Atlas)? month + 128 : month; //для Atlas + 128 месяцев
-    month = month + m_correct_date_koeff * 128; //коеффициент приходит извне, рассчитывается от текущей даты по желанию пользователя
+    month = month + m_correct_date_koeff * 128; //коэффициент приходит извне, рассчитывается от текущей даты по желанию пользователя
     month = month == 0 ? 1 : month;
 
 //для старых прыжков прошитого n3 надо отнимать 96 месяцев (это надо сделать в интерфейсе)

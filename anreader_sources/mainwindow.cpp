@@ -547,7 +547,6 @@ void MainWindow::open_DataListDialog(const datakind dlk, map_DataList &data)
     }
 }
 
-
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::devicetypes_list()
 {
