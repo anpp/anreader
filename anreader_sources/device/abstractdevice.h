@@ -22,7 +22,7 @@ class AbstractDevice : public QObject
 {    
     Q_OBJECT
 public:
-    enum  DeviceStates: int {Unk = -1, Disconnected = 0, Connected = 1, Initializing = 2, Ready = 3, Processing = 4, Receiving = 5, Error = 6};
+    enum DeviceStates: int {Unk = -1, Disconnected = 0, Connected = 1, Initializing = 2, Ready = 3, Processing = 4, Receiving = 5, Error = 6};
 
     explicit AbstractDevice(QString portName, QObject *parent = nullptr);
     virtual ~AbstractDevice();

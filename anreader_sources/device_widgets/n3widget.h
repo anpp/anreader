@@ -21,9 +21,12 @@ class QCheckBox;
 class DeviceFrame : public QFrame
 {
     enum n3widget_defs: int {element_height = 34, n_rows = 8, spacing = 4, line_height = 8, button_height = 24};
-public:
-    explicit DeviceFrame(QWidget *parent = nullptr, bool correctDate = false);
+    enum ExpiredType: int {None = -1, OldN3 = 0, N3 = 1, Atlas = 2};
+public:        
+    explicit DeviceFrame(QWidget *parent = nullptr, ExpiredType et = None);
     ~DeviceFrame() {}
+
+    int calcCorrectKoeff() const;
 
 private:
     QLineEdit te_sn;
@@ -49,6 +52,7 @@ private:
     QAction* m_set_clock_action = nullptr;
 
     QCheckBox* m_cbCorrectDate = nullptr;
+    ExpiredType m_et = ExpiredType::None;
 
 protected:
 

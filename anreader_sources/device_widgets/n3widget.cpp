@@ -7,8 +7,15 @@
 #include <QCheckBox>
 
 
+const static QString ExpiredNames[] =
+                              {QObject::tr("Fixing jumps's dates for N3 software revision 3 (2017-08 expired)"),
+                               QObject::tr("Fixing jumps's dates for N3 software revision 4 (2025-08 expired)"),
+                               QObject::tr("Fixing jumps's dates for Atlas (2028-04 expired)"),
+                              };
+
+
 //----------------------------------------------------------------------------------------------------------------------
-DeviceFrame::DeviceFrame(QWidget *parent, bool correctDate) : QFrame (parent)
+DeviceFrame::DeviceFrame(QWidget *parent, ExpiredType et) : QFrame (parent), m_et(et)
 {
     QFormLayout *lForm = new QFormLayout;
     QVBoxLayout *lMain = new QVBoxLayout(this);
@@ -91,10 +98,10 @@ DeviceFrame::DeviceFrame(QWidget *parent, bool correctDate) : QFrame (parent)
     lReadJumps->addWidget(&sb_number);
     lReadJumps->addWidget(&pb_read_jumps);
 
-    if(correctDate)
+    if(ExpiredType::None != m_et)
     {
         m_cbCorrectDate = new QCheckBox(tr("Fixing jumps's dates"), this);
-        m_cbCorrectDate->setToolTip("Fixing jumps's dates for N3 software revision 3");
+        m_cbCorrectDate->setToolTip(tr(ExpiredNames[et].toStdString().c_str()));
         m_cbCorrectDate->setChecked(true);
         lMain->addWidget(m_cbCorrectDate);
     }
@@ -105,6 +112,39 @@ DeviceFrame::DeviceFrame(QWidget *parent, bool correctDate) : QFrame (parent)
                          lSettings->spacing() +
                          line_horz0.height() + line_horz2.height()+ line_horz2.height() +
                          (m_cbCorrectDate? m_cbCorrectDate->height() : 0));
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+int DeviceFrame::calcCorrectKoeff() const
+{
+    int koeff = 0;
+
+    int month_diff = 0;
+
+    if(m_cbCorrectDate)
+        if(m_cbCorrectDate->checkState() == Qt::CheckState::Checked)
+        {
+            switch(m_et)
+            {
+            case ExpiredType::OldN3:
+                month_diff = (QDate::currentDate().year() - 2007) * 12 + QDate::currentDate().month();
+                break;
+            case ExpiredType::N3:
+                month_diff = (QDate::currentDate().year() - 2015) * 12 + QDate::currentDate().month();
+                break;
+            case ExpiredType::Atlas:
+                month_diff = ((QDate::currentDate().year() - 2007) * 12) + 128 + QDate::currentDate().month();
+                break;
+            default:
+                koeff = 0;
+                break;
+            }
+            if(month_diff > 0)
+                koeff = month_diff / 128;
+        }
+    //qDebug() << month_diff;
+    //qDebug() << koeff;
+    return koeff;
 }
 
 
@@ -233,8 +273,26 @@ void N3Widget::makeFrame()
 {
     if(!m_device) return;
 
-    device_frame = new DeviceFrame(this,
-                       (static_cast<N3Types>(m_device->product_type()) == N3Types::N3 && m_device->revision() < 4));
+    DeviceFrame::ExpiredType et = DeviceFrame::ExpiredType::None;
+
+    //вычисление - надо ли показывать галочку коррекции даты для разных приборов
+    switch(static_cast<N3Types>(m_device->product_type()))
+    {
+    case N3Types::N3:
+        if((m_device->revision() < 4) && (QDate::currentDate() >= QDate(2017, 8, 1)))
+            et = DeviceFrame::ExpiredType::OldN3;
+        if((m_device->revision() == 4) && (QDate::currentDate() >= QDate(2025, 8, 1)))
+            et = DeviceFrame::ExpiredType::N3;
+        break;
+    case N3Types::Atlas:
+        if(QDate::currentDate() >= QDate(2028, 4, 1))
+            et = DeviceFrame::ExpiredType::Atlas;
+        break;
+    default:
+        et = DeviceFrame::ExpiredType::None;
+        break;
+    }
+    device_frame = new DeviceFrame(this, et);
     device_frame->te_sn.setText(m_device->getSerialNumber());
 }
 
@@ -379,7 +437,7 @@ void N3Widget::readed_summary_settings()
 
         int last_jump = 0;
         emit giveLastJump(last_jump);
-        device_frame->sb_number.setValue(summary.topJumpNumber() - last_jump);
+        device_frame->sb_number.setValue(summary.topJumpNumber() - last_jump);        
 
         m_clock_timer->start(1000);
     }
@@ -389,7 +447,10 @@ void N3Widget::readed_summary_settings()
 void N3Widget::read_jumps()
 {
     if(device_frame != nullptr)
+    {
+        ((Neptune*)(m_device.get()))->setCorrectDateKoeff(device_frame->calcCorrectKoeff());
         read_last_jumps(static_cast<unsigned int>(device_frame->sb_number.value()));
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -436,6 +497,7 @@ void N3Widget::N3Settings()
     std::unique_ptr<N3MainSettingsDialog> sd = std::make_unique<N3MainSettingsDialog>(static_cast<const N3DeviceSettings&>(m_device->settings()), this);
     sd->exec();
 }
+
 
 
 

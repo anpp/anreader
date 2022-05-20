@@ -25,7 +25,7 @@ struct queue_command
 class WorkerKeepAlive : public QObject
 {
     Q_OBJECT
-public:
+public:    
     explicit WorkerKeepAlive() :QObject() { }
     ~WorkerKeepAlive() {}
     void setThread(QThread *thread) { this->thread = thread; }
@@ -66,7 +66,7 @@ struct s_key_item{
 class Neptune : public AbstractDevice
 {
     Q_OBJECT
-public:
+public:    
     explicit Neptune(QString portName, QObject *parent);
 
     virtual  ~Neptune() override;
@@ -77,6 +77,8 @@ public:
     virtual void set_date_time(const QDateTime& a_datetime) override;
     virtual int revision() const override { return m_software_revision; }
     virtual int product_type() const override { return static_cast<int>(m_product_type); }
+
+    void setCorrectDateKoeff(int value) { m_correct_date_koeff = value; }
 
 
 protected:
@@ -131,6 +133,7 @@ private:
     QByteArray Type0Record;
     uint type0Size = 0;
     unsigned int m_NumBlocks{0};
+    int m_correct_date_koeff = 0;
 
     queue_command last_command{N3Commands::None, 0, 0, 0};
 
