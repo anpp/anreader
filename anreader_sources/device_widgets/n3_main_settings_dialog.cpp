@@ -2,6 +2,8 @@
 #include "ui_n3_main_settings_dialog.h"
 
 #include "device/n3devicesettings.h"
+#include "common/common.h"
+
 
 //-------------------------------------------------------------------------------------
 N3MainSettingsDialog::N3MainSettingsDialog(const N3DeviceSettings& n3settings, QWidget *parent) :

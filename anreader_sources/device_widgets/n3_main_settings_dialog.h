@@ -2,6 +2,7 @@
 #define N3_MAIN_SETTINGS_DIALOG_H
 
 #include <QDialog>
+#include <memory>
 
 namespace Ui {
 class N3MainSettingsDialog;
