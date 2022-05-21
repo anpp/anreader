@@ -18,12 +18,14 @@ public:
     ~N3MainSettingsDialog();
 
     const N3DeviceSettings& new_settings() const { return *m_new_n3settings; }
+    bool isChanged() const;
 
 private:    
     Ui::N3MainSettingsDialog *ui;
     const N3DeviceSettings& m_n3settings;
     std::unique_ptr<N3DeviceSettings> m_new_n3settings;
     QByteArray raw_settings;
+    QString m_title;
 
     void fillComboBoxes();
     void initComboBoxes();

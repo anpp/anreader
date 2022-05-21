@@ -11,7 +11,7 @@ N3MainSettingsDialog::N3MainSettingsDialog(const N3DeviceSettings& n3settings, Q
 {
     ui->setupUi(this);
 
-    raw_settings.fill(0, 32);
+    m_title = windowTitle();
     raw_settings = m_n3settings.data();
 
     m_new_n3settings = std::make_unique<N3DeviceSettings>(raw_settings);
@@ -24,6 +24,12 @@ N3MainSettingsDialog::N3MainSettingsDialog(const N3DeviceSettings& n3settings, Q
 N3MainSettingsDialog::~N3MainSettingsDialog()
 {
     delete ui;
+}
+
+//-------------------------------------------------------------------------------------
+bool N3MainSettingsDialog::isChanged() const
+{
+    return m_new_n3settings->data() != m_n3settings.data();
 }
 
 //-------------------------------------------------------------------------------------
@@ -118,4 +124,5 @@ void N3MainSettingsDialog::combo_changeindex(int index)
     default:
         break;
     }
+    setWindowTitle(m_title + (isChanged() ? "*" : ""));
 }

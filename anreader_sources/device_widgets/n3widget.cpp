@@ -497,6 +497,8 @@ void N3Widget::N3Settings()
     std::unique_ptr<N3MainSettingsDialog> sd = std::make_unique<N3MainSettingsDialog>(static_cast<const N3DeviceSettings&>(m_device->settings()), this);
     if(sd->exec() == QDialog::Accepted)
     {
+        if(!sd->isChanged())
+            qDebug() << "No changes";
         qDebug() << sd->new_settings().data().toHex();
     }
 }
