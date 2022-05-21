@@ -14,13 +14,14 @@ enum class date_format : unsigned {US = 0, International};
 enum class time_format : unsigned {h12 = 0, h24};
 enum class climb_display_mode : unsigned {show_time = 0, show_altitude};
 enum class canopy_alarms_mode : unsigned {normal = 0, loud};
+enum class canopy_display_mode : unsigned {scaled = 0, not_scaled};
 
 
 class ADeviceSettings
 {
     mutable QStringList m_dstlist;
 public:
-    explicit ADeviceSettings(const QByteArray& adata);
+    explicit ADeviceSettings(QByteArray& adata);
     virtual ~ADeviceSettings() {}
 
     virtual altitude_measure    altitudeMeasure() const = 0;
@@ -30,15 +31,26 @@ public:
     virtual bool                logbookEnabled() const = 0;
     virtual time_format         timeFormat() const = 0;
     virtual date_format         dateFormat() const = 0;
-    virtual bool                canopyDisplayEnabled() const = 0;
+    virtual canopy_display_mode canopyDisplayEnabled() const = 0;
     virtual climb_display_mode  climbDisplayMode() const = 0;
     virtual canopy_alarms_mode  canopyAlarmsMode() const = 0;
 
-    const QByteArray& data() const {return m_data; }
+    virtual void                setAltitudeMeasure(altitude_measure value) = 0;
+    virtual void                setSpeedMeasure(speed_measure value) = 0;
+    virtual void                setTemperatureMeasure(temperature_measure value) = 0;
+    virtual void                setDislpayIsFlipped(bool value) = 0;
+    virtual void                setLogbookEnabled(bool value) = 0;
+    virtual void                setTimeFormat(time_format value) = 0;
+    virtual void                setDateFormat(date_format value) = 0;
+    virtual void                setCanopyDisplayEnabled(canopy_display_mode value) = 0;
+    virtual void                setClimbDisplayMode(climb_display_mode value) = 0;
+    virtual void                setCanopyAlarmsMode(canopy_alarms_mode value) = 0;
+
+    QByteArray& data() const {return m_data; }
     const QStringList& listBySettingType(device_setting_type dst) const;
 
 protected:
-    const QByteArray& m_data;
+    QByteArray& m_data;
 };
 
 #endif // ADEVICESETTINGS_H

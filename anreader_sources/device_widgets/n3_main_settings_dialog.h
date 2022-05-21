@@ -17,12 +17,20 @@ public:
     explicit N3MainSettingsDialog(const N3DeviceSettings& n3settings, QWidget *parent = nullptr);
     ~N3MainSettingsDialog();
 
+    const N3DeviceSettings& new_settings() const { return *m_new_n3settings; }
+
 private:    
     Ui::N3MainSettingsDialog *ui;
     const N3DeviceSettings& m_n3settings;
+    std::unique_ptr<N3DeviceSettings> m_new_n3settings;
+    QByteArray raw_settings;
 
     void fillComboBoxes();
     void initComboBoxes();
+
+private slots:
+    void combo_changeindex(int index);
+
 };
 
 #endif // N3_MAIN_SETTINGS_DIALOG_H

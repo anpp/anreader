@@ -18,7 +18,7 @@ enum ds_offsets: int      {altitudeMeasure = 2,
 class N3DeviceSettings : public ADeviceSettings
 {
 public:
-    N3DeviceSettings(const QByteArray& adata) : ADeviceSettings(adata) {};
+    N3DeviceSettings(QByteArray& adata) : ADeviceSettings(adata) {};
     virtual ~N3DeviceSettings() override {}
 
     altitude_measure    altitudeMeasure() const override;
@@ -28,16 +28,26 @@ public:
     bool                logbookEnabled() const override;
     time_format         timeFormat() const override;
     date_format         dateFormat() const override;
-    bool                canopyDisplayEnabled() const override;
+    canopy_display_mode canopyDisplayEnabled() const override;
     climb_display_mode  climbDisplayMode() const override;
     canopy_alarms_mode  canopyAlarmsMode() const override;
 
-    //void setInfo(const QByteArray &info) override {bytes = info; }
+    void                setAltitudeMeasure(altitude_measure value) override;
+    void                setSpeedMeasure(speed_measure value) override;
+    void                setTemperatureMeasure(temperature_measure value) override;
+    void                setDislpayIsFlipped(bool value) override;
+    void                setLogbookEnabled(bool value) override;
+    void                setTimeFormat(time_format value) override;
+    void                setDateFormat(date_format value) override;
+    void                setCanopyDisplayEnabled(canopy_display_mode value) override;
+    void                setClimbDisplayMode(climb_display_mode value) override;
+    void                setCanopyAlarmsMode(canopy_alarms_mode value) override;
 
-private:
-    //QByteArray& bytes;
 
-    uint8_t getByte(const int offset) const;
+private:    
+
+    uint8_t getByte(int offset) const;
+    void setByte(uint8_t byte, int offset);
 
 };
 

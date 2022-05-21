@@ -413,7 +413,7 @@ void N3Widget::readed_summary_settings()
         qDebug() << settings.logbookEnabled();
         qDebug() << static_cast<int>(settings.timeFormat());
         qDebug() << static_cast<int>(settings.dateFormat());
-        qDebug() << settings.canopyDisplayEnabled(); //Not Scaled = 1
+        qDebug() << static_cast<int>(settings.canopyDisplayEnabled()); //Not Scaled = 1
         qDebug() << static_cast<int>(settings.climbDisplayMode());
         qDebug() << static_cast<int>(settings.canopyAlarmsMode());
 
@@ -495,7 +495,10 @@ void N3Widget::N3Settings()
         return;
 
     std::unique_ptr<N3MainSettingsDialog> sd = std::make_unique<N3MainSettingsDialog>(static_cast<const N3DeviceSettings&>(m_device->settings()), this);
-    sd->exec();
+    if(sd->exec() == QDialog::Accepted)
+    {
+        qDebug() << sd->new_settings().data().toHex();
+    }
 }
 
 

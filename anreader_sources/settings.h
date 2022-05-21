@@ -30,6 +30,7 @@ enum class kindset: int {all =0, appearance, misc, screen, environment, device_t
 
 class Settings;
 
+//============================================================================================================================
 class Setting
 {
     QString title;
@@ -53,6 +54,7 @@ protected:
 typedef std::shared_ptr<Setting> ptrSetting;
 typedef std::map<QString, Setting*> mset;
 
+//============================================================================================================================
 class Settings {
     static std::shared_ptr<Settings> m_self;
     QMainWindow* owner;

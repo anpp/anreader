@@ -13,7 +13,7 @@ const static QString canopy_display_mode_string[] = {QObject::tr("Scaled"), QObj
 
 
 //----------------------------------------------------------------------------------------------------------------------
-ADeviceSettings::ADeviceSettings(const QByteArray &adata): m_data(adata)
+ADeviceSettings::ADeviceSettings(QByteArray &adata): m_data(adata)
 {
 
 }

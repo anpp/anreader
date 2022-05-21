@@ -43,9 +43,9 @@ date_format N3DeviceSettings::dateFormat() const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-bool N3DeviceSettings::canopyDisplayEnabled() const
+canopy_display_mode N3DeviceSettings::canopyDisplayEnabled() const
 {
-    return getByte(ds_offsets::canopyDisplayEnabled) == 1;
+    return getByte(ds_offsets::canopyDisplayEnabled) == 0 ? canopy_display_mode::scaled : canopy_display_mode::not_scaled;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -61,9 +61,77 @@ canopy_alarms_mode N3DeviceSettings::canopyAlarmsMode() const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-uint8_t N3DeviceSettings::getByte(const int offset) const
+void N3DeviceSettings::setAltitudeMeasure(altitude_measure value)
+{
+    setByte(static_cast<uint8_t>(value), ds_offsets::altitudeMeasure);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3DeviceSettings::setSpeedMeasure(speed_measure value)
+{
+    setByte(static_cast<uint8_t>(value), ds_offsets::speedMeasure);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3DeviceSettings::setTemperatureMeasure(temperature_measure value)
+{
+    setByte(static_cast<uint8_t>(value), ds_offsets::temperatureMeasure);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3DeviceSettings::setDislpayIsFlipped(bool value)
+{
+    setByte(static_cast<uint8_t>(value), ds_offsets::displayFlipped);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3DeviceSettings::setLogbookEnabled(bool value)
+{
+    setByte(static_cast<uint8_t>(value), ds_offsets::logbookEnabled);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3DeviceSettings::setTimeFormat(time_format value)
+{
+    setByte(static_cast<uint8_t>(value), ds_offsets::timeFormat);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3DeviceSettings::setDateFormat(date_format value)
+{
+    setByte(static_cast<uint8_t>(value), ds_offsets::dateFormat);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3DeviceSettings::setCanopyDisplayEnabled(canopy_display_mode value)
+{
+    setByte(static_cast<uint8_t>(value), ds_offsets::canopyDisplayEnabled);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3DeviceSettings::setClimbDisplayMode(climb_display_mode value)
+{
+    setByte(static_cast<uint8_t>(value), ds_offsets::climbDisplayMode);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3DeviceSettings::setCanopyAlarmsMode(canopy_alarms_mode value)
+{
+    setByte(static_cast<uint8_t>(value), ds_offsets::canopyAlarmsMode);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+uint8_t N3DeviceSettings::getByte(int offset) const
 {
     if(m_data.size() >= offset)
         return m_data[offset];
     return 0;
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3DeviceSettings::setByte(uint8_t byte, int offset)
+{
+    if(m_data.size() >= offset)
+        m_data[offset] = byte;
+}
+
