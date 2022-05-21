@@ -22,6 +22,7 @@ public:
     void read_datetime() override;
     void end_communication() override;
     uint n_iterations_by_jumps(const uint n_jumps) override;
+    void write_settings() override;
 
 
 signals:

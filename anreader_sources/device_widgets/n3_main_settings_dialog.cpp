@@ -29,6 +29,7 @@ N3MainSettingsDialog::~N3MainSettingsDialog()
 //-------------------------------------------------------------------------------------
 bool N3MainSettingsDialog::isChanged() const
 {
+    //если прибор отключится - тут может быть падение
     return m_new_n3settings->data() != m_n3settings.data();
 }
 
@@ -124,5 +125,12 @@ void N3MainSettingsDialog::combo_changeindex(int index)
     default:
         break;
     }
-    setWindowTitle(m_title + (isChanged() ? "*" : ""));
+    setWindowTitle(tr(m_title.toStdString().c_str()) + (isChanged() ? "*" : ""));
+}
+
+//-------------------------------------------------------------------------------------
+void N3MainSettingsDialog::on_buttonBox_accepted()
+{
+    m_new_n3settings->calculateCheckSum();
+    accept();
 }

@@ -400,23 +400,7 @@ void N3Widget::readed_summary_settings()
 
     if(device_frame != nullptr)
     {
-
-        const ADeviceSettings &settings = m_device->settings();
         emit afterConnect(*this);
-
-        qDebug() << settings.data().toHex();
-
-        qDebug() << static_cast<int>(settings.altitudeMeasure());
-        qDebug() << static_cast<int>(settings.speedMeasure());
-        qDebug() << static_cast<int>(settings.temperatureMeasure());
-        qDebug() << settings.dislpayIsFlipped();
-        qDebug() << settings.logbookEnabled();
-        qDebug() << static_cast<int>(settings.timeFormat());
-        qDebug() << static_cast<int>(settings.dateFormat());
-        qDebug() << static_cast<int>(settings.canopyDisplayEnabled()); //Not Scaled = 1
-        qDebug() << static_cast<int>(settings.climbDisplayMode());
-        qDebug() << static_cast<int>(settings.canopyAlarmsMode());
-
 
         auto calc_time { [] (uint32_t secs) -> QString
             {
@@ -496,10 +480,11 @@ void N3Widget::N3Settings()
 
     std::unique_ptr<N3MainSettingsDialog> sd = std::make_unique<N3MainSettingsDialog>(static_cast<const N3DeviceSettings&>(m_device->settings()), this);
     if(sd->exec() == QDialog::Accepted)
-    {
-        if(!sd->isChanged())
-            qDebug() << "No changes";
-        qDebug() << sd->new_settings().data().toHex();
+    {if(sd->isChanged())
+        {
+            ((Neptune*)m_device.get())->setrawDataSettings(sd->new_settings().data());
+            m_device->write_settings();
+        }
     }
 }
 

@@ -216,14 +216,14 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
 
 
 //----------------------------------------------------------------------------------------------------------------------
-void Neptune::executeCommand(N3Commands command, unsigned int address, unsigned int length, quint16 delay_ms)
+void Neptune::executeCommand(N3Commands command, unsigned int address, unsigned int length, QByteArray *wbytes, quint16 delay_ms)
 {
     startTimeoutTimer(N3Constants::TimeoutInMs);
 
     // Пока оставил инициализацию тут, но надо бы перенести в переход в состояние Initializing... Работает и так, но может выстрелить.
     if((command == N3Commands::InitCommand) && (state() == DeviceStates::Connected))
     {
-        last_command = {command, address, length, delay_ms};
+        last_command = {command, address, length, delay_ms, wbytes};
         emit initializeStateSignal();
         emit log("Command: " + QString::number(command, 16).toUpper() + "h");
 
@@ -235,14 +235,14 @@ void Neptune::executeCommand(N3Commands command, unsigned int address, unsigned 
 
     if(state() == DeviceStates::Ready)
     {
-        last_command = {command, address, length, delay_ms};
+        last_command = {command, address, length, delay_ms, wbytes};
         emit processingStateSignal(); //при переходе в состояние Processing вызовется метод sendLastCommand()
     }
     else
     {       
         if(command != N3Commands::KeepAlive)
         {
-            queue_command c = {command, address, length, delay_ms};
+            queue_command c = {command, address, length, delay_ms, wbytes};
             m_commands.enqueue(c);
         }
     }
@@ -263,7 +263,8 @@ void Neptune::sendLastCommand()
 
     switch(last_command.m_command){
     case N3Commands::EndComm:
-        destroy_port();
+        outBuffer = makeSigleByteCommand(last_command.m_command);
+        emit sendPacket(*outBuffer);
         break;
 
     case N3Commands::KeepAlive:
@@ -294,7 +295,7 @@ void Neptune::sendLastCommand()
 
         outBuffer = cryptPacket(command_bytes, true);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
-/*
+        /*
         command_bytes = command_bytes.fromHex("1c96ca312c342fd9032daeab55645c214115d449bdb074db4115d449bdb074db");
         outBuffer = cryptPacket(command_bytes, false);
         qDebug() << outBuffer->toHex();
@@ -334,6 +335,32 @@ void Neptune::sendLastCommand()
         command_bytes[6] = length_bytes[0];
         command_bytes[7] = length_bytes[1];
         command_bytes[8] = calculateChecksum(command_bytes);
+
+        outBuffer = cryptPacket(command_bytes, true);
+        emit sendPacket(*outBuffer, last_command.m_delay_ms);
+        break;
+
+    case N3Commands::WriteMemory:
+
+        rawData = last_command.m_bytes_to_write;
+        if(nullptr == rawData)
+        {
+            emit errorSignal("Nothing to write");
+            break;
+        }
+        emit log("Writing data: " + rawData->toHex());
+
+        address_bytes = BytesOperations::UIntToBytes(last_command.m_address);
+
+        command_bytes[0] = last_command.m_length;
+        command_bytes[1] = static_cast<char>(last_command.m_command);
+        command_bytes[2] = address_bytes[0];
+        command_bytes[3] = address_bytes[1];
+        command_bytes[4] = address_bytes[2];
+        command_bytes[5] = address_bytes[3];
+        for(unsigned int i = 0; i < N3Constants::DeviceSettingsSize; ++i)
+            command_bytes[6 + i] = rawData->at(i);
+        command_bytes[last_command.m_length + 1] = calculateChecksum(command_bytes);
 
         outBuffer = cryptPacket(command_bytes, true);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
@@ -431,6 +458,12 @@ void Neptune::processData(QByteArray data)
         break;
     case N3Commands::SetDateTime:
         processDefault(data);
+        break;
+    case N3Commands::WriteMemory: //пока данные в одном блоке - обработка по-умолчанию
+        processDefault(data);
+        break;
+    case N3Commands::EndComm:
+        destroy_port();
         break;
 
     default:
@@ -690,9 +723,8 @@ char Neptune::calculateChecksum(const QByteArray &packet) const
     char length = packet[0];
     char checksum = 0;
     for (uchar i = 1; i <= length; ++i)
-    {
         checksum += packet[i];
-    }
+
     return checksum;
 }
 
@@ -778,7 +810,7 @@ void Neptune::slotReady()
   if (m_commands.count())
   {
       command = m_commands.dequeue();
-      executeCommand(command.m_command, command.m_address, command.m_length, command.m_delay_ms);
+      executeCommand(command.m_command, command.m_address, command.m_length, command.m_bytes_to_write, command.m_delay_ms);
   }
   else {      
       keep_alive_worker.start();

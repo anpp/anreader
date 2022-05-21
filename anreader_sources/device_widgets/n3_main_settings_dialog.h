@@ -33,6 +33,7 @@ private:
 private slots:
     void combo_changeindex(int index);
 
+    void on_buttonBox_accepted();
 };
 
 #endif // N3_MAIN_SETTINGS_DIALOG_H

@@ -19,6 +19,7 @@ struct queue_command
     quint32 m_address;
     quint32 m_length;
     quint16 m_delay_ms;
+    QByteArray *m_bytes_to_write;
 };
 
 
@@ -79,15 +80,23 @@ public:
     virtual int product_type() const override { return static_cast<int>(m_product_type); }
 
     void setCorrectDateKoeff(int value) { m_correct_date_koeff = value; }
+    void setrawDataSettings(const QByteArray& value) { rawDataSettings = value; }
 
 
 protected:
     void setupComPort() override;
-    void executeCommand(N3Commands command, unsigned int address = 0, unsigned int length = 0, quint16 delay_ms = N3Constants::DelayBetweenCommands);
+    void executeCommand(N3Commands command, unsigned int address = 0, unsigned int length = 0, QByteArray *wbytes = nullptr, quint16 delay_ms = N3Constants::DelayBetweenCommands);
     virtual std::unique_ptr<QByteArray> jump_at(uint index) const override;
     std::unique_ptr<CustomJump> jump_from_raw(uint index) const;
     int m_software_revision{0};
     N3Types m_product_type = N3Types::Unknown;
+
+    QByteArray rawDataDetails;
+    QByteArray rawDataSummary;
+    QByteArray rawDataSettings;
+    QByteArray rawDZNames;
+    QByteArray rawAPNames;
+    QByteArray rawDateTime;
 
 private:
     void init();
@@ -117,12 +126,6 @@ private:
     std::unique_ptr<QByteArray> outBuffer;
     QByteArray inBuffer;
     QByteArray ackBuffer;
-    QByteArray rawDataDetails;
-    QByteArray rawDataSummary;
-    QByteArray rawDataSettings;
-    QByteArray rawDZNames;
-    QByteArray rawAPNames;
-    QByteArray rawDateTime;
 
     mutable QByteArray* rawData = nullptr;
     int outBufferPosition{0};
@@ -135,7 +138,7 @@ private:
     unsigned int m_NumBlocks{0};
     int m_correct_date_koeff = 0;
 
-    queue_command last_command{N3Commands::None, 0, 0, 0};
+    queue_command last_command{N3Commands::None, 0, 0, 0, nullptr};
 
     QThread keep_alive_thread;
     WorkerKeepAlive keep_alive_worker;        
