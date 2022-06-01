@@ -254,6 +254,7 @@ void Neptune::sendLastCommand()
     QByteArray command_bytes(32, 0);
     QByteArray address_bytes;
     QByteArray length_bytes;
+    quint32 data_length = 0;
 
     emit log("Command: " + QString::number(last_command.m_command, 16).toUpper() + "h Address: " + QString::number(last_command.m_address, 16).toUpper() + "h" + " Length: " + QString::number(last_command.m_length, 16).toUpper() + "h");
 
@@ -352,7 +353,8 @@ void Neptune::sendLastCommand()
 
         address_bytes = BytesOperations::UIntToBytes(last_command.m_address);
 
-        command_bytes[0] = last_command.m_length + 4 + 1; //4 - размер адреса, 1 - размер кода команды
+        data_length = last_command.m_length + 4 + 1; //4 - размер адреса, 1 - размер кода команды
+        command_bytes[0] = data_length;
         command_bytes[1] = static_cast<char>(last_command.m_command);
         command_bytes[2] = address_bytes[0];
         command_bytes[3] = address_bytes[1];
@@ -360,7 +362,7 @@ void Neptune::sendLastCommand()
         command_bytes[5] = address_bytes[3];
         for(unsigned int i = 0; i < N3Constants::DeviceSettingsSize; ++i)
             command_bytes[6 + i] = rawData->at(i);
-        command_bytes[last_command.m_length + 1] = calculateChecksum(command_bytes);
+        command_bytes[data_length + 1] = calculateChecksum(command_bytes);
 
         outBuffer = cryptPacket(command_bytes, true);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
