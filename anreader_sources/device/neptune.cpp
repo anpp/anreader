@@ -352,7 +352,7 @@ void Neptune::sendLastCommand()
 
         address_bytes = BytesOperations::UIntToBytes(last_command.m_address);
 
-        command_bytes[0] = last_command.m_length;
+        command_bytes[0] = last_command.m_length + 4 + 1; //4 - размер адреса, 1 - размер кода команды
         command_bytes[1] = static_cast<char>(last_command.m_command);
         command_bytes[2] = address_bytes[0];
         command_bytes[3] = address_bytes[1];

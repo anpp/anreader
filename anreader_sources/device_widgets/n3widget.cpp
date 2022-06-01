@@ -482,7 +482,7 @@ void N3Widget::N3Settings()
     if(sd->exec() == QDialog::Accepted)
     {if(sd->isChanged())
         {
-            ((Neptune*)m_device.get())->setrawDataSettings(sd->new_settings().data());
+            ((Neptune*)m_device.get())->setRawDataSettings(sd->new_settings().data());
             m_device->write_settings();
         }
     }

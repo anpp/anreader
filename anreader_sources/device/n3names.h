@@ -3,7 +3,7 @@
 
 #include "anames.h"
 
-enum class N3DZValues: uint {count = 32, length = 10, offset = 2};
+enum class N3NamesValues: uint {count = 32, length = 10, offset = 2};
 
 class N3Names : public ANames
 {

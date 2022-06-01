@@ -69,9 +69,7 @@ uint Neptune_HiL::n_iterations_by_jumps(const uint n_jumps)
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::write_settings()
 {
-    executeCommand(N3Commands::WriteMemory, N3Addresses::DeviceSettings,
-                   N3Constants::DeviceSettingsSize + 4 + 1, //4 - размер адреса, 1 - размер кода команды
-                   &rawDataSettings);
+    executeCommand(N3Commands::WriteMemory, N3Addresses::DeviceSettings, N3Constants::DeviceSettingsSize, &rawDataSettings);
 }
 
 

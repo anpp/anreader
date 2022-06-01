@@ -80,7 +80,7 @@ public:
     virtual int product_type() const override { return static_cast<int>(m_product_type); }
 
     void setCorrectDateKoeff(int value) { m_correct_date_koeff = value; }
-    void setrawDataSettings(const QByteArray& value) { rawDataSettings = value; }
+    void setRawDataSettings(const QByteArray& value) { rawDataSettings = value; }
 
 
 protected:
