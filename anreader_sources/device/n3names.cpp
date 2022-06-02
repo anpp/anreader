@@ -21,24 +21,24 @@ uint N3Names::filled() const
 //----------------------------------------------------------------------------------------------------------------------
 QString N3Names::byIndex(const uint index) const
 {    
-    QString result = "";    
+    QString result = "";
 
     uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
 
     if(index < count())
     {
-        QByteArray arr(static_cast<uint>(N3NamesValues::length), 0);
+        QByteArray bytes_name(static_cast<uint>(N3NamesValues::length), 0);
         for(uint i = offset; i < offset + static_cast<uint>(N3NamesValues::length); ++i)
-        {
-            arr[i - offset] = data[i];
+            bytes_name[i - offset] = data[i];
 
-            //if('\0' == data[i]) continue;
-            //result += (data[i] & 0b01111111);
-            //if(i - offset == 1)
-              //  qDebug() << ((data[i] & 0b10000000) >> 8);
-        }
-        qDebug() << arr.toHex();
-        //qDebug() << QString::fromStdString( arr.toStdString());
+        //bool hidden = (bytes_name[0] & 0b10000000) >> 7;
+        //bool used = (bytes_name[1] & 0b10000000) >> 7;
+
+        bytes_name[0] = bytes_name[0] & 0b01111111;
+        bytes_name[1] = bytes_name[1] & 0b01111111;
+        result = QString::fromLatin1(bytes_name);
+
+        //qDebug() << result << " " << used << " " << hidden;
     }
 
     return result;

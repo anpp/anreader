@@ -424,6 +424,10 @@ void N3Widget::readed_summary_settings()
         device_frame->sb_number.setValue(summary.topJumpNumber() - last_jump);        
 
         m_clock_timer->start(1000);
+
+        qDebug() << m_device.get()->airplanes().Names()[summary.currentAPIndex()];
+        qDebug() << m_device.get()->dropzones().Names()[summary.currentDZIndex()];
+
     }
 }
 

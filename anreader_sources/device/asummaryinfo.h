@@ -19,6 +19,8 @@ public:
     virtual uint16_t topJumpNumber() const = 0;
     virtual uint16_t lastJumpOffset() const = 0;
     virtual uint16_t firstJumpNumber() const = 0;
+    virtual uint16_t currentDZIndex() const = 0;
+    virtual uint16_t currentAPIndex() const = 0;
 
 protected:
     const QByteArray& data;

@@ -8,8 +8,9 @@ const std::vector<QString> &ANames::Names() const
     {
         for(uint i = 0; i < count(); ++i)
         {
-            if(byIndex(i).trimmed() != "----") //paralog or neptune feature
-                m_names->push_back(byIndex(i).trimmed());
+            QString name = byIndex(i).trimmed();
+            if(name != "----") //paralog or neptune feature
+                m_names->push_back(name);
         }
     }
     return *m_names;

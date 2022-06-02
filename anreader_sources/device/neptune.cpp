@@ -521,6 +521,12 @@ void Neptune::processReadMemory(const QByteArray &data)
             if(rawData == &rawDataDetails)
                 addJumpsToVector();
 
+            if(rawData != &rawDataDetails)
+            {
+                emit log("Reading data: " + rawData->toHex());
+                emit log("Number blocks: " + QString::number(m_NumBlocks));
+            }
+
             emit readyStateSignal();
         }
     }

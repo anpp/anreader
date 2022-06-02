@@ -12,7 +12,9 @@ enum si_offsets: unsigned {odometerJumps = 2,
                            nextJumpNumber = 16,
                            topJumpNumber = 18,
                            lastJumpOffset = 20,
-                           firstJumpNumber = 22};
+                           firstJumpNumber = 22,
+                           currentDZ = 24,
+                           currentAP = 26};
 
 
 class N3SummaryInfo : public ASummaryInfo
@@ -30,6 +32,8 @@ public:
     virtual uint16_t topJumpNumber() const override;
     virtual uint16_t lastJumpOffset() const override;
     virtual uint16_t firstJumpNumber() const override;
+    virtual uint16_t currentDZIndex() const override;
+    virtual uint16_t currentAPIndex() const override;
 
 };
 

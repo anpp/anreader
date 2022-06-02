@@ -59,6 +59,18 @@ uint16_t N3SummaryInfo::firstJumpNumber() const
     return BytesOperations::getValue16(data, si_offsets::firstJumpNumber);
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+uint16_t N3SummaryInfo::currentDZIndex() const
+{
+    return BytesOperations::getValue16(data, si_offsets::currentDZ);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+uint16_t N3SummaryInfo::currentAPIndex() const
+{
+    return BytesOperations::getValue16(data, si_offsets::currentAP);
+}
+
 
 
 
