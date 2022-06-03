@@ -31,6 +31,9 @@ private:
     void fillComboBoxes();
     void initComboBoxes();
 
+signals:
+    void changed(bool);
+
 private slots:
     void combo_changeindex(int index);
 

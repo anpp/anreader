@@ -5,15 +5,15 @@
 #include <math.h>
 
 const static QString N3TypeNames[] =
-                              {QObject::tr("Unknown"),
-                               QObject::tr("Neptune"),
-                               QObject::tr("Wave"),
-                               QObject::tr("Tracker"),
-                               QObject::tr("Data Logger"),
-                               QObject::tr("N3"),
-                               QObject::tr("N3A"),
-                               QObject::tr("Atlas")
-                              };
+{QObject::tr("Unknown"),
+ QObject::tr("Neptune"),
+ QObject::tr("Wave"),
+ QObject::tr("Tracker"),
+ QObject::tr("Data Logger"),
+ QObject::tr("N3"),
+ QObject::tr("N3A"),
+ QObject::tr("Atlas")
+};
 
 //----------------------------------------------------------------------------------------------------------------------
 void WorkerKeepAlive::keepAlive()
@@ -31,9 +31,9 @@ void WorkerKeepAlive::process()
     working = true;
 
     while(working)
-    {                
+    {
         keepAlive();
-        QThread::msleep(N3Constants::KeepAliveDelay);                
+        QThread::msleep(N3Constants::KeepAliveDelay);
     }
     emit finished();
 }
@@ -105,7 +105,7 @@ unsigned int Neptune::n_jumps_readed() const
     {
         last_jump_is_valid = (BytesOperations::bytesToUInt16(*jump_at(n_jumps - 1), 0) != 65535);
         n_jumps =  n_jumps - (last_jump_is_valid ? 0 : 1);
-    }    
+    }
     return n_jumps;
 }
 
@@ -124,7 +124,7 @@ const QString Neptune::getSerialNumber() const
     if(Type0Record.size() > 16){
         for(auto i = 5; i <= 13; ++i)
             result += Type0Record[i];
-    }    
+    }
     return result;
 }
 
@@ -180,12 +180,12 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
     month = month + m_correct_date_koeff * 128; //коэффициент приходит извне, рассчитывается от текущей даты по желанию пользователя
     month = month == 0 ? 1 : month;
 
-//для старых прыжков прошитого n3 надо отнимать 96 месяцев (это надо сделать в интерфейсе)
-//Непрошитые N3 и Atlas отсчитывают месяцы с 2007 года, только Atlas еще + 128 месяцев (то есть с 2017.08)
-//прошитый N3 отсчитывает с 2015
+    //для старых прыжков прошитого n3 надо отнимать 96 месяцев (это надо сделать в интерфейсе)
+    //Непрошитые N3 и Atlas отсчитывают месяцы с 2007 года, только Atlas еще + 128 месяцев (то есть с 2017.08)
+    //прошитый N3 отсчитывает с 2015
     QDate date((m_software_revision >= 4 && m_product_type == N3Types::N3? 2015 : 2007) + (month - 1) / 12,
-            month % 12 == 0 ? 12 : month % 12,
-            (raw_jump->at(13) >> 2) & 0b11111);
+               month % 12 == 0 ? 12 : month % 12,
+               (raw_jump->at(13) >> 2) & 0b11111);
     QTime time((BytesOperations::bytesToUInt16(*raw_jump, 6) >> 6) & 0b11111,
                BytesOperations::bytesToUInt16(*raw_jump, 6) & 0x3F);
 
@@ -233,19 +233,19 @@ void Neptune::executeCommand(N3Commands command, unsigned int address, unsigned 
 
     else
 
-    if(state() == DeviceStates::Ready)
-    {
-        last_command = {command, address, length, delay_ms, wbytes};
-        emit processingStateSignal(); //при переходе в состояние Processing вызовется метод sendLastCommand()
-    }
-    else
-    {       
-        if(command != N3Commands::KeepAlive)
+        if(state() == DeviceStates::Ready)
         {
-            queue_command c = {command, address, length, delay_ms, wbytes};
-            m_commands.enqueue(c);
+            last_command = {command, address, length, delay_ms, wbytes};
+            emit processingStateSignal(); //при переходе в состояние Processing вызовется метод sendLastCommand()
         }
-    }
+        else
+        {
+            if(command != N3Commands::KeepAlive)
+            {
+                queue_command c = {command, address, length, delay_ms, wbytes};
+                m_commands.enqueue(c);
+            }
+        }
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -349,7 +349,7 @@ void Neptune::sendLastCommand()
             emit errorSignal("Nothing to write");
             break;
         }
-        emit log("Writing data: " + rawData->toHex());
+        emit log("Writing data: <FONT color=#006b00>" + rawData->toHex() + "</FONT>");
 
         address_bytes = BytesOperations::UIntToBytes(last_command.m_address);
 
@@ -499,7 +499,7 @@ void Neptune::processType0Record(const QByteArray &data)
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::processReadMemory(const QByteArray &data)
 {
-    inBuffer.append(data);    
+    inBuffer.append(data);
 
     //qDebug() << data.toHex();
     if(!checkInBufer())
@@ -514,7 +514,7 @@ void Neptune::processReadMemory(const QByteArray &data)
         emit stepProgress();
 
         if(static_cast<unsigned int>(rawData->size()) >= m_NumBlocks * N3Constants::BlockSize)
-        {            
+        {
             *rawData = *cryptPacket(*rawData, false); //тоже копирование. можно убрать (нужно).
             *rawData = rawData->mid(sizeof(uint32_t), memory_block_length - sizeof(uint32_t));
 
@@ -523,7 +523,7 @@ void Neptune::processReadMemory(const QByteArray &data)
 
             if(rawData != &rawDataDetails)
             {
-                emit log("Reading data: " + rawData->toHex());
+                emit log("Readed data: <FONT color=#006b00>" + rawData->toHex() + "</FONT>");
                 emit log("Number blocks: " + QString::number(m_NumBlocks));
             }
 
@@ -683,11 +683,11 @@ std::unique_ptr<QByteArray> Neptune::cryptPacket(const QByteArray &packet, bool 
     {
         local_packet = packet; //копирование... (в эту ветку не заходит, но на всякий случай)
 
-        #if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
-                local_packet.append(0, packet_size - packet.size()); //для XP
-        #else
-                local_packet.append('\0', packet_size - packet.size());
-        #endif
+#if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
+        local_packet.append(0, packet_size - packet.size()); //для XP
+#else
+        local_packet.append('\0', packet_size - packet.size());
+#endif
 
         ref_packet = &local_packet;
         emit log(tr("Warning: data alignment! Packet size = ") + QString::number(packet.size()));
@@ -802,28 +802,28 @@ void Neptune::finishedWriteData()
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::slotConnected()
 {
-  AbstractDevice::slotConnected();
-  keep_alive_worker.clear();
-  executeCommand(N3Commands::InitCommand);
+    AbstractDevice::slotConnected();
+    keep_alive_worker.clear();
+    executeCommand(N3Commands::InitCommand);
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::slotReady()
 { 
-  AbstractDevice::slotReady();  
+    AbstractDevice::slotReady();
 
-  queue_command command;
+    queue_command command;
 
-  if (m_commands.count())
-  {
-      command = m_commands.dequeue();
-      executeCommand(command.m_command, command.m_address, command.m_length, command.m_bytes_to_write, command.m_delay_ms);
-  }
-  else {      
-      keep_alive_worker.start();
-      emit allCommandsComplete();
-  }
+    if (m_commands.count())
+    {
+        command = m_commands.dequeue();
+        executeCommand(command.m_command, command.m_address, command.m_length, command.m_bytes_to_write, command.m_delay_ms);
+    }
+    else {
+        keep_alive_worker.start();
+        emit allCommandsComplete();
+    }
 }
 
 
@@ -838,7 +838,7 @@ void Neptune::slotReadyExit()
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::slotReceiving()
 {
-    AbstractDevice::slotReceiving();        
+    AbstractDevice::slotReceiving();
     emit setProgress(m_NumBlocks);
 }
 

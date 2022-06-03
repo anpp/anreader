@@ -368,6 +368,8 @@ void AbstractDevice::slotDisconnected()
 {  
   emit log("STATE MACHINE: Disconnected");
   m_jumps.clear();
+  m_dropzones->clear();
+  m_airplanes->clear();
   removeComPort();  
   sp.reset();
   emit changedState();

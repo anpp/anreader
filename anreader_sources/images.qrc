@@ -31,5 +31,7 @@
         <file>images/icons/buttons/accept.png</file>
         <file>images/icons/buttons/export_jumps.png</file>
         <file>images/icons/buttons/calendar.png</file>
+        <file>images/icons/buttons/dz.png</file>
+        <file>images/icons/buttons/airplane.png</file>
     </qresource>
 </RCC>

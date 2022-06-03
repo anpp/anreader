@@ -6,7 +6,7 @@ const std::vector<QString> &ANames::Names() const
 {
     if(m_names->size() == 0)
     {
-        for(uint i = 0; i < count(); ++i)
+        for(uint i = 0; i < filled(); ++i)
         {
             QString name = byIndex(i).trimmed();
             if(name != "----") //paralog or neptune feature

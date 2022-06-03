@@ -13,9 +13,10 @@ public:
 
     uint count() const override;
     uint filled() const override;
+    virtual void clear() override { m_names->clear(); }
 
 private:
-    QString byIndex(const uint index) const override;
+    QString byIndex(const uint index) const override;    
 
 };
 

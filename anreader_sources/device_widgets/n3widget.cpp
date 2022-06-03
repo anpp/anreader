@@ -3,6 +3,7 @@
 #include "choice_datetime_dialog.h"
 #include "mainwindow.h"
 #include "n3_main_settings_dialog.h"
+#include "n3_names_dialog.h"
 #include <QTimer>
 #include <QCheckBox>
 
@@ -24,11 +25,16 @@ DeviceFrame::DeviceFrame(QWidget *parent, ExpiredType et) : QFrame (parent), m_e
     QHBoxLayout *lReadJumps = new QHBoxLayout;
 
     lSettings->addWidget(&tb_settings);
+    lSettings->addWidget(&tb_dropzones);
     lSettings->addStretch();
 
     tb_settings.setToolTip(tr("Device settings..."));
     tb_settings.setIconSize(QSize(32, 32));
     tb_settings.setIcon(QIcon(":/images/icons/buttons/device_settings.png"));    
+
+    tb_dropzones.setToolTip(tr("Dropzones..."));
+    tb_dropzones.setIconSize(QSize(32, 32));
+    tb_dropzones.setIcon(QIcon(":/images/icons/buttons/dz.png"));
 
     lForm->setContentsMargins(0, 0, 0, 0);
     lClock->setContentsMargins(0, 0, 0, 0);
@@ -241,13 +247,15 @@ void N3Widget::addDeviceFrame()
     connect(&device_frame->pb_read_jumps, &QPushButton::clicked, this, &N3Widget::read_jumps);
     connect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_current_datetime);
     connect(&device_frame->pb_edit_clock, &QPushButton::clicked, this, &N3Widget::choice_datetime);
-    connect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::N3Settings);
+    connect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::n3Settings);
+    connect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::n3Dropzones);
 
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_read_jumps, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_edit_clock, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->le_clock, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->sb_number, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->tb_settings, &QPushButton::setEnabled);
+    connect(this, &N3Widget::controls_is_enabled, &device_frame->tb_dropzones, &QPushButton::setEnabled);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -258,7 +266,8 @@ void N3Widget::deleteDeviceFrame()
     disconnect(&device_frame->pb_read_jumps, &QPushButton::clicked, this, &N3Widget::read_jumps);
     disconnect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_current_datetime);
     disconnect(&device_frame->pb_edit_clock, &QPushButton::clicked, this, &N3Widget::choice_datetime);
-    disconnect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::N3Settings);
+    disconnect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::n3Settings);
+    disconnect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::n3Settings);
 
     delete device_frame;
     device_frame = nullptr;
@@ -477,18 +486,31 @@ void N3Widget::choice_datetime()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3Widget::N3Settings()
+void N3Widget::n3Settings()
 {
     if(!m_device)
         return;
 
     std::unique_ptr<N3MainSettingsDialog> sd = std::make_unique<N3MainSettingsDialog>(static_cast<const N3DeviceSettings&>(m_device->settings()), this);
     if(sd->exec() == QDialog::Accepted)
-    {if(sd->isChanged())
+    {
+        if(sd->isChanged())
         {
             ((Neptune*)m_device.get())->setRawDataSettings(sd->new_settings().data());
             m_device->write_settings();
         }
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Widget::n3Dropzones()
+{
+    if(!m_device)
+        return;
+
+    std::unique_ptr<N3NamesDialog> nd = std::make_unique<N3NamesDialog>(this);
+    if(nd->exec() == QDialog::Accepted)
+    {
     }
 }
 

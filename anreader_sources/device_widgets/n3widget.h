@@ -42,6 +42,7 @@ private:
     QFrame line_horz2;
 
     QToolButton tb_settings;
+    QToolButton tb_dropzones;
 
     QLineEdit le_clock;
     QToolButton pb_edit_clock;
@@ -98,7 +99,8 @@ public slots:
     void clockUpdate();
     void set_current_datetime();
     void choice_datetime();
-    void N3Settings();
+    void n3Settings();
+    void n3Dropzones();
 };
 
 #endif // N3WIDGET_H

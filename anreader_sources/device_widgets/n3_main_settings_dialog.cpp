@@ -4,6 +4,7 @@
 #include "device/n3devicesettings.h"
 #include "common/common.h"
 
+#include <QPushButton>
 
 //-------------------------------------------------------------------------------------
 N3MainSettingsDialog::N3MainSettingsDialog(const N3DeviceSettings& n3settings, QWidget *parent) :
@@ -20,6 +21,9 @@ N3MainSettingsDialog::N3MainSettingsDialog(const N3DeviceSettings& n3settings, Q
 
     fillComboBoxes();
     initComboBoxes();
+
+    connect(this, &N3MainSettingsDialog::changed, ui->buttonBox->button(QDialogButtonBox::StandardButton::Ok), &QPushButton::setEnabled);
+    emit changed(false);
 }
 
 //-------------------------------------------------------------------------------------
@@ -127,7 +131,11 @@ void N3MainSettingsDialog::combo_changeindex(int index)
     default:
         break;
     }
-    setWindowTitle(tr(m_title.toStdString().c_str()) + (isChanged() ? "*" : ""));
+
+    bool is_changed = isChanged();
+    emit changed(is_changed);
+
+    setWindowTitle(tr(m_title.toStdString().c_str()) + (is_changed ? "*" : ""));
 }
 
 //-------------------------------------------------------------------------------------
