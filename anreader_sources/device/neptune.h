@@ -19,7 +19,7 @@ struct queue_command
     quint32 m_address;
     quint32 m_length;
     quint16 m_delay_ms;
-    QByteArray *m_bytes_to_write;
+    char *m_bytes_to_write;
 };
 
 
@@ -85,7 +85,7 @@ public:
 
 protected:
     void setupComPort() override;
-    void executeCommand(N3Commands command, unsigned int address = 0, unsigned int length = 0, QByteArray *wbytes = nullptr, quint16 delay_ms = N3Constants::DelayBetweenCommands);
+    void executeCommand(N3Commands command, unsigned int address = 0, unsigned int length = 0, char *wbytes = nullptr, quint16 delay_ms = N3Constants::DelayBetweenCommands);
     virtual std::unique_ptr<QByteArray> jump_at(uint index) const override;
     std::unique_ptr<CustomJump> jump_from_raw(uint index) const;
     int m_software_revision{0};

@@ -56,7 +56,7 @@ void Neptune_HiL::read_datetime()
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::end_communication()
 {
-    executeCommand(N3Commands::EndComm);
+    executeCommand(N3Commands::EndComm, 0, 0, nullptr, 0);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -69,7 +69,30 @@ uint Neptune_HiL::n_iterations_by_jumps(const uint n_jumps)
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::write_settings()
 {
-    executeCommand(N3Commands::WriteMemory, N3Addresses::DeviceSettings, N3Constants::DeviceSettingsSize, &rawDataSettings);
+    write_to_memory(N3Addresses::DeviceSettings, N3Constants::DeviceSettingsSize, rawDataSettings);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void Neptune_HiL::write_to_memory(unsigned int address, unsigned int length, QByteArray &wbytes)
+{
+    if(0 == length || 0 == address)
+        return;
+
+    if(length > N3Constants::WriteRateDataSize)
+    {
+        uint rest = length % N3Constants::WriteRateDataSize;
+        uint num_cicles = (length / N3Constants::WriteRateDataSize);
+
+        for(uint i = 0; i < num_cicles; ++i)
+        {
+            executeCommand(N3Commands::WriteMemory, address, N3Constants::WriteRateDataSize, wbytes.data() + (i * N3Constants::WriteRateDataSize));
+            address += N3Constants::WriteRateDataSize;
+        }
+        if(rest > 0)
+            executeCommand(N3Commands::WriteMemory, address, rest, wbytes.data() + ((num_cicles) * N3Constants::WriteRateDataSize));
+    }
+    else
+        executeCommand(N3Commands::WriteMemory, address, length, wbytes.data(), 0);
 }
 
 

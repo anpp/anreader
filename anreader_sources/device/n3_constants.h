@@ -4,9 +4,9 @@
 
 enum XTEA: unsigned {key_schedule_constant = 0x9E3779B9, NumRounds = 16};
 
-enum N3Constants: unsigned int {DelayInMs = 10000, TimeoutInMs = 20000, DelayBetweenCommands = 600, BlockSize = 32, BytesToPort = 8, msByteSendingDelay = 50, Type0RecordSizeInRaw = 97,
-                                JumpRecordSize = 22, SummarySize = 0x001E, JumpDetailsSize = 0xF938, DeviceSettingsSize = 0x00010, DZNamesSize = 0x0142, APNamesSize = 0x0142,
-                                KeepAliveDelay = 1000};
+enum N3Constants: unsigned int {DelayInMs = 10000, TimeoutInMs = 20000, DelayBetweenCommands = 50, BlockSize = 32, BytesToPort = 8, msByteSendingDelay = 50, Type0RecordSizeInRaw = 97,
+                                JumpRecordSize = 22, SummarySize = 0x001C, JumpDetailsSize = 0xF938, DeviceSettingsSize = 0x00010, DZNamesSize = 0x0142, APNamesSize = 0x0142,
+                                KeepAliveDelay = 1000, WriteRateDataSize = 24};
 
 enum N3Commands: unsigned char {None = 0, InitCommand = 1, AckSuccess = 0x31, AckRepeat = 0x34, AckReady = 0x35,
                                 ReadMemory = 0xA0, EndComm = 0xAF, KeepAlive = 0xA4, ReadDateTime = 0xA2, SetDateTime = 0xB2,

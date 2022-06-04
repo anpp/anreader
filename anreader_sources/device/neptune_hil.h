@@ -24,6 +24,9 @@ public:
     uint n_iterations_by_jumps(const uint n_jumps) override;
     void write_settings() override;
 
+private:
+    void write_to_memory(unsigned int address, unsigned int length, QByteArray &wbytes);
+
 
 signals:
 };

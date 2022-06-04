@@ -216,7 +216,7 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
 
 
 //----------------------------------------------------------------------------------------------------------------------
-void Neptune::executeCommand(N3Commands command, unsigned int address, unsigned int length, QByteArray *wbytes, quint16 delay_ms)
+void Neptune::executeCommand(N3Commands command, unsigned int address, unsigned int length, char *wbytes, quint16 delay_ms)
 {
     startTimeoutTimer(N3Constants::TimeoutInMs);
 
@@ -296,12 +296,11 @@ void Neptune::sendLastCommand()
 
         outBuffer = cryptPacket(command_bytes, true);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
-        /*
-        command_bytes = command_bytes.fromHex("1c96ca312c342fd9032daeab55645c214115d449bdb074db4115d449bdb074db");
-        outBuffer = cryptPacket(command_bytes, false);
-        qDebug() << outBuffer->toHex();
 
-        command_bytes = command_bytes.fromHex("b4819618f741cde8479f5fb4396df0846474b1aea2b6c455feb551d89df65133 ");
+/*
+  emit readyStateSignal();
+
+        command_bytes = command_bytes.fromHex("98c8e423f5dd4b4228f04b4e49ab75f603b6631e0c0a52a6afd24590be916076");
         outBuffer = cryptPacket(command_bytes, false);
         qDebug() << outBuffer->toHex();
 */
@@ -314,7 +313,7 @@ void Neptune::sendLastCommand()
         if(nullptr == rawData)
         {
             emit errorSignal("Unknown address");
-            return;
+            break;
         }
 
         rawData->reserve(memory_block_length);
@@ -343,13 +342,21 @@ void Neptune::sendLastCommand()
 
     case N3Commands::WriteMemory:
 
-        rawData = last_command.m_bytes_to_write;
-        if(nullptr == rawData)
+        if(nullptr == last_command.m_bytes_to_write)
         {
-            emit errorSignal("Nothing to write");
+            emit log("Error: nothing to write!");
+            emit readyStateSignal();
             break;
         }
-        emit log("Writing data: <FONT color=#006b00>" + rawData->toHex() + "</FONT>");
+
+        if(last_command.m_length > N3Constants::WriteRateDataSize)
+        {
+            emit log(tr("Error: too huge data size!"));
+            emit readyStateSignal();
+            break;
+        }
+
+        emit log(tr("Writing data") + ": <FONT color=#006b00>" + QByteArray::fromRawData(last_command.m_bytes_to_write, last_command.m_length).toHex() + "</FONT>");
 
         address_bytes = BytesOperations::UIntToBytes(last_command.m_address);
 
@@ -360,12 +367,16 @@ void Neptune::sendLastCommand()
         command_bytes[3] = address_bytes[1];
         command_bytes[4] = address_bytes[2];
         command_bytes[5] = address_bytes[3];
-        for(unsigned int i = 0; i < N3Constants::DeviceSettingsSize; ++i)
-            command_bytes[6 + i] = rawData->at(i);
+        for(unsigned int i = 0; i < last_command.m_length; ++i)
+            command_bytes[6 + i] = last_command.m_bytes_to_write[i];
         command_bytes[data_length + 1] = calculateChecksum(command_bytes);
 
         outBuffer = cryptPacket(command_bytes, true);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
+
+        qDebug() << command_bytes.toHex();
+
+
 
         break;
 
