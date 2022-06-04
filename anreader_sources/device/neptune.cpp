@@ -374,10 +374,6 @@ void Neptune::sendLastCommand()
         outBuffer = cryptPacket(command_bytes, true);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
 
-        qDebug() << command_bytes.toHex();
-
-
-
         break;
 
     default:
@@ -472,7 +468,7 @@ void Neptune::processData(QByteArray data)
     case N3Commands::SetDateTime:
         processDefault(data);
         break;
-    case N3Commands::WriteMemory: //пока данные в одном блоке - обработка по-умолчанию
+    case N3Commands::WriteMemory:
         processDefault(data);
         break;
     case N3Commands::EndComm:

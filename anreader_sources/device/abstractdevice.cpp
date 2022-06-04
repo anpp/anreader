@@ -73,10 +73,10 @@ void AbstractDevice::initStateMachine()
 
     connect(connectedState.get(), &QState::entered, this, &AbstractDevice::slotConnected);
     connect(initializingState.get(), &QState::entered, this, &AbstractDevice::slotInitializing);
-    connect(readyState.get(), &QState::entered, this, &AbstractDevice::slotReady);
-    connect(processingState.get(), &QState::entered, this, &AbstractDevice::slotProcessing);
-    connect(receivingState.get(), &QState::entered, this, &AbstractDevice::slotReceiving);
-    connect(errorState.get(), &QState::entered, this, &AbstractDevice::slotStateError);
+    connect(readyState.get(), &QState::entered, this, &AbstractDevice::slotReady, Qt::QueuedConnection);
+    connect(processingState.get(), &QState::entered, this, &AbstractDevice::slotProcessing, Qt::QueuedConnection);
+    connect(receivingState.get(), &QState::entered, this, &AbstractDevice::slotReceiving, Qt::QueuedConnection);
+    connect(errorState.get(), &QState::entered, this, &AbstractDevice::slotStateError, Qt::QueuedConnection);
     connect(disconnectedState.get(), &QState::entered, this, &AbstractDevice::slotDisconnected);
 
     connect(readyState.get(), &QState::exited, this, &AbstractDevice::slotReadyExit);
