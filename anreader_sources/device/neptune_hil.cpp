@@ -9,20 +9,15 @@ void Neptune_HiL::read_details_jumps(unsigned int jump_index, unsigned int num_j
     if(num_jumps + jump_index > summary().totalJumps())
         num_jumps = summary().totalJumps() - jump_index;
 
-    if(num_jumps > Neptune_HiL_defs::jumps_rate)
+    uint num_cicles = num_jumps / Neptune_HiL_defs::jumps_rate;
+    uint rest = num_jumps - (Neptune_HiL_defs::jumps_rate * num_cicles);
+    for(uint i = 0; i < num_cicles; ++i)
     {
-        uint num_cicles = num_jumps / Neptune_HiL_defs::jumps_rate;
-        uint rest = num_jumps - (Neptune_HiL_defs::jumps_rate * num_cicles);
-        for(uint i = 0; i < num_cicles; ++i)
-        {
-            executeCommand(N3Commands::ReadMemory, N3Addresses::JumpDetails + N3Constants::JumpRecordSize * jump_index, N3Constants::JumpRecordSize * Neptune_HiL_defs::jumps_rate);
-            jump_index += Neptune_HiL_defs::jumps_rate;            
-        }        
-        if(rest > 0)
-            executeCommand(N3Commands::ReadMemory, N3Addresses::JumpDetails + N3Constants::JumpRecordSize * jump_index, N3Constants::JumpRecordSize * rest);
+        executeCommand(N3Commands::ReadMemory, N3Addresses::JumpDetails + N3Constants::JumpRecordSize * jump_index, N3Constants::JumpRecordSize * Neptune_HiL_defs::jumps_rate);
+        jump_index += Neptune_HiL_defs::jumps_rate;
     }
-    else
-        executeCommand(N3Commands::ReadMemory, N3Addresses::JumpDetails + N3Constants::JumpRecordSize * jump_index, N3Constants::JumpRecordSize * num_jumps);
+    if(rest > 0)
+        executeCommand(N3Commands::ReadMemory, N3Addresses::JumpDetails + N3Constants::JumpRecordSize * jump_index, N3Constants::JumpRecordSize * rest);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -78,21 +73,16 @@ void Neptune_HiL::write_to_memory(unsigned int address, unsigned int length, QBy
     if(0 == length || 0 == address)
         return;
 
-    if(length > N3Constants::WriteRateDataSize)
-    {
-        uint rest = length % N3Constants::WriteRateDataSize;
-        uint num_cicles = (length / N3Constants::WriteRateDataSize);
+    uint rest = length % N3Constants::WriteRateDataSize;
+    uint num_cicles = (length / N3Constants::WriteRateDataSize);
 
-        for(uint i = 0; i < num_cicles; ++i)
-        {
-            executeCommand(N3Commands::WriteMemory, address, N3Constants::WriteRateDataSize, wbytes.data() + (i * N3Constants::WriteRateDataSize));
-            address += N3Constants::WriteRateDataSize;
-        }
-        if(rest > 0)
-            executeCommand(N3Commands::WriteMemory, address, rest, wbytes.data() + ((num_cicles) * N3Constants::WriteRateDataSize));
+    for(uint i = 0; i < num_cicles; ++i)
+    {
+        executeCommand(N3Commands::WriteMemory, address, N3Constants::WriteRateDataSize, wbytes.data() + (i * N3Constants::WriteRateDataSize));
+        address += N3Constants::WriteRateDataSize;
     }
-    else
-        executeCommand(N3Commands::WriteMemory, address, length, wbytes.data(), 0);
+    if(rest > 0)
+        executeCommand(N3Commands::WriteMemory, address, rest, wbytes.data() + ((num_cicles) * N3Constants::WriteRateDataSize));
 }
 
 

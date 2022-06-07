@@ -26,6 +26,7 @@ DeviceFrame::DeviceFrame(QWidget *parent, ExpiredType et) : QFrame (parent), m_e
 
     lSettings->addWidget(&tb_settings);
     lSettings->addWidget(&tb_dropzones);
+    lSettings->addWidget(&tb_aircrafts);
     lSettings->addStretch();
 
     tb_settings.setToolTip(tr("Device settings..."));
@@ -35,6 +36,10 @@ DeviceFrame::DeviceFrame(QWidget *parent, ExpiredType et) : QFrame (parent), m_e
     tb_dropzones.setToolTip(tr("Dropzones..."));
     tb_dropzones.setIconSize(QSize(32, 32));
     tb_dropzones.setIcon(QIcon(":/images/icons/buttons/dz.png"));
+
+    tb_aircrafts.setToolTip(tr("Aircrafts..."));
+    tb_aircrafts.setIconSize(QSize(32, 32));
+    tb_aircrafts.setIcon(QIcon(":/images/icons/buttons/airplane.png"));
 
     lForm->setContentsMargins(0, 0, 0, 0);
     lClock->setContentsMargins(0, 0, 0, 0);
@@ -256,6 +261,7 @@ void N3Widget::addDeviceFrame()
     connect(this, &N3Widget::controls_is_enabled, &device_frame->sb_number, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->tb_settings, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->tb_dropzones, &QPushButton::setEnabled);
+    connect(this, &N3Widget::controls_is_enabled, &device_frame->tb_aircrafts, &QPushButton::setEnabled);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -267,7 +273,7 @@ void N3Widget::deleteDeviceFrame()
     disconnect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_current_datetime);
     disconnect(&device_frame->pb_edit_clock, &QPushButton::clicked, this, &N3Widget::choice_datetime);
     disconnect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::n3Settings);
-    disconnect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::n3Settings);
+    disconnect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::n3Dropzones);
 
     delete device_frame;
     device_frame = nullptr;

@@ -158,10 +158,8 @@ AbstractDevice::DeviceStates AbstractDevice::state() const
 {
     if(sm->property("state").isValid())
         return static_cast<DeviceStates>(sm->property("state").toInt());
-    else {
+    else
         return  DeviceStates::Unk;
-    }
-
 }
 
 //----------------------------------------------------------------------------------------------------------------------

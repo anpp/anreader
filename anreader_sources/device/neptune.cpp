@@ -258,26 +258,24 @@ void Neptune::sendLastCommand()
 
     emit log("Command: " + QString::number(last_command.m_command, 16).toUpper() + "h Address: " + QString::number(last_command.m_address, 16).toUpper() + "h" + " Length: " + QString::number(last_command.m_length, 16).toUpper() + "h");
 
-    memory_block_length = static_cast<quint16>(last_command.m_length + sizeof(uint32_t));
-
     inBuffer.clear();
 
     switch(last_command.m_command){
     case N3Commands::EndComm:
-        outBuffer = makeSigleByteCommand(last_command.m_command);
+        outBuffer = makeSingleByteCommand(last_command.m_command);
         emit sendPacket(*outBuffer);
         break;
 
     case N3Commands::KeepAlive:
         // не используется, есть поток WorkerKeepAlive
-        outBuffer = makeSigleByteCommand(last_command.m_command);
+        outBuffer = makeSingleByteCommand(last_command.m_command);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
         break;
 
     case N3Commands::ReadDateTime:
         m_NumBlocks = 1;
         rawDateTime.clear();
-        outBuffer = makeSigleByteCommand(last_command.m_command);
+        outBuffer = makeSingleByteCommand(last_command.m_command);
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
         break;
 
@@ -307,7 +305,7 @@ void Neptune::sendLastCommand()
         break;
 
     case N3Commands::ReadMemory:
-
+        memory_block_length = static_cast<quint16>(last_command.m_length + sizeof(uint32_t));
         rawData = getRawData(last_command.m_address);
 
         if(nullptr == rawData)
@@ -324,7 +322,6 @@ void Neptune::sendLastCommand()
 
         //для расчета количества ожидаемых блоков надо прибавить еще 4 байта к размеру данных
         m_NumBlocks = ((memory_block_length + sizeof(uint32_t)) / N3Constants::BlockSize) + (((memory_block_length + sizeof(uint32_t)) % N3Constants::BlockSize) == 0 ? 0 : 1);
-        //qDebug() << m_NumBlocks;
 
         command_bytes[0] = 7;
         command_bytes[1] = static_cast<char>(last_command.m_command);
@@ -383,7 +380,7 @@ void Neptune::sendLastCommand()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-bool Neptune::checkInBufer()
+bool Neptune::checkInBuffer()
 {
     if(state() == DeviceStates::Processing)
     {
@@ -432,8 +429,6 @@ void Neptune::processData(QByteArray data)
         else //если пришло подтверждение в состоянии Ready - это от keep_alive_worker
         {
             keep_alive_worker.receiveAck();
-
-            //qDebug() << ackBuffer.toHex();
             ackBuffer.clear();
         }
         return;
@@ -494,7 +489,7 @@ void Neptune::processType0Record(const QByteArray &data)
             setEncryptionKey(m_product_type == N3Types::Atlas ? atlas_key : (m_software_revision >= 4 ? new_key: old_key));
             emit log("s/n: " + getSerialNumber());
 
-            keep_alive_worker.keep_alive_command = *makeSigleByteCommand(N3Commands::KeepAlive); //один раз за коннект пусть копируется
+            keep_alive_worker.keep_alive_command = *makeSingleByteCommand(N3Commands::KeepAlive); //один раз за коннект пусть копируется
             emit readyStateSignal();
         }
         else
@@ -509,7 +504,7 @@ void Neptune::processReadMemory(const QByteArray &data)
     inBuffer.append(data);
 
     //qDebug() << data.toHex();
-    if(!checkInBufer())
+    if(!checkInBuffer())
         return;
 
     if(static_cast<unsigned int>(inBuffer.size()) >= N3Constants::BlockSize)
@@ -544,7 +539,7 @@ void Neptune::processReadDateTime(const QByteArray &data)
 {
     inBuffer.append(data);
 
-    if(!checkInBufer())
+    if(!checkInBuffer())
         return;
 
     if(static_cast<unsigned int>(inBuffer.size()) >= N3Constants::BlockSize)
@@ -718,7 +713,7 @@ std::unique_ptr<QByteArray> Neptune::cryptPacket(const QByteArray &packet, bool 
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-std::unique_ptr<QByteArray> Neptune::makeSigleByteCommand(const N3Commands command) const
+std::unique_ptr<QByteArray> Neptune::makeSingleByteCommand(const N3Commands command) const
 {    
     std::unique_ptr<QByteArray> result = std::make_unique<QByteArray>(32, 0);
 
@@ -732,7 +727,6 @@ std::unique_ptr<QByteArray> Neptune::makeSigleByteCommand(const N3Commands comma
 
 
 //----------------------------------------------------------------------------------------------------------------------
-//надо убрать
 char Neptune::calculateChecksum(const QByteArray &packet) const
 {
     char length = packet[0];
