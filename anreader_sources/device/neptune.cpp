@@ -207,8 +207,8 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
 
     bool is_deleted = (raw_jump->at(2) >> 7) & 1;
 
-    QString dz = dropzones().Names().at(((BytesOperations::bytesToUInt16(*raw_jump, 15) >> 2) & 0b11111));
-    QString ap = airplanes().Names().at(((BytesOperations::bytesToUInt16(*raw_jump, 11) >> 4) & 0b1111));
+    QString dz = *dropzones().Names().at(((BytesOperations::bytesToUInt16(*raw_jump, 15) >> 2) & 0b11111));
+    QString ap = *airplanes().Names().at(((BytesOperations::bytesToUInt16(*raw_jump, 11) >> 4) & 0b1111));
 
     return std::make_unique<N3Jump>(jump_number, jump_date, dz, ap, exit_alt, delp_alt, freefall_time, canopy_time, speed12K, speed9K, speed6K, speed3K, is_deleted);
 }

@@ -17,9 +17,25 @@ uint N3Names::filled() const
 
     return 0;
 }
-#include <QDebug>
+
 //----------------------------------------------------------------------------------------------------------------------
-QString N3Names::byIndex(const uint index) const
+bool N3Names::used(uint index) const
+{
+    if(m_map_used.contains(index))
+        return m_map_used[index];
+    return false;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+bool N3Names::hidden(uint index) const
+{
+    if(m_map_hidden.contains(index))
+        return m_map_hidden[index];
+    return false;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+QString N3Names::byIndex(uint index) const
 {    
     QString result = "";
 
@@ -31,16 +47,13 @@ QString N3Names::byIndex(const uint index) const
         for(uint i = offset; i < offset + static_cast<uint>(N3NamesValues::length); ++i)
             bytes_name[i - offset] = m_data[i];
 
-        bool hidden = (bytes_name[0] & 0b10000000) >> 7;
-        bool used = (bytes_name[1] & 0b10000000) >> 7;
+        m_map_hidden[index] = (bytes_name[0] & 0b10000000) >> 7;
+        m_map_used[index] = (bytes_name[1] & 0b10000000) >> 7;
 
         bytes_name[0] = bytes_name[0] & 0b01111111;
         bytes_name[1] = bytes_name[1] & 0b01111111;
         result = QString::fromLatin1(bytes_name);
-
-        qDebug() << result << " " << used << " " << hidden;
     }
-
     return result;
 }
 

@@ -17,6 +17,7 @@ class N3Widget;
 class QTimer;
 class QAction;
 class QCheckBox;
+class N3Names;
 
 class DeviceFrame : public QFrame
 {
@@ -86,7 +87,8 @@ private:
     void addDeviceFrame();
     void deleteDeviceFrame();
     void makeFrame();
-    void read_last_jumps(unsigned int n_jumps);    
+    void read_last_jumps(unsigned int n_jumps);
+    bool names_dialog(const QString& title, const N3Names& names, int active_index, int active_index2 = -1);
 
     DeviceFrame *device_frame = nullptr;
     std::unique_ptr<QTimer> m_clock_timer;
@@ -102,6 +104,7 @@ public slots:
     void choice_datetime();
     void n3Settings();
     void n3Dropzones();
+    void n3Airplanes();
 };
 
 #endif // N3WIDGET_H

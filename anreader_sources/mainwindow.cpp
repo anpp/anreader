@@ -654,10 +654,10 @@ void MainWindow::finish(const DWidget& widget)
 void MainWindow::afterConnect(const DWidget &widget)
 {
     for(auto& ap: widget.device().airplanes().Names())
-        initDataInLists(ap, "", "");
+        initDataInLists(*ap, "", "");
 
     for(auto& dz: widget.device().dropzones().Names())
-        initDataInLists("", dz, "");
+        initDataInLists("", *dz, "");
 
     dl.save();
 }

@@ -254,6 +254,7 @@ void N3Widget::addDeviceFrame()
     connect(&device_frame->pb_edit_clock, &QPushButton::clicked, this, &N3Widget::choice_datetime);
     connect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::n3Settings);
     connect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::n3Dropzones);
+    connect(&device_frame->tb_aircrafts, &QToolButton::clicked, this, &N3Widget::n3Airplanes);
 
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_read_jumps, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_edit_clock, &QPushButton::setEnabled);
@@ -274,6 +275,7 @@ void N3Widget::deleteDeviceFrame()
     disconnect(&device_frame->pb_edit_clock, &QPushButton::clicked, this, &N3Widget::choice_datetime);
     disconnect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::n3Settings);
     disconnect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::n3Dropzones);
+    disconnect(&device_frame->tb_aircrafts, &QToolButton::clicked, this, &N3Widget::n3Airplanes);
 
     delete device_frame;
     device_frame = nullptr;
@@ -353,6 +355,16 @@ void N3Widget::read_last_jumps(unsigned int n_jumps)
     m_device->read_details_jumps(firstJumpOffset_1, num_jumps_1);
     if(num_jumps_2 > 0)
         m_device->read_details_jumps(firstJumpOffset_2, num_jumps_2);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+bool N3Widget::names_dialog(const QString& title, const N3Names &names, int active_index, int active_index2)
+{
+    std::unique_ptr<N3NamesDialog> nd = std::make_unique<N3NamesDialog>(title, names, active_index, active_index2, this);
+    if(nd->exec() == QDialog::Accepted)
+    {
+    }
+    return false;
 }
 
 
@@ -440,9 +452,8 @@ void N3Widget::readed_summary_settings()
 
         m_clock_timer->start(1000);
 
-        qDebug() << m_device.get()->airplanes().Names()[summary.currentAPIndex()];
-        qDebug() << m_device.get()->dropzones().Names()[summary.currentDZIndex()];
-
+        qDebug() << *m_device.get()->airplanes().Names()[summary.currentAPIndex()];
+        qDebug() << *m_device.get()->dropzones().Names()[summary.currentDZIndex()];
     }
 }
 
@@ -513,11 +524,15 @@ void N3Widget::n3Dropzones()
 {
     if(!m_device)
         return;
+    names_dialog("Dropzones", static_cast<const N3Names&>(m_device->dropzones()), m_device->summary().currentDZIndex());
+}
 
-    std::unique_ptr<N3NamesDialog> nd = std::make_unique<N3NamesDialog>(this);
-    if(nd->exec() == QDialog::Accepted)
-    {
-    }
+//----------------------------------------------------------------------------------------------------------------------
+void N3Widget::n3Airplanes()
+{
+    if(!m_device)
+        return;
+    names_dialog("Airplanes", static_cast<const N3Names&>(m_device->airplanes()), m_device->summary().currentAPIndex());
 }
 
 
