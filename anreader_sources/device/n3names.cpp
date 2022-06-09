@@ -35,6 +35,41 @@ bool N3Names::hidden(uint index) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+bool N3Names::active(uint index) const
+{
+    if(m_map_active.contains(index))
+        return m_map_active[index];
+    return false;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Names::setActive(uint index) const
+{
+    m_map_active[index] = true;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+N3Names &N3Names::operator=(const N3Names &right)
+{
+    if (this == &right)
+        return *this;
+
+    m_map_active = right.m_map_active;
+    m_map_used = right.m_map_used;
+    m_map_hidden = right.m_map_hidden;
+    return *this;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+bool operator==(const N3Names& left, const N3Names& right)
+{
+    return (left.m_data == right.m_data
+            && left.m_map_active == right.m_map_active
+            && left.m_map_used == right.m_map_used
+            && left.m_map_hidden == right.m_map_hidden);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 QString N3Names::byIndex(uint index) const
 {    
     QString result = "";

@@ -18,6 +18,9 @@ public:
     virtual void clear() =0;
     virtual bool used(uint index) const = 0;
     virtual bool hidden(uint index) const = 0;
+    virtual bool active(uint index) const = 0;
+
+    virtual void setActive(uint index) const = 0;
 
     QByteArray& data() const {return m_data; }
 

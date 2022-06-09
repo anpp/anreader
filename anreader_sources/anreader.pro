@@ -29,6 +29,7 @@ SOURCES += \
     datalists.cpp \
     device_widgets/n3_main_settings_dialog.cpp \
     device_widgets/n3_names_dialog.cpp \
+    device_widgets/n3names_model.cpp \
     devices_list_widget.cpp \
     jumpeditor_dialog/combolist_model.cpp \
     log_widget.cpp \
@@ -59,6 +60,7 @@ HEADERS += \
     datalists.h \
     device_widgets/n3_main_settings_dialog.h \
     device_widgets/n3_names_dialog.h \
+    device_widgets/n3names_model.h \
     devices_list_widget.h \
     jumpeditor_dialog/combolist_model.h \
     log_widget.h \

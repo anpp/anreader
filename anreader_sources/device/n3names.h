@@ -11,6 +11,7 @@ class N3Names : public ANames
 {
     mutable QMap<uint, bool> m_map_used;
     mutable QMap<uint, bool> m_map_hidden;
+    mutable QMap<uint, bool> m_map_active;
 public:    
     explicit N3Names(QByteArray& adata): ANames(adata) {};
     virtual ~N3Names() override {}
@@ -19,7 +20,13 @@ public:
     uint filled() const override;
     virtual void clear() override { m_names->clear(); }    
     bool used(uint index) const override;
-    bool hidden(uint index) const override;
+    bool hidden(uint index) const override;    
+    bool active(uint index) const override;
+
+    void setActive(uint index) const override;
+
+    friend bool operator==(const N3Names& left, const N3Names& right);
+    N3Names& operator=(const N3Names& right);
 
 private:
     QString byIndex(uint index) const override;
