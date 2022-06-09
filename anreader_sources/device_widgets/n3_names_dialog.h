@@ -19,6 +19,7 @@ class N3NamesDialog : public QDialog
     std::unique_ptr<N3Names> m_new_n3names;
     QByteArray raw_names;
     QString m_title;
+    std::unique_ptr<N3NamesModel> m_model;
 
 public:
     explicit N3NamesDialog(const QString& title, const N3Names& names,  QWidget *parent = nullptr);
