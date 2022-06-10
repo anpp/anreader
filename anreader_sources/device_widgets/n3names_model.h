@@ -24,6 +24,8 @@ public:
     int rowCount(const QModelIndex&) const override;
     int columnCount(const QModelIndex&) const override {return static_cast<int>(N3NamesModel_defs::NumColumns); }
 
+    int filledCount() const;
+
 };
 
 

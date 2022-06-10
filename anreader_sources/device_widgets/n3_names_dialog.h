@@ -4,12 +4,14 @@
 #include <QDialog>
 #include <memory>
 
+
 namespace Ui {
 class N3NamesDialog;
 }
 
 class N3Names;
 class N3NamesModel;
+class N3NamesDelegate;
 
 class N3NamesDialog : public QDialog
 {
@@ -20,6 +22,7 @@ class N3NamesDialog : public QDialog
     QByteArray raw_names;
     QString m_title;
     std::unique_ptr<N3NamesModel> m_model;
+    std::unique_ptr<N3NamesDelegate> m_delegate;
 
 public:
     explicit N3NamesDialog(const QString& title, const N3Names& names,  QWidget *parent = nullptr);

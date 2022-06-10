@@ -1,5 +1,6 @@
 #include "comboeditdelegate.h"
 
+#include <QComboBox>
 
 //---------------------------------------------------------------------------------------------------------------------------
 QWidget *ComboEditDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
