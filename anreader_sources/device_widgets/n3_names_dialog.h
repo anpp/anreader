@@ -31,9 +31,7 @@ public:
 private:
     Ui::N3NamesDialog *ui;
 
-
 private slots:
-
 
 };
 

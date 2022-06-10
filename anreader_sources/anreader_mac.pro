@@ -28,6 +28,9 @@ SOURCES += \
     datalist_dialog/listwidget.cpp \
     datalists.cpp \
     device_widgets/n3_main_settings_dialog.cpp \
+    device_widgets/n3_names_dialog.cpp \
+    device_widgets/n3names_delegate.cpp \
+    device_widgets/n3names_model.cpp \
     devices_list_widget.cpp \
     jumpeditor_dialog/combolist_model.cpp \
     log_widget.cpp \
@@ -57,6 +60,9 @@ HEADERS += \
     datalist_dialog/listwidget.h \
     datalists.h \
     device_widgets/n3_main_settings_dialog.h \
+    device_widgets/n3_names_dialog.h \
+    device_widgets/n3names_delegate.h \
+    device_widgets/n3names_model.h \
     devices_list_widget.h \
     jumpeditor_dialog/combolist_model.h \
     log_widget.h \
@@ -88,6 +94,7 @@ FORMS += \
     common/string_list.ui \
     datalist_dialog/datalist_dialog.ui \
     device_widgets/n3_main_settings_dialog.ui \
+    device_widgets/n3_names_dialog.ui \
     jumpeditor_dialog/n3jumpeditor.ui \
     settings_dialog/settings_com_port.ui \
     device_widgets/choice_datetime_dialog.ui

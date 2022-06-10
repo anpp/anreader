@@ -123,7 +123,6 @@ void N3NamesDelegate::radio_toggled(bool value)
     if(!value)
         return;
     QRadioButton *rb = static_cast<QRadioButton*>(sender());
-    if(rb) {
-      emit commitData(rb);
-    }
+    if(rb)
+        emit commitData(rb);
 }
