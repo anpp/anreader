@@ -32,6 +32,23 @@ QVariant N3NamesModel::data(const QModelIndex &index, int role) const
 //------------------------------------------------------------------------------------------
 bool N3NamesModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    if(!index.isValid())
+        return false;
+
+    if(index.column() == static_cast<int>(N3NamesModel_defs::Active) && Qt::EditRole == role)
+    {
+        if(value.toBool())
+        {
+            for(uint i = 0; i < m_data.filled(); ++i)
+                if(i != static_cast<uint>(index.row()))
+                    m_data.setActive(i, false);
+                else
+                    m_data.setActive(i);
+
+            emit dataChanged(QModelIndex(), QModelIndex());
+            return true;
+        }
+    }
     return false;
 }
 
@@ -68,6 +85,10 @@ Qt::ItemFlags N3NamesModel::flags(const QModelIndex &index) const
     {
         if(index.column() == static_cast<int>(N3NamesModel_defs::Active))
             flags |= Qt::ItemIsEditable;
+
+        //if(index.column() == static_cast<int>(N3NamesModel_defs::Hidden))
+        //    flags |= Qt::ItemIsEditable;
+
     }
 
     return flags;

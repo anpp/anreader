@@ -27,6 +27,7 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
     ui->tvNames->setItemDelegateForColumn(static_cast<int>(N3NamesModel_defs::Used), m_delegate.get());
     ui->tvNames->setItemDelegateForColumn(static_cast<int>(N3NamesModel_defs::Hidden), m_delegate.get());
     ui->tvNames->setEditTriggers(QAbstractItemView::AllEditTriggers);
+
     ui->tvNames->resizeColumnsToContents();
     ui->tvNames->resizeRowsToContents();
 }
@@ -36,3 +37,5 @@ N3NamesDialog::~N3NamesDialog()
 {
     delete ui;
 }
+
+

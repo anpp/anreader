@@ -6,6 +6,7 @@
 
 class N3NamesDelegate : public QItemDelegate
 {
+    Q_OBJECT
 public:
     N3NamesDelegate(QObject *parent = nullptr) : QItemDelegate(parent) {}
 
@@ -17,6 +18,9 @@ public:
 
 private:
     QRect calcRect(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+private slots:
+    void radio_toggled(bool value);
 };
 
 #endif // N3NAMESDELEGAT_H

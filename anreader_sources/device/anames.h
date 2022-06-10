@@ -20,7 +20,7 @@ public:
     virtual bool hidden(uint index) const = 0;
     virtual bool active(uint index) const = 0;
 
-    virtual void setActive(uint index) const = 0;
+    virtual void setActive(uint index, bool value = true) const = 0;
 
     QByteArray& data() const {return m_data; }
 

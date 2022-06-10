@@ -43,9 +43,9 @@ bool N3Names::active(uint index) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3Names::setActive(uint index) const
+void N3Names::setActive(uint index, bool value) const
 {
-    m_map_active[index] = true;
+    m_map_active[index] = value;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ QString N3Names::byIndex(uint index) const
             bytes_name[i - offset] = m_data[i];
 
         m_map_hidden[index] = (bytes_name[0] & 0b10000000) >> 7;
-        m_map_used[index] = (bytes_name[1] & 0b10000000) >> 7;
+        m_map_used[index] = (bytes_name[1] & 0b10000000) >> 7;        
 
         bytes_name[0] = bytes_name[0] & 0b01111111;
         bytes_name[1] = bytes_name[1] & 0b01111111;
