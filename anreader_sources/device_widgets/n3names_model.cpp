@@ -35,20 +35,30 @@ bool N3NamesModel::setData(const QModelIndex &index, const QVariant &value, int 
     if(!index.isValid())
         return false;
 
-    if(index.column() == static_cast<int>(N3NamesModel_defs::Active) && Qt::EditRole == role)
-    {
-        if(value.toBool())
+    if(Qt::EditRole == role)
+        switch(static_cast<N3NamesModel_defs>(index.column()))
         {
-            for(uint i = 0; i < m_data.filled(); ++i)
-                if(i != static_cast<uint>(index.row()))
-                    m_data.setActive(i, false);
-                else
-                    m_data.setActive(i);
+        case N3NamesModel_defs::Active:
+            if(value.toBool())
+            {
+                for(uint i = 0; i < m_data.filled(); ++i)
+                    if(i != static_cast<uint>(index.row()))
+                        m_data.setActive(i, false);
+                    else
+                        m_data.setActive(i);
 
+                emit dataChanged(QModelIndex(), QModelIndex());
+                return true;
+            }
+            break;
+        case N3NamesModel_defs::Hidden:
+            m_data.setHidden(index.row(), value.toBool());
             emit dataChanged(QModelIndex(), QModelIndex());
             return true;
+        default:
+            break;
         }
-    }
+
     return false;
 }
 
@@ -83,11 +93,14 @@ Qt::ItemFlags N3NamesModel::flags(const QModelIndex &index) const
     flags &= ~Qt::ItemIsEditable;
     if(index.isValid())
     {
-        if(index.column() == static_cast<int>(N3NamesModel_defs::Active))
+        if(index.column() == static_cast<int>(N3NamesModel_defs::Active)
+                && !m_data.hidden(index.row()))
             flags |= Qt::ItemIsEditable;
 
-        //if(index.column() == static_cast<int>(N3NamesModel_defs::Hidden))
-        //    flags |= Qt::ItemIsEditable;
+        if(index.column() == static_cast<int>(N3NamesModel_defs::Hidden)
+                && !m_data.used(index.row())
+                && !m_data.active(index.row()))
+            flags |= Qt::ItemIsEditable;
 
     }
 
@@ -104,4 +117,22 @@ int N3NamesModel::rowCount(const QModelIndex &) const
 int N3NamesModel::filledCount() const
 {
     return m_data.filled();
+}
+
+//------------------------------------------------------------------------------------------
+bool N3NamesModel::used(uint index) const
+{
+    return m_data.used(index);
+}
+
+//------------------------------------------------------------------------------------------
+bool N3NamesModel::hidden(uint index) const
+{
+    return m_data.hidden(index);
+}
+
+//------------------------------------------------------------------------------------------
+bool N3NamesModel::active(uint index) const
+{
+    return m_data.active(index);
 }

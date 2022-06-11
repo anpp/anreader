@@ -21,6 +21,7 @@ public:
     virtual bool active(uint index) const = 0;
 
     virtual void setActive(uint index, bool value = true) const = 0;
+    virtual void setHidden(uint index, bool value = true) = 0;
 
     QByteArray& data() const {return m_data; }
 

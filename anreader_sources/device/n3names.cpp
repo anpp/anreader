@@ -21,16 +21,21 @@ uint N3Names::filled() const
 //----------------------------------------------------------------------------------------------------------------------
 bool N3Names::used(uint index) const
 {
-    if(m_map_used.contains(index))
-        return m_map_used[index];
+    uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
+
+    if(index < filled())
+        return (m_data[offset + 1] & 0b10000000) >> 7;
     return false;
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 bool N3Names::hidden(uint index) const
 {
-    if(m_map_hidden.contains(index))
-        return m_map_hidden[index];
+    uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
+
+    if(index < filled())
+        return (m_data[offset] & 0b10000000) >> 7;
     return false;
 }
 
@@ -49,24 +54,33 @@ void N3Names::setActive(uint index, bool value) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void N3Names::setHidden(uint index, bool value)
+{
+    uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
+
+    if(index < count())
+    {
+        if(value)
+            m_data[offset] = m_data[offset] | 0b10000000;
+        else
+            m_data[offset] = m_data[offset] & ~0b10000000;
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 N3Names &N3Names::operator=(const N3Names &right)
 {
     if (this == &right)
         return *this;
 
     m_map_active = right.m_map_active;
-    m_map_used = right.m_map_used;
-    m_map_hidden = right.m_map_hidden;
     return *this;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 bool operator==(const N3Names& left, const N3Names& right)
 {
-    return (left.m_data == right.m_data
-            && left.m_map_active == right.m_map_active
-            && left.m_map_used == right.m_map_used
-            && left.m_map_hidden == right.m_map_hidden);
+    return (left.m_data == right.m_data && left.m_map_active == right.m_map_active);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -76,14 +90,11 @@ QString N3Names::byIndex(uint index) const
 
     uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
 
-    if(index < count())
+    if(index < filled())
     {
         QByteArray bytes_name(static_cast<uint>(N3NamesValues::length), 0);
         for(uint i = offset; i < offset + static_cast<uint>(N3NamesValues::length); ++i)
             bytes_name[i - offset] = m_data[i];
-
-        m_map_hidden[index] = (bytes_name[0] & 0b10000000) >> 7;
-        m_map_used[index] = (bytes_name[1] & 0b10000000) >> 7;        
 
         bytes_name[0] = bytes_name[0] & 0b01111111;
         bytes_name[1] = bytes_name[1] & 0b01111111;

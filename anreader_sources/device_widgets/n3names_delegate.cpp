@@ -47,8 +47,11 @@ void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
     {
     case N3NamesModel_defs::Active:
         rb = static_cast<QRadioButton*>(editor);
-        connect(rb, &QRadioButton::toggled, this, &N3NamesDelegate::radio_toggled);
-        rb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
+        if(nullptr != rb)
+        {
+            connect(rb, &QRadioButton::toggled, this, &N3NamesDelegate::radio_toggled);
+            rb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
+        }
         break;
     case N3NamesModel_defs::Used:
         cb = static_cast<QCheckBox*>(editor);
@@ -56,7 +59,11 @@ void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
         break;
     case N3NamesModel_defs::Hidden:
         cb = static_cast<QCheckBox*>(editor);
-        cb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
+        if(nullptr != cb)
+        {
+            connect(cb, &QCheckBox::toggled, this, &N3NamesDelegate::check_toggled);
+            cb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
+        }
         break;
     default:
         break;
@@ -71,8 +78,23 @@ void N3NamesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, c
     if(index.column() == static_cast<int>(N3NamesModel_defs::Active))
     {
         QRadioButton *rb = static_cast<QRadioButton*>(editor);
-        model->setData(index, rb->isChecked() , Qt::EditRole);
+        if(nullptr != rb)
+        {
+            connect(rb, &QRadioButton::toggled, this, &N3NamesDelegate::radio_toggled);
+            model->setData(index, rb->isChecked() , Qt::EditRole);
+        }
     }
+
+    if(index.column() == static_cast<int>(N3NamesModel_defs::Hidden))
+    {
+        QCheckBox *cb = static_cast<QCheckBox*>(editor);
+        if(nullptr != cb)
+        {
+            disconnect(cb, &QCheckBox::toggled, this, &N3NamesDelegate::check_toggled);
+            model->setData(index, cb->isChecked() , Qt::EditRole);
+        }
+    }
+
 }
 
 //------------------------------------------------------------------------------------------
@@ -99,6 +121,22 @@ void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
         opt.rect = calcRect(option, index);
         //opt.state = opt.state & ~QStyle::State_HasFocus;
         opt.state |= (index.data(Qt::EditRole).toBool() ? QStyle::State_On : QStyle::State_Off);
+
+        if(index.column() == static_cast<int>(N3NamesModel_defs::Used))
+            opt.state &= ~QStyle::State_Enabled;
+
+        if(index.column() != static_cast<int>(N3NamesModel_defs::Active)
+                && static_cast<const N3NamesModel*>(index.model())->used(index.row()))
+            opt.state &= ~QStyle::State_Enabled;
+
+        if(index.column() == static_cast<int>(N3NamesModel_defs::Active)
+                && static_cast<const N3NamesModel*>(index.model())->hidden(index.row()))
+            opt.state &= ~QStyle::State_Enabled;
+
+        if(index.column() == static_cast<int>(N3NamesModel_defs::Hidden)
+                && static_cast<const N3NamesModel*>(index.model())->active(index.row()))
+            opt.state &= ~QStyle::State_Enabled;
+
         qApp->style()->drawPrimitive(pe, &opt, painter);
         return;
     }
@@ -124,5 +162,14 @@ void N3NamesDelegate::radio_toggled(bool value)
         return;
     QRadioButton *rb = static_cast<QRadioButton*>(sender());
     if(rb)
-        emit commitData(rb);
+        commitData(rb);
+}
+
+//------------------------------------------------------------------------------------------
+void N3NamesDelegate::check_toggled(bool value)
+{
+    Q_UNUSED(value);
+    QCheckBox *cb = static_cast<QCheckBox*>(sender());
+    if(cb)
+        commitData(cb);
 }

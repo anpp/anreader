@@ -9,8 +9,6 @@ enum class N3NamesValues: uint {count = 32, length = 10, offset = 2};
 
 class N3Names : public ANames
 {
-    mutable QMap<uint, bool> m_map_used;
-    mutable QMap<uint, bool> m_map_hidden;
     mutable QMap<uint, bool> m_map_active;
 public:    
     explicit N3Names(QByteArray& adata): ANames(adata){
@@ -27,6 +25,7 @@ public:
     bool active(uint index) const override;
 
     void setActive(uint index, bool value = true) const override;
+    void setHidden(uint index, bool value = true) override;
 
     friend bool operator==(const N3Names& left, const N3Names& right);
     N3Names& operator=(const N3Names& right);

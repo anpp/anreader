@@ -21,6 +21,7 @@ private:
 
 private slots:
     void radio_toggled(bool value);
+    void check_toggled(bool value);
 };
 
 #endif // N3NAMESDELEGAT_H
