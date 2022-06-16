@@ -3,10 +3,7 @@
 
 #include <QCheckBox>
 #include <QRadioButton>
-#include <QCheckBox>
 #include <QApplication>
-#include <QMouseEvent>
-#include <QKeyEvent>
 
 //------------------------------------------------------------------------------------------
 QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const

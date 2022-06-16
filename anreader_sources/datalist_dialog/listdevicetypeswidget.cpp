@@ -22,6 +22,7 @@ ListDeviceTypesWidget::ListDeviceTypesWidget(t_devicetypelist &datalist, QWidget
     m_listTable->setSelectionMode(QAbstractItemView::SingleSelection);
     m_listTable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     m_listTable->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    m_listTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
     connect(m_listTable->selectionModel(), &QItemSelectionModel::currentRowChanged,  this, &ListDeviceTypesWidget::rowChanged);
 }
