@@ -19,7 +19,7 @@ Settings::Settings(QMainWindow* widget_owner, const QString& organization, const
                     std::make_shared<Setting>("current_file_delimiter", kindset::environment, QString(";"), QVariant(QVariant::String), false),
                     //
                     std::make_shared<Setting>("N3", kindset::device_types, QString("Altimaster N3;USB Serial Port Driver for Altimaster N3"), QVariant(QVariant::String), false),
-                    std::make_shared<Setting>("Atlas", kindset::device_types, QString("USB Serial Port Driver"), QVariant(QVariant::String), false),
+                    std::make_shared<Setting>("Atlas", kindset::device_types, QString("USB Serial Port Driver;USB Serial Port"), QVariant(QVariant::String), false),
                     //COM Port
                     std::make_shared<Setting>("baudRate", kindset::com_port, QSerialPort::Baud57600, QVariant(QVariant::Int), false),
                     std::make_shared<Setting>("dataBits", kindset::com_port, QSerialPort::Data8, QVariant(QVariant::Int), false),
