@@ -176,14 +176,16 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
     uint jump_number = BytesOperations::bytesToUInt16(*raw_jump, 0);
 
     int month = ((raw_jump->at(2) & 0x7F));
-    month = (m_product_type == N3Types::Atlas)? month + 128 : month; //для Atlas + 128 месяцев
+    month = (m_product_type == N3Types::Atlas && m_software_revision == 1)? month + 128 : month; //для Atlas ревизии 1 + 128 месяцев
+
     month = month + m_correct_date_koeff * 128; //коэффициент приходит извне, рассчитывается от текущей даты по желанию пользователя
     month = month == 0 ? 1 : month;
 
     //для старых прыжков прошитого n3 надо отнимать 96 месяцев (это надо сделать в интерфейсе)
     //Непрошитые N3 и Atlas отсчитывают месяцы с 2007 года, только Atlas еще + 128 месяцев (то есть с 2017.08)
     //прошитый N3 отсчитывает с 2015
-    QDate date((m_software_revision >= 4 && m_product_type == N3Types::N3? 2015 : 2007) + (month - 1) / 12,
+    QDate date(((m_software_revision >= 4 && m_product_type == N3Types::N3) ||
+                (m_software_revision > 1 && m_product_type == N3Types::Atlas)? 2015 : 2007) + (month - 1) / 12,
                month % 12 == 0 ? 12 : month % 12,
                (raw_jump->at(13) >> 2) & 0b11111);
     QTime time((BytesOperations::bytesToUInt16(*raw_jump, 6) >> 6) & 0b11111,
@@ -485,8 +487,14 @@ void Neptune::processType0Record(const QByteArray &data)
     if (static_cast<unsigned int>(Type0Record.size()) >= N3Constants::Type0RecordSizeInRaw)
     {
         emit log("Type0 record: " + Type0Record);
-        if (verifyType0Record()) {
-            setEncryptionKey(m_product_type == N3Types::Atlas ? atlas_key : (m_software_revision >= 4 ? new_key: old_key));
+        if (verifyType0Record()) {            
+            QVector<s_key_item> &vec_key = (m_software_revision >= 4 ? new_key: old_key);
+
+            if(m_product_type == N3Types::Atlas)
+                vec_key = m_software_revision == 1 ? atlas_key : new_key;
+
+            setEncryptionKey(vec_key);
+
             emit log("s/n: " + getSerialNumber());
 
             keep_alive_worker.keep_alive_command = *makeSingleByteCommand(N3Commands::KeepAlive); //один раз за коннект пусть копируется
