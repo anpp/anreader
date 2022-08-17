@@ -22,7 +22,7 @@ class N3Names;
 class DeviceFrame : public QFrame
 {
     enum n3widget_defs: int {element_height = 34, n_rows = 8, spacing = 4, line_height = 8, button_height = 24};
-    enum ExpiredType: int {None = -1, OldN3 = 0, N3 = 1, Atlas = 2};
+    enum ExpiredType: int {None = -1, OldN3 = 0, N3 = 1, AtlasRev3 = 2, Atlas = 3};
 public:        
     explicit DeviceFrame(QWidget *parent = nullptr, ExpiredType et = None);
     ~DeviceFrame() {}

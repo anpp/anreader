@@ -11,6 +11,7 @@
 const static QString ExpiredNames[] =
                               {QObject::tr("Fixing jumps's dates for N3 software revision 3 (2017-08 expired)"),
                                QObject::tr("Fixing jumps's dates for N3 software revision 4 (2025-08 expired)"),
+                               QObject::tr("Fixing jumps's dates for Atlas software revision 3 (2025-08 expired)"),
                                QObject::tr("Fixing jumps's dates for Atlas (2028-04 expired)"),
                               };
 
@@ -302,6 +303,9 @@ void N3Widget::makeFrame()
             et = DeviceFrame::ExpiredType::N3;
         break;
     case N3Types::Atlas:
+        if((m_device->revision() == 3) && (QDate::currentDate() >= QDate(2025, 8, 1)))
+            et = DeviceFrame::ExpiredType::AtlasRev3;
+        else
         if(QDate::currentDate() >= QDate(2028, 4, 1))
             et = DeviceFrame::ExpiredType::Atlas;
         break;

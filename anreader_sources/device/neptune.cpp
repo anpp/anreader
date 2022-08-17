@@ -185,7 +185,7 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
     //Непрошитые N3 и Atlas отсчитывают месяцы с 2007 года, только Atlas еще + 128 месяцев (то есть с 2017.08)
     //прошитый N3 отсчитывает с 2015
     QDate date(((m_software_revision >= 4 && m_product_type == N3Types::N3) ||
-                (m_software_revision > 1 && m_product_type == N3Types::Atlas)? 2015 : 2007) + (month - 1) / 12,
+                (m_software_revision == 3 && m_product_type == N3Types::Atlas)? 2015 : 2007) + (month - 1) / 12,
                month % 12 == 0 ? 12 : month % 12,
                (raw_jump->at(13) >> 2) & 0b11111);
     QTime time((BytesOperations::bytesToUInt16(*raw_jump, 6) >> 6) & 0b11111,
