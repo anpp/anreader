@@ -9,7 +9,7 @@ CONFIG += c++14
 QMAKE_CFLAGS += -std=c++14
 QMAKE_CXXFLAGS += -std=c++14
 
-QMAKE_LFLAGS_RELEASE += -static -static-libgcc
+#QMAKE_LFLAGS_RELEASE += -static -static-libgcc
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
