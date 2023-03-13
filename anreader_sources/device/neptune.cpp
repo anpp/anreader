@@ -12,7 +12,12 @@ const static QString N3TypeNames[] =
  QObject::tr("Data Logger"),
  QObject::tr("N3"),
  QObject::tr("N3A"),
- QObject::tr("Atlas")
+ QObject::tr("Atlas"),
+ QObject::tr("?"),
+ QObject::tr("?"),
+ QObject::tr("?"),
+ QObject::tr("?"),
+ QObject::tr("Atlas 2")
 };
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -767,7 +772,7 @@ bool Neptune::verifyType0Record()
         return false;
     }
 
-    if(Type0Record.at(15) <= 7)
+    if(Type0Record.at(15) <= 12)
         m_product_type = static_cast<N3Types>(Type0Record.at(15));
     m_software_revision = Type0Record[4];
 
