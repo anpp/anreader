@@ -26,12 +26,15 @@ public:
 
     void setActive(uint index, bool value = true) const override;
     void setHidden(uint index, bool value = true) override;
+    void setUsed(uint index, bool value) override;
+    void setName(uint index, const QString value) override;
 
     friend bool operator==(const N3Names& left, const N3Names& right);
     N3Names& operator=(const N3Names& right);
 
 private:
     QString byIndex(uint index) const override;
+    void setHighBit(uint index, uint byte_number, bool value) override;
 
 };
 

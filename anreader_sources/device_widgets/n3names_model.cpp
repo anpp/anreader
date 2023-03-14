@@ -51,10 +51,17 @@ bool N3NamesModel::setData(const QModelIndex &index, const QVariant &value, int 
                 return true;
             }
             break;
+
         case N3NamesModel_defs::Hidden:
             m_data.setHidden(index.row(), value.toBool());
             emit dataChanged(QModelIndex(), QModelIndex());
             return true;
+
+        case N3NamesModel_defs::Name:
+            m_data.setName(index.row(), value.toString());
+            emit dataChanged(QModelIndex(), QModelIndex());
+            return true;
+
         default:
             break;
         }
@@ -100,6 +107,10 @@ Qt::ItemFlags N3NamesModel::flags(const QModelIndex &index) const
         if(index.column() == static_cast<int>(N3NamesModel_defs::Hidden)
                 && !m_data.used(index.row())
                 && !m_data.active(index.row()))
+            flags |= Qt::ItemIsEditable;
+
+        if(index.column() == static_cast<int>(N3NamesModel_defs::Name)
+                && !m_data.used(index.row())) //&& m_data.filled()) > static_cast<uint>(index.row()))
             flags |= Qt::ItemIsEditable;
 
     }

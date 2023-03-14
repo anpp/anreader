@@ -22,11 +22,14 @@ public:
 
     virtual void setActive(uint index, bool value = true) const = 0;
     virtual void setHidden(uint index, bool value = true) = 0;
+    virtual void setUsed(uint index, bool value) = 0;
+    virtual void setName(uint index, const QString value) = 0;
 
     QByteArray& data() const {return m_data; }
 
 protected:
     virtual QString byIndex(uint index) const = 0;
+    virtual void setHighBit(uint index, uint byte_number, bool value) = 0;
 
     QByteArray& m_data;
     std::unique_ptr<std::vector<std::unique_ptr<QString>>> m_names = std::make_unique<std::vector<std::unique_ptr<QString>>>();

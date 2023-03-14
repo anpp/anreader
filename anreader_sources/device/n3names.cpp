@@ -56,14 +56,30 @@ void N3Names::setActive(uint index, bool value) const
 //----------------------------------------------------------------------------------------------------------------------
 void N3Names::setHidden(uint index, bool value)
 {
-    uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
+    setHighBit(index, 0, value);
+}
 
-    if(index < count())
+//----------------------------------------------------------------------------------------------------------------------
+void N3Names::setUsed(uint index, bool value)
+{
+    setHighBit(index, 1, value);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Names::setName(uint index, const QString value)
+{
+    bool saved_used = used(index);
+    bool saved_hidden = hidden(index);
+
+    if(index <= count())
     {
-        if(value)
-            m_data[offset] = m_data[offset] | 0b10000000;
-        else
-            m_data[offset] = m_data[offset] & ~0b10000000;
+        uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
+        for(uint i = 0; i < static_cast<uint>(N3NamesValues::length); ++i)
+            m_data[i +offset] = value.at(i).toLatin1();
+        setUsed(index, saved_used);
+        setHidden(index, saved_hidden);
+
+        m_names->clear(); //очистка списка имен, при первом обращении заполнится вновь из сырых данных
     }
 }
 
@@ -101,5 +117,19 @@ QString N3Names::byIndex(uint index) const
         result = QString::fromLatin1(bytes_name);
     }
     return result;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Names::setHighBit(uint index, uint byte_number, bool value)
+{
+    uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset) + byte_number;
+
+    if(index < count())
+    {
+        if(value)
+            m_data[offset] = m_data[offset] | 0b10000000;
+        else
+            m_data[offset] = m_data[offset] & ~0b10000000;
+    }
 }
 
