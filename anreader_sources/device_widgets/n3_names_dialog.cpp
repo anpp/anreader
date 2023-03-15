@@ -39,4 +39,16 @@ N3NamesDialog::~N3NamesDialog()
     delete ui;
 }
 
+//--------------------------------------------------------------------------------------------------------------
+bool N3NamesDialog::isChanged() const
+{
+    return m_new_n3names->data() != m_n3names.data();
+}
 
+
+//--------------------------------------------------------------------------------------------------------------
+void N3NamesDialog::on_buttonBox_accepted()
+{
+    m_new_n3names->calculateCheckSum();
+    accept();
+}

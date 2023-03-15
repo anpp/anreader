@@ -367,6 +367,19 @@ bool N3Widget::names_dialog(const QString& title, const N3Names &names)
     std::unique_ptr<N3NamesDialog> nd = std::make_unique<N3NamesDialog>(title, names, this);
     if(nd->exec() == QDialog::Accepted)
     {
+        if(nd->isChanged())
+        {
+            if(title == "Airplanes")
+            {
+                ((Neptune*)m_device.get())->setRawDataAPNames(nd->new_n3names().data());
+                m_device->write_airplanes();
+            }
+            if(title == "Dropzones")
+            {
+                ((Neptune*)m_device.get())->setRawDataDZNames(nd->new_n3names().data());
+                m_device->write_dropzones();
+            }
+        }
     }
     return false;
 }

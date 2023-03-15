@@ -34,12 +34,12 @@ void Neptune_HiL::read_settings()
 
 void Neptune_HiL::read_dropzones()
 {
-    executeCommand(N3Commands::ReadMemory, N3Addresses::DropZones, N3Constants::DZNamesSize);
+    executeCommand(N3Commands::ReadMemory, N3Addresses::DropZones, N3Constants::N3NamesSize);
 }
 
 void Neptune_HiL::read_airplanes()
 {
-    executeCommand(N3Commands::ReadMemory, N3Addresses::Airplanes, N3Constants::APNamesSize);
+    executeCommand(N3Commands::ReadMemory, N3Addresses::Airplanes, N3Constants::N3NamesSize);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -65,6 +65,18 @@ uint Neptune_HiL::n_iterations_by_jumps(const uint n_jumps)
 void Neptune_HiL::write_settings()
 {
     write_to_memory(N3Addresses::DeviceSettings, N3Constants::DeviceSettingsSize, rawDataSettings);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void Neptune_HiL::write_dropzones()
+{
+    write_to_memory(N3Addresses::DropZones, N3Constants::N3NamesSize, rawDZNames);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void Neptune_HiL::write_airplanes()
+{
+    write_to_memory(N3Addresses::Airplanes, N3Constants::N3NamesSize, rawAPNames);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

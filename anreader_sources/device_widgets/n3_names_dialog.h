@@ -28,11 +28,15 @@ public:
     explicit N3NamesDialog(const QString& title, const N3Names& names,  QWidget *parent = nullptr);
     ~N3NamesDialog();
 
+    bool isChanged() const;
+    const N3Names& new_n3names() const { return *m_new_n3names; }
+
 private:
     Ui::N3NamesDialog *ui;
 
 private slots:
 
+    void on_buttonBox_accepted();
 };
 
 #endif // N3_NAMES_DIALOG_H

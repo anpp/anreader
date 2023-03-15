@@ -16,6 +16,7 @@ public:
             setActive(i, false);
     };
     virtual ~N3Names() override {}
+    void calculateCheckSum();
 
     uint count() const override;
     uint filled() const override;

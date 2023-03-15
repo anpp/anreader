@@ -1,4 +1,14 @@
 #include "n3names.h"
+#include "n3_constants.h"
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Names::calculateCheckSum()
+{
+    if(m_data.size() < static_cast<int>(N3Constants::N3NamesSize)) return;
+    m_data[0] = 1;
+    for(unsigned int i = 1; i < N3Constants::N3NamesSize; i++)
+        m_data[0] = m_data[0] + m_data[i];
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 uint N3Names::count() const

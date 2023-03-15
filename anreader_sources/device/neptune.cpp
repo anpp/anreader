@@ -636,10 +636,10 @@ QByteArray *Neptune::getRawData(const unsigned int address)
     if((address >= N3Addresses::DeviceSettings) && (address < N3Addresses::DeviceSettings + N3Constants::DeviceSettingsSize))
         result = &rawDataSettings;
 
-    if((address >= N3Addresses::DropZones) && (address < N3Addresses::DropZones + N3Constants::DZNamesSize))
+    if((address >= N3Addresses::DropZones) && (address < N3Addresses::DropZones + N3Constants::N3NamesSize))
         result = &rawDZNames;
 
-    if((address >= N3Addresses::Airplanes) && (address < N3Addresses::Airplanes + N3Constants::APNamesSize))
+    if((address >= N3Addresses::Airplanes) && (address < N3Addresses::Airplanes + N3Constants::N3NamesSize))
         result = &rawAPNames;
 
     return result;

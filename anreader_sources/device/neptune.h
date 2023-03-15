@@ -81,6 +81,8 @@ public:
 
     void setCorrectDateKoeff(int value) { m_correct_date_koeff = value; }
     void setRawDataSettings(const QByteArray& value) { rawDataSettings = value; }
+    void setRawDataAPNames(const QByteArray& value) { rawAPNames = value; }
+    void setRawDataDZNames(const QByteArray& value) { rawDZNames = value; }
 
 
 protected:

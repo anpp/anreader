@@ -922,6 +922,9 @@ void MainWindow::editJump(uint row_index)
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::initDataInLists(const QString &aircraft, const QString &dropzone, const QString &canopy)
 {
+    if(aircraft == "----" || dropzone == "----" || canopy == "----") //paralog or neptune feature
+        return;
+
     if(aircraft != "" && dl.aircrafts().find(aircraft) == dl.aircrafts().end())
         dl.aircrafts()[aircraft] = "";
 

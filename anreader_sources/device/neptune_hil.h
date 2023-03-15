@@ -23,6 +23,9 @@ public:
     void end_communication() override;
     uint n_iterations_by_jumps(const uint n_jumps) override;
     void write_settings() override;
+    void write_dropzones() override;
+    void write_airplanes() override;
+
 
 private:
     void write_to_memory(unsigned int address, unsigned int length, QByteArray &wbytes);
