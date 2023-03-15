@@ -74,8 +74,13 @@ void N3Names::setName(uint index, const QString value)
     if(index <= count())
     {
         uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
-        for(uint i = 0; i < static_cast<uint>(N3NamesValues::length); ++i)
-            m_data[i +offset] = value.at(i).toLatin1();
+        for(int i = 0; i < static_cast<int>(N3NamesValues::length); ++i)
+        {
+            m_data[i + offset] = 0;
+            if(i < value.size())
+                m_data[i + offset] = value.at(i).toLatin1();
+        }
+
         setUsed(index, saved_used);
         setHidden(index, saved_hidden);
 
