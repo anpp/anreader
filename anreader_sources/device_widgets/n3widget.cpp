@@ -362,7 +362,7 @@ void N3Widget::read_last_jumps(unsigned int n_jumps)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-bool N3Widget::names_dialog(const QString& title, const N3Names &names)
+void N3Widget::names_dialog(const QString& title, const N3Names &names)
 {
     std::unique_ptr<N3NamesDialog> nd = std::make_unique<N3NamesDialog>(title, names, this);
     if(nd->exec() == QDialog::Accepted)
@@ -381,7 +381,6 @@ bool N3Widget::names_dialog(const QString& title, const N3Names &names)
             }
         }
     }
-    return false;
 }
 
 

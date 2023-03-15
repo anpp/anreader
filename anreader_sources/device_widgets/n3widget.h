@@ -88,7 +88,7 @@ private:
     void deleteDeviceFrame();
     void makeFrame();
     void read_last_jumps(unsigned int n_jumps);
-    bool names_dialog(const QString& title, const N3Names& names);
+    void names_dialog(const QString& title, const N3Names& names);
 
     DeviceFrame *device_frame = nullptr;
     std::unique_ptr<QTimer> m_clock_timer;

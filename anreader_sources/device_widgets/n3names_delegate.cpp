@@ -35,7 +35,7 @@ QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
         case N3NamesModel_defs::Name:
         {
             le = new QLineEdit(parent);
-            le->setValidator(new QRegExpValidator(QRegExp("^[a-zA-Z0-9:;/-,. ]{0,20}$")));
+            le->setValidator(new QRegExpValidator(QRegExp("^[a-zA-Z0-9:;/-,. !]{0,20}$")));
             le->setMaxLength(static_cast<uint>(N3NamesValues::length));
             return le;
         }
