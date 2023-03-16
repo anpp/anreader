@@ -253,9 +253,9 @@ void N3Widget::addDeviceFrame()
     connect(&device_frame->pb_read_jumps, &QPushButton::clicked, this, &N3Widget::read_jumps);
     connect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_current_datetime);
     connect(&device_frame->pb_edit_clock, &QPushButton::clicked, this, &N3Widget::choice_datetime);
-    connect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::n3Settings);
-    connect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::n3Dropzones);
-    connect(&device_frame->tb_aircrafts, &QToolButton::clicked, this, &N3Widget::n3Airplanes);
+    connect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::N3Settings);
+    connect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::N3Dropzones);
+    connect(&device_frame->tb_aircrafts, &QToolButton::clicked, this, &N3Widget::N3Airplanes);
 
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_read_jumps, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_edit_clock, &QPushButton::setEnabled);
@@ -274,9 +274,9 @@ void N3Widget::deleteDeviceFrame()
     disconnect(&device_frame->pb_read_jumps, &QPushButton::clicked, this, &N3Widget::read_jumps);
     disconnect(device_frame->m_set_clock_action, &QAction::triggered, this, &N3Widget::set_current_datetime);
     disconnect(&device_frame->pb_edit_clock, &QPushButton::clicked, this, &N3Widget::choice_datetime);
-    disconnect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::n3Settings);
-    disconnect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::n3Dropzones);
-    disconnect(&device_frame->tb_aircrafts, &QToolButton::clicked, this, &N3Widget::n3Airplanes);
+    disconnect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::N3Settings);
+    disconnect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::N3Dropzones);
+    disconnect(&device_frame->tb_aircrafts, &QToolButton::clicked, this, &N3Widget::N3Airplanes);
 
     delete device_frame;
     device_frame = nullptr;
@@ -362,7 +362,7 @@ void N3Widget::read_last_jumps(unsigned int n_jumps)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3Widget::names_dialog(const QString& title, const N3Names &names)
+void N3Widget::N3Names_dialog(const QString& title, const N3Names &names)
 {
     std::unique_ptr<N3NamesDialog> nd = std::make_unique<N3NamesDialog>(title, names, this);
     if(nd->exec() == QDialog::Accepted)
@@ -375,7 +375,7 @@ void N3Widget::names_dialog(const QString& title, const N3Names &names)
                 {
                     m_device->airplanes().setActive(nd->new_n3names().active_index_one());
                     m_device->summary().setAPIndex(nd->new_n3names().active_index_one());
-                    m_device->write_summaty_jumps();
+                    m_device->write_summary_jumps();
                 }
 
                 if(nd->isChangedData())
@@ -390,7 +390,7 @@ void N3Widget::names_dialog(const QString& title, const N3Names &names)
                 {
                     m_device->dropzones().setActive(nd->new_n3names().active_index_one());
                     m_device->summary().setDZIndex(nd->new_n3names().active_index_one());
-                    m_device->write_summaty_jumps();
+                    m_device->write_summary_jumps();
                 }
 
                 if(nd->isChangedData())
@@ -540,7 +540,7 @@ void N3Widget::choice_datetime()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3Widget::n3Settings()
+void N3Widget::N3Settings()
 {
     if(!m_device) return;
 
@@ -556,17 +556,17 @@ void N3Widget::n3Settings()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3Widget::n3Dropzones()
+void N3Widget::N3Dropzones()
 {
     if(!m_device) return;
-    names_dialog("Dropzones", static_cast<const N3Names&>(m_device->dropzones()));
+    N3Names_dialog("Dropzones", static_cast<const N3Names&>(m_device->dropzones()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3Widget::n3Airplanes()
+void N3Widget::N3Airplanes()
 {
     if(!m_device) return;    
-    names_dialog("Airplanes", static_cast<const N3Names&>(m_device->airplanes()));
+    N3Names_dialog("Airplanes", static_cast<const N3Names&>(m_device->airplanes()));
 }
 
 

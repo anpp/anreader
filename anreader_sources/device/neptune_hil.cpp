@@ -11,6 +11,7 @@ void Neptune_HiL::read_details_jumps(unsigned int jump_index, unsigned int num_j
 
     uint num_cicles = num_jumps / Neptune_HiL_defs::jumps_rate;
     uint rest = num_jumps - (Neptune_HiL_defs::jumps_rate * num_cicles);
+
     for(uint i = 0; i < num_cicles; ++i)
     {
         executeCommand(N3Commands::ReadMemory, N3Addresses::JumpDetails + N3Constants::JumpRecordSize * jump_index, N3Constants::JumpRecordSize * Neptune_HiL_defs::jumps_rate);
@@ -80,7 +81,7 @@ void Neptune_HiL::write_airplanes()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void Neptune_HiL::write_summaty_jumps()
+void Neptune_HiL::write_summary_jumps()
 {
     write_to_memory(N3Addresses::Summary, N3Constants::SummarySize, rawDataSummary);
 }

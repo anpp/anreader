@@ -104,7 +104,7 @@ void N3SummaryInfo::setWord(uint16_t value, int offset)
     {
         QByteArray bytes(BytesOperations::UIntToBytes(value));
 
-        m_data[offset] = bytes[0];
+        m_data[offset + 0] = bytes[0];
         m_data[offset + 1] = bytes[1];
     }
 }

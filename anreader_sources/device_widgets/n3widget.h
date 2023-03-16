@@ -88,7 +88,7 @@ private:
     void deleteDeviceFrame();
     void makeFrame();
     void read_last_jumps(unsigned int n_jumps);
-    void names_dialog(const QString& title, const N3Names& names);
+    void N3Names_dialog(const QString& title, const N3Names& names);
 
     DeviceFrame *device_frame = nullptr;
     std::unique_ptr<QTimer> m_clock_timer;
@@ -102,9 +102,9 @@ public slots:
     void clockUpdate();
     void set_current_datetime();
     void choice_datetime();
-    void n3Settings();
-    void n3Dropzones();
-    void n3Airplanes();
+    void N3Settings();
+    void N3Dropzones();
+    void N3Airplanes();
 };
 
 #endif // N3WIDGET_H

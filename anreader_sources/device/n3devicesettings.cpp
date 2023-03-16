@@ -6,7 +6,7 @@ void N3DeviceSettings::calculateCheckSum()
 {
     if(m_data.size() < static_cast<int>(N3Constants::DeviceSettingsSize)) return;
     m_data[0] = 1;
-    for(unsigned int i = 1; i < N3Constants::DeviceSettingsSize; i++)
+    for(unsigned int i = 2; i < N3Constants::DeviceSettingsSize; i++)
         m_data[0] = m_data[0] + m_data[i];
 }
 
