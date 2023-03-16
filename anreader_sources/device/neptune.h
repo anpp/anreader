@@ -105,7 +105,8 @@ private:
     void setAckBuffer(const QByteArray &data);
     void processType0Record(const QByteArray &data);
     void processReadMemory(const QByteArray &data);
-    void processReadDateTime(const QByteArray &data);
+    void processWriteMemory(const QByteArray &data);
+    void processReadDateTime(const QByteArray &data);    
     void processDefault(const QByteArray &data);
     void encrypt(uint32_t &dword0, uint32_t &dword1, uint8_t NumRounds) const;
     void decrypt(uint32_t &dword0, uint32_t &dword1, uint8_t NumRounds) const;

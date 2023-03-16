@@ -58,8 +58,15 @@ bool N3Names::active(uint index) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+uint N3Names::active_index_one() const
+{
+    return m_map_active.key(true);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 void N3Names::setActive(uint index, bool value) const
 {
+    m_map_active.clear();
     m_map_active[index] = value;
 }
 

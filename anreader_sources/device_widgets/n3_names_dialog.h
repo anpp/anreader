@@ -29,6 +29,8 @@ public:
     ~N3NamesDialog();
 
     bool isChanged() const;
+    bool isChangedCurrentName() const;
+    bool isChangedData() const;
     const N3Names& new_n3names() const { return *m_new_n3names; }
 
 private:

@@ -22,7 +22,8 @@ class AbstractDevice : public QObject
 {    
     Q_OBJECT
 public:
-    enum DeviceStates: int {Unk = -1, Disconnected = 0, Connected = 1, Initializing = 2, Ready = 3, Processing = 4, Receiving = 5, Error = 6};
+    enum DeviceStates: int {Unk = -1, Disconnected = 0, Connected = 1, Initializing = 2, Ready = 3, Processing = 4,
+                            Receiving = 5, Sending = 6, Error = 7};
 
     explicit AbstractDevice(QString portName, QObject *parent = nullptr);
     virtual ~AbstractDevice();
@@ -48,6 +49,7 @@ public:
     virtual void write_settings() = 0;
     virtual void write_dropzones() = 0;
     virtual void write_airplanes() = 0;
+    virtual void write_summaty_jumps() = 0;
 
     virtual int revision() const = 0;
     virtual int product_type() const = 0;
@@ -55,8 +57,8 @@ public:
 
     virtual const QString getSerialNumber() const = 0;
 
-    const ASummaryInfo& summary() const;
-    const ADeviceSettings& settings() const;
+    ASummaryInfo& summary() const;
+    ADeviceSettings& settings() const;
     const ANames& dropzones() const;
     const ANames& airplanes() const;
     const QString& state_str() const;
@@ -83,6 +85,7 @@ protected:
     std::unique_ptr<QState> readyState;
     std::unique_ptr<QState> processingState;
     std::unique_ptr<QState> receivingState;
+    std::unique_ptr<QState> sendingState;
     std::unique_ptr<QState> errorState;
 
     t_jumps m_jumps;    
@@ -112,6 +115,7 @@ signals:
     void readyStateSignal();
     void processingStateSignal();
     void receiveingStateSignal();
+    void sendingStateSignal();
     void disconnectStateSignal();
     void allCommandsComplete();
     void changedState();
@@ -138,6 +142,7 @@ public slots:
     virtual void slotReadyExit();
     virtual void slotProcessing();
     virtual void slotReceiving();
+    virtual void slotSending();
     virtual void slotError(const QString&);
     virtual void slotStateError();
     virtual void slotDisconnected();    

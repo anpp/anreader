@@ -358,9 +358,7 @@ void Neptune::sendLastCommand()
             emit log(tr("Error: too huge data size!"));
             emit readyStateSignal();
             break;
-        }
-
-        emit log(tr("Writing data") + ": <FONT color=#006b00>" + QByteArray::fromRawData(last_command.m_bytes_to_write, last_command.m_length).toHex() + "</FONT>");
+        }                
 
         address_bytes = BytesOperations::UIntToBytes(last_command.m_address);
 
@@ -376,6 +374,8 @@ void Neptune::sendLastCommand()
         command_bytes[data_length + 1] = calculateChecksum(command_bytes);
 
         outBuffer = cryptPacket(command_bytes, true);
+
+        emit sendingStateSignal();
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
 
         break;
@@ -423,7 +423,8 @@ void Neptune::processData(QByteArray data)
 
     setAckBuffer(data);
 
-    if(!(state() == DeviceStates::Processing || state() == DeviceStates::Receiving || state() == DeviceStates::Initializing))
+    if(!(state() == DeviceStates::Processing || state() == DeviceStates::Receiving
+         || state() == DeviceStates::Initializing || state() == DeviceStates::Sending))
     {
         if(ackBuffer.size() < 2)
             return;
@@ -471,7 +472,7 @@ void Neptune::processData(QByteArray data)
         processDefault(data);
         break;
     case N3Commands::WriteMemory:
-        processDefault(data);
+        processWriteMemory(data);
         break;
     case N3Commands::EndComm:
         destroy_port();
@@ -543,6 +544,31 @@ void Neptune::processReadMemory(const QByteArray &data)
             }
 
             emit readyStateSignal();
+        }
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void Neptune::processWriteMemory(const QByteArray &data)
+{
+    inBuffer.append(data);
+
+    if(state() == DeviceStates::Sending)
+    {
+        if(checkAcknowledgment(inBuffer))
+        {
+            inBuffer.clear();
+            emit stepProgress();
+            emit log(tr("Sended data") + ": <FONT color=#006b00>" + QByteArray::fromRawData(last_command.m_bytes_to_write, last_command.m_length).toHex() + "</FONT>");
+            emit readyStateSignal();
+        }
+        else
+        {
+            if(inBuffer.size() == 1)
+                return;
+
+            emit errorSignal("Acknowledgement error");
+            return;
         }
     }
 }

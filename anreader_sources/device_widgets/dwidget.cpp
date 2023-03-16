@@ -139,7 +139,8 @@ void DWidget::stateChanged()
 
     connect_button.setEnabled(AbstractDevice::DeviceStates::Error == state || AbstractDevice::DeviceStates::Ready == state || AbstractDevice::DeviceStates::Disconnected == state);
     setButton(state == AbstractDevice::DeviceStates::Disconnected);
-    emit controls_is_enabled(!(AbstractDevice::DeviceStates::Processing == state || AbstractDevice::DeviceStates::Receiving == state));
+    emit controls_is_enabled(!(AbstractDevice::DeviceStates::Processing == state
+                               || AbstractDevice::DeviceStates::Receiving == state || AbstractDevice::DeviceStates::Sending == state));
 }
 
 //----------------------------------------------------------------------------------------------------------------------

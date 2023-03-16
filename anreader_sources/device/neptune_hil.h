@@ -25,7 +25,7 @@ public:
     void write_settings() override;
     void write_dropzones() override;
     void write_airplanes() override;
-
+    void write_summaty_jumps() override;
 
 private:
     void write_to_memory(unsigned int address, unsigned int length, QByteArray &wbytes);

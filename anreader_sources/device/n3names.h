@@ -24,6 +24,7 @@ public:
     bool used(uint index) const override;
     bool hidden(uint index) const override;    
     bool active(uint index) const override;
+    uint active_index_one() const override;
 
     void setActive(uint index, bool value = true) const override;
     void setHidden(uint index, bool value = true) override;

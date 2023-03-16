@@ -19,6 +19,7 @@ public:
     virtual bool used(uint index) const = 0;
     virtual bool hidden(uint index) const = 0;
     virtual bool active(uint index) const = 0;
+    virtual uint active_index_one() const = 0; //могут быть два значения активны в сигналах (alarms) - для freefall и canopy
 
     virtual void setActive(uint index, bool value = true) const = 0;
     virtual void setHidden(uint index, bool value = true) = 0;

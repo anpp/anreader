@@ -80,6 +80,12 @@ void Neptune_HiL::write_airplanes()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void Neptune_HiL::write_summaty_jumps()
+{
+    write_to_memory(N3Addresses::Summary, N3Constants::SummarySize, rawDataSummary);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::write_to_memory(unsigned int address, unsigned int length, QByteArray &wbytes)
 {
     if(0 == length || 0 == address)
@@ -87,6 +93,8 @@ void Neptune_HiL::write_to_memory(unsigned int address, unsigned int length, QBy
 
     uint rest = length % N3Constants::WriteRateDataSize;
     uint num_cicles = (length / N3Constants::WriteRateDataSize);
+
+    emit setProgress(num_cicles + (rest > 0 ? 1 : 0));
 
     for(uint i = 0; i < num_cicles; ++i)
     {

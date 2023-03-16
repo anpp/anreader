@@ -20,8 +20,9 @@ enum si_offsets: unsigned {odometerJumps = 2,
 class N3SummaryInfo : public ASummaryInfo
 {
 public:
-    explicit N3SummaryInfo(const QByteArray& adata): ASummaryInfo(adata) {};
+    explicit N3SummaryInfo(QByteArray& adata): ASummaryInfo(adata) {};
     virtual ~N3SummaryInfo() override {}
+    void calculateCheckSum();
 
     virtual uint16_t odometerJumps() const override;
     virtual uint16_t totalJumps() const override;
@@ -34,6 +35,11 @@ public:
     virtual uint16_t firstJumpNumber() const override;
     virtual uint16_t currentDZIndex() const override;
     virtual uint16_t currentAPIndex() const override;
+    void setDZIndex(uint16_t value) override;
+    void setAPIndex(uint16_t value) override;
+
+private:
+    void setWord(uint16_t value, int offset);
 
 };
 

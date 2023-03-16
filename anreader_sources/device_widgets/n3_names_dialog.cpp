@@ -42,6 +42,18 @@ N3NamesDialog::~N3NamesDialog()
 //--------------------------------------------------------------------------------------------------------------
 bool N3NamesDialog::isChanged() const
 {
+    return !(*m_new_n3names == m_n3names);
+}
+
+//--------------------------------------------------------------------------------------------------------------
+bool N3NamesDialog::isChangedCurrentName() const
+{
+    return (m_new_n3names->active_index_one() != m_n3names.active_index_one());
+}
+
+//--------------------------------------------------------------------------------------------------------------
+bool N3NamesDialog::isChangedData() const
+{
     return m_new_n3names->data() != m_n3names.data();
 }
 

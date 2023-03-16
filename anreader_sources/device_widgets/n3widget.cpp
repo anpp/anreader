@@ -371,13 +371,33 @@ void N3Widget::names_dialog(const QString& title, const N3Names &names)
         {
             if(title == "Airplanes")
             {
-                ((Neptune*)m_device.get())->setRawDataAPNames(nd->new_n3names().data());
-                m_device->write_airplanes();
+                if(nd->isChangedCurrentName())
+                {
+                    m_device->airplanes().setActive(nd->new_n3names().active_index_one());
+                    m_device->summary().setAPIndex(nd->new_n3names().active_index_one());
+                    m_device->write_summaty_jumps();
+                }
+
+                if(nd->isChangedData())
+                {
+                    ((Neptune*)m_device.get())->setRawDataAPNames(nd->new_n3names().data());
+                    m_device->write_airplanes();
+                }
             }
             if(title == "Dropzones")
-            {
-                ((Neptune*)m_device.get())->setRawDataDZNames(nd->new_n3names().data());
-                m_device->write_dropzones();
+            {                
+                if(nd->isChangedCurrentName())
+                {
+                    m_device->dropzones().setActive(nd->new_n3names().active_index_one());
+                    m_device->summary().setDZIndex(nd->new_n3names().active_index_one());
+                    m_device->write_summaty_jumps();
+                }
+
+                if(nd->isChangedData())
+                {
+                    ((Neptune*)m_device.get())->setRawDataDZNames(nd->new_n3names().data());
+                    m_device->write_dropzones();
+                }
             }
         }
     }
@@ -418,6 +438,9 @@ void N3Widget::stateChanged()
             setImage("n3_refresh.png");
             break;
         case AbstractDevice::DeviceStates::Receiving:
+            setImage("n3_refresh.png");
+            break;
+        case AbstractDevice::DeviceStates::Sending:
             setImage("n3_refresh.png");
             break;
         case AbstractDevice::DeviceStates::Ready:
@@ -506,8 +529,7 @@ void N3Widget::set_current_datetime()
 //----------------------------------------------------------------------------------------------------------------------
 void N3Widget::choice_datetime()
 {
-    if(!m_device)
-        return;
+    if(!m_device) return;
 
     std::unique_ptr<ChoiceDateTimeDialog> cdtDialog = std::make_unique<ChoiceDateTimeDialog>(m_device->dateTime(), this);
     if(QDialog::Accepted == cdtDialog->exec())
@@ -520,15 +542,14 @@ void N3Widget::choice_datetime()
 //----------------------------------------------------------------------------------------------------------------------
 void N3Widget::n3Settings()
 {
-    if(!m_device)
-        return;
+    if(!m_device) return;
 
     std::unique_ptr<N3MainSettingsDialog> sd = std::make_unique<N3MainSettingsDialog>(static_cast<const N3DeviceSettings&>(m_device->settings()), this);
     if(sd->exec() == QDialog::Accepted)
     {
         if(sd->isChanged())
         {
-            ((Neptune*)m_device.get())->setRawDataSettings(sd->new_settings().data());
+            ((Neptune*)m_device.get())->setRawDataSettings(sd->new_settings().data());            
             m_device->write_settings();
         }
     }
@@ -537,16 +558,14 @@ void N3Widget::n3Settings()
 //----------------------------------------------------------------------------------------------------------------------
 void N3Widget::n3Dropzones()
 {
-    if(!m_device)
-        return;
+    if(!m_device) return;
     names_dialog("Dropzones", static_cast<const N3Names&>(m_device->dropzones()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void N3Widget::n3Airplanes()
 {
-    if(!m_device)
-        return;
+    if(!m_device) return;    
     names_dialog("Airplanes", static_cast<const N3Names&>(m_device->airplanes()));
 }
 

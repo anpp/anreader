@@ -13,6 +13,7 @@ const static QString StateNames[] = {QObject::tr("Disconnected"),
                                QObject::tr("Ready"),
                                QObject::tr("Processing..."),
                                QObject::tr("Receiving data..."),
+                               QObject::tr("Sending data..."),
                                QObject::tr("Error"),
                               };
 
@@ -33,6 +34,7 @@ AbstractDevice::AbstractDevice(QString portName, QObject *parent) : QObject(pare
     readyState = std::make_unique<QState>(commonState.get());
     processingState = std::make_unique<QState>(commonState.get());
     receivingState = std::make_unique<QState>(commonState.get());
+    sendingState = std::make_unique<QState>(commonState.get());
     errorState = std::make_unique<QState>();
 
 
@@ -68,14 +70,18 @@ void AbstractDevice::initStateMachine()
 
     processingState->addTransition(this, &AbstractDevice::receiveingStateSignal, receivingState.get());
     processingState->addTransition(this, &AbstractDevice::readyStateSignal, readyState.get());
+    processingState->addTransition(this, &AbstractDevice::sendingStateSignal, sendingState.get());
     receivingState->addTransition(this, &AbstractDevice::readyStateSignal, readyState.get());
-    receivingState->addTransition(this, &AbstractDevice::processingStateSignal, processingState.get());
+    receivingState->addTransition(this, &AbstractDevice::processingStateSignal, processingState.get());    
+    sendingState->addTransition(this, &AbstractDevice::readyStateSignal, readyState.get());
+    sendingState->addTransition(this, &AbstractDevice::processingStateSignal, processingState.get());
 
     connect(connectedState.get(), &QState::entered, this, &AbstractDevice::slotConnected);
     connect(initializingState.get(), &QState::entered, this, &AbstractDevice::slotInitializing);
     connect(readyState.get(), &QState::entered, this, &AbstractDevice::slotReady, Qt::QueuedConnection);
     connect(processingState.get(), &QState::entered, this, &AbstractDevice::slotProcessing, Qt::QueuedConnection);
     connect(receivingState.get(), &QState::entered, this, &AbstractDevice::slotReceiving, Qt::QueuedConnection);
+    connect(sendingState.get(), &QState::entered, this, &AbstractDevice::slotSending, Qt::DirectConnection);
     connect(errorState.get(), &QState::entered, this, &AbstractDevice::slotStateError, Qt::QueuedConnection);
     connect(disconnectedState.get(), &QState::entered, this, &AbstractDevice::slotDisconnected);
 
@@ -87,6 +93,7 @@ void AbstractDevice::initStateMachine()
     readyState->assignProperty(sm.get(), "state", DeviceStates::Ready);
     processingState->assignProperty(sm.get(), "state", DeviceStates::Processing);
     receivingState->assignProperty(sm.get(), "state", DeviceStates::Receiving);
+    sendingState->assignProperty(sm.get(), "state", DeviceStates::Sending);
     errorState->assignProperty(sm.get(), "state", DeviceStates::Error);
     disconnectedState->assignProperty(sm.get(), "state", DeviceStates::Disconnected);
 
@@ -163,13 +170,13 @@ AbstractDevice::DeviceStates AbstractDevice::state() const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-const ASummaryInfo &AbstractDevice::summary() const
+ASummaryInfo &AbstractDevice::summary() const
 {
     return *m_summary;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-const ADeviceSettings &AbstractDevice::settings() const
+ADeviceSettings &AbstractDevice::settings() const
 {
     return *m_settings;
 }
@@ -342,6 +349,13 @@ void AbstractDevice::slotProcessing()
 void AbstractDevice::slotReceiving()
 {    
     emit log("STATE MACHINE: Receiving data...");
+    emit changedState();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void AbstractDevice::slotSending()
+{
+    emit log("STATE MACHINE: Sending data...");
     emit changedState();
 }
 
