@@ -18,16 +18,20 @@ QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
     {
         QRadioButton *rb = nullptr;
         QLineEdit *le = nullptr;
+        QCheckBox *cb = nullptr;
 
         switch(static_cast<N3NamesModel_defs>(index.column()))
         {
         case N3NamesModel_defs::Active:
             rb = new QRadioButton(parent);
+            connect(rb, &QRadioButton::toggled, this, &N3NamesDelegate::radio_toggled);
             rb->setCheckable(true);
             return rb;
 
         case N3NamesModel_defs::Used:
-            return new QCheckBox(parent);
+            cb = new QCheckBox(parent);
+            connect(cb, &QCheckBox::toggled, this, &N3NamesDelegate::check_toggled);
+            return cb;
 
         case N3NamesModel_defs::Hidden:
             return new QCheckBox(parent);
@@ -60,10 +64,7 @@ void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
     case N3NamesModel_defs::Active:
         rb = static_cast<QRadioButton*>(editor);
         if(nullptr != rb)
-        {
-            connect(rb, &QRadioButton::toggled, this, &N3NamesDelegate::radio_toggled);
             rb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
-        }
         break;
 
     case N3NamesModel_defs::Used:
@@ -74,10 +75,7 @@ void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
     case N3NamesModel_defs::Hidden:
         cb = static_cast<QCheckBox*>(editor);
         if(nullptr != cb)
-        {
-            connect(cb, &QCheckBox::toggled, this, &N3NamesDelegate::check_toggled);
-            cb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
-        }
+            cb->setChecked(index.model()->data(index, Qt::EditRole).toBool());       
         break;
 
     case N3NamesModel_defs::Name:
@@ -101,21 +99,15 @@ void N3NamesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, c
     if(index.column() == static_cast<int>(N3NamesModel_defs::Active))
     {
         QRadioButton *rb = static_cast<QRadioButton*>(editor);
-        if(nullptr != rb)
-        {
-            disconnect(rb, &QRadioButton::toggled, this, &N3NamesDelegate::radio_toggled);
+        if(nullptr != rb)        
             model->setData(index, rb->isChecked() , Qt::EditRole);
-        }
     }
 
     if(index.column() == static_cast<int>(N3NamesModel_defs::Hidden))
     {
         QCheckBox *cb = static_cast<QCheckBox*>(editor);
         if(nullptr != cb)
-        {
-            disconnect(cb, &QCheckBox::toggled, this, &N3NamesDelegate::check_toggled);
             model->setData(index, cb->isChecked() , Qt::EditRole);
-        }
     }
 
     if(index.column() == static_cast<int>(N3NamesModel_defs::Name))
