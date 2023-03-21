@@ -64,7 +64,7 @@ uint N3Names::active_index_one() const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3Names::setActive(uint index, bool value) const
+void N3Names::setActive(uint index, bool value)
 {
     m_map_active.clear();
     m_map_active[index] = value;
@@ -103,6 +103,13 @@ void N3Names::setName(uint index, const QString value)
 
         m_names->clear(); //очистка списка имен, при первом обращении заполнится вновь из сырых данных
     }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Names::setFilled(const uchar value)
+{
+    if(m_data.size() > static_cast<int>(N3NamesValues::offset))
+        m_data[1] = value;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

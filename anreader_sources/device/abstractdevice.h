@@ -59,8 +59,8 @@ public:
 
     ASummaryInfo& summary() const;
     ADeviceSettings& settings() const;
-    const ANames& dropzones() const;
-    const ANames& airplanes() const;
+    ANames& dropzones() const;
+    ANames& airplanes() const;
     const QString& state_str() const;
     const QDateTime& dateTime() const;
 

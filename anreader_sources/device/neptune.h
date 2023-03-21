@@ -100,6 +100,8 @@ protected:
     QByteArray rawAPNames;
     QByteArray rawDateTime;
 
+    volatile unsigned int m_NumBlocks{0};
+
 private:
     void init();
     void setAckBuffer(const QByteArray &data);
@@ -121,6 +123,7 @@ private:
     void addJumpsToVector();
     void sendLastCommand();
     bool checkInBuffer();
+    void dequeueCommand();
 
     QVector<s_key_item> new_key{{-86, true}, {21, false}, {4, false}, {11, false}, {22, false}, {20, false}, {10, false}, {105, true}, {5, false}, {6, false}, {8, false}, {68, true}, {7, false}, {9, false}, {24, false}, {23, false}};
     QVector<s_key_item> old_key{{78, true}, {6, false}, {24, false}, {22, false}, {4, false}, {23, false}, {21, false}, {11, false}, {8, false}, {117, true}, {5, false}, {20, false}, {7, false}, {9, false}, {126, true}, {19, false}};
@@ -131,14 +134,12 @@ private:
     QByteArray ackBuffer;
 
     mutable QByteArray* rawData = nullptr;
-    int outBufferPosition{0};
     uint16_t memory_block_length{0};
     QQueue<queue_command> m_commands;
 
     uint32_t m_key[4]{0, 0, 0, 0};
     QByteArray Type0Record;
-    uint type0Size = 0;
-    unsigned int m_NumBlocks{0};
+    uint type0Size = 0;    
     int m_correct_date_koeff = 0;
 
     queue_command last_command{N3Commands::None, 0, 0, 0, nullptr};

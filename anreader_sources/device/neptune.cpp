@@ -225,9 +225,9 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::executeCommand(N3Commands command, unsigned int address, unsigned int length, char *wbytes, quint16 delay_ms)
 {
-    startTimeoutTimer(N3Constants::TimeoutInMs);
+    startTimeoutTimer(N3Constants::TimeoutInMs);    
 
-    // Пока оставил инициализацию тут, но надо бы перенести в переход в состояние Initializing... Работает и так, но может выстрелить.
+    // Пока оставил инициализацию тут, но надо бы перенести в переход в состояние Initializing... Работает и так, но может выстрелить.        
     if((command == N3Commands::InitCommand) && (state() == DeviceStates::Connected))
     {
         last_command = {command, address, length, delay_ms, wbytes};
@@ -237,9 +237,7 @@ void Neptune::executeCommand(N3Commands command, unsigned int address, unsigned 
         Type0Record.clear();
         emit sendPacket("018080", N3Constants::DelayInMs);
     }
-
-    else
-
+    else        
         if(state() == DeviceStates::Ready)
         {
             last_command = {command, address, length, delay_ms, wbytes};
@@ -247,11 +245,17 @@ void Neptune::executeCommand(N3Commands command, unsigned int address, unsigned 
         }
         else
         {
-            if(command != N3Commands::KeepAlive)
+            if(state() == DeviceStates::Sending && m_NumBlocks > 0 && N3Commands::WriteMemory == last_command.m_command)
             {
-                queue_command c = {command, address, length, delay_ms, wbytes};
-                m_commands.enqueue(c);
+                last_command = {command, address, length, delay_ms, wbytes};
+                sendLastCommand();
             }
+            else
+                if(command != N3Commands::KeepAlive)
+                {
+                    queue_command c = {command, address, length, delay_ms, wbytes};
+                    m_commands.enqueue(c);
+                }
         }
 }
 
@@ -375,7 +379,8 @@ void Neptune::sendLastCommand()
 
         outBuffer = cryptPacket(command_bytes, true);
 
-        emit sendingStateSignal();
+        if(state() != DeviceStates::Sending)
+            emit sendingStateSignal();
         emit sendPacket(*outBuffer, last_command.m_delay_ms);
 
         break;
@@ -409,7 +414,6 @@ bool Neptune::checkInBuffer()
     }
     return true;
 }
-
 
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::processData(QByteArray data)
@@ -560,7 +564,18 @@ void Neptune::processWriteMemory(const QByteArray &data)
             inBuffer.clear();
             emit stepProgress();
             emit log(tr("Sended data") + ": <FONT color=#006b00>" + QByteArray::fromRawData(last_command.m_bytes_to_write, last_command.m_length).toHex() + "</FONT>");
-            emit readyStateSignal();
+
+            if(--m_NumBlocks <= 0)
+                emit readyStateSignal();
+            else
+            {
+                if(m_commands.count() == 0)
+                {
+                    emit errorSignal("Iteration count mismatch");
+                    return;
+                }
+                dequeueCommand();
+            }
         }
         else
         {
@@ -853,14 +868,12 @@ void Neptune::slotReady()
 { 
     AbstractDevice::slotReady();
 
-    queue_command command;
+    m_NumBlocks = 0; //!!!
 
     if (m_commands.count())
+        dequeueCommand();
+    else
     {
-        command = m_commands.dequeue();
-        executeCommand(command.m_command, command.m_address, command.m_length, command.m_bytes_to_write, command.m_delay_ms);
-    }
-    else {
         keep_alive_worker.start();
         emit allCommandsComplete();
     }
@@ -897,6 +910,16 @@ void Neptune::slotProcessing()
 }
 
 
+//----------------------------------------------------------------------------------------------------------------------
+void Neptune::dequeueCommand()
+{
+    queue_command command;
+    if (m_commands.count())
+    {
+        command = m_commands.dequeue();
+        executeCommand(command.m_command, command.m_address, command.m_length, command.m_bytes_to_write, command.m_delay_ms);
+    }
+}
 
 
 

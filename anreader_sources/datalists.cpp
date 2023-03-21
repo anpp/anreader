@@ -153,7 +153,7 @@ void DataLists::saveDataByKind(const datakind dk) const
     for(auto it = mdl.begin(); it != mdl.end(); ++it)
     {
         QString key = (*it).first.trimmed();
-        if((*it).first.trimmed() != "") // в новом Атласе 2 такое встретилось
+        if(key != "") // в новом Атласе 2 такое встретилось
           qsettings.setValue("/" + key, (*it).second);
     }
     qsettings.endGroup();

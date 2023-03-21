@@ -95,7 +95,8 @@ void Neptune_HiL::write_to_memory(unsigned int address, unsigned int length, QBy
     uint rest = length % N3Constants::WriteRateDataSize;
     uint num_cicles = (length / N3Constants::WriteRateDataSize);
 
-    emit setProgress(num_cicles + (rest > 0 ? 1 : 0));
+    m_NumBlocks += num_cicles + (rest > 0 ? 1 : 0);
+    emit setProgress(m_NumBlocks);
 
     for(uint i = 0; i < num_cicles; ++i)
     {
