@@ -92,6 +92,7 @@ protected:
     std::unique_ptr<CustomJump> jump_from_raw(uint index) const;
     int m_software_revision{0};
     N3Types m_product_type = N3Types::Unknown;
+    N3CommTypes m_commutication_type = N3CommTypes::Unknown;
 
     QByteArray rawDataDetails;
     QByteArray rawDataSummary;

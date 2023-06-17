@@ -817,10 +817,16 @@ bool Neptune::verifyType0Record()
 
     if(Type0Record.at(15) <= 12)
         m_product_type = static_cast<N3Types>(Type0Record.at(15));
+
+    if(3 == Type0Record.at(2) || 4 == Type0Record.at(2) || 5 == Type0Record.at(2))
+        m_commutication_type = static_cast<N3CommTypes>(Type0Record.at(2));
+
     m_software_revision = Type0Record[4];
 
+
     emit log("Software revision: " + QString::number(m_software_revision));
-    emit log("Product type: " + QString::number(Type0Record.at(15)) + " - " + N3TypeNames[static_cast<int>(m_product_type)]);
+    emit log("Product type: " + QString::number(static_cast<int>(m_product_type)) + " - " + N3TypeNames[static_cast<int>(m_product_type)]);
+    emit log("Communication type: " + QString::number(static_cast<int>(m_commutication_type)));
     return (N3Types::Unknown != m_product_type);
 }
 
