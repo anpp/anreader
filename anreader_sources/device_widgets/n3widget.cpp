@@ -9,11 +9,12 @@
 
 
 const static QString ExpiredNames[] =
-                              {QObject::tr("Fixing jumps's dates for N3 software revision 3 (2017-08 expired)"),
-                               QObject::tr("Fixing jumps's dates for N3 software revision 4 (2025-08 expired)"),
-                               QObject::tr("Fixing jumps's dates for Atlas software revision 3 (2025-08 expired)"),
-                               QObject::tr("Fixing jumps's dates for Atlas (2028-04 expired)"),
-                              };
+    {QObject::tr("Fixing jumps's dates for N3 software revision 3 (2017-08 expired)"),
+     QObject::tr("Fixing jumps's dates for N3 software revision 4 (2025-08 expired)"),
+     QObject::tr("Fixing jumps's dates for Atlas software revision 3 (2025-08 expired)"),
+     QObject::tr("Fixing jumps's dates for Atlas (2028-04 expired)"),
+     QObject::tr("Fixing jumps's dates for Atlas 2 software revision 5 (2025-08 expired)"),
+     };
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -147,6 +148,13 @@ int DeviceFrame::calcCorrectKoeff() const
             case ExpiredType::Atlas:
                 month_diff = ((QDate::currentDate().year() - 2007) * 12) + 128 + QDate::currentDate().month();
                 break;
+            case ExpiredType::AtlasRev3:
+                month_diff = (QDate::currentDate().year() - 2015) * 12 + QDate::currentDate().month();
+                break;
+            case ExpiredType::Atlas2Rev5:
+                month_diff = (QDate::currentDate().year() - 2015) * 12 + QDate::currentDate().month();
+                break;
+
             default:
                 koeff = 0;
                 break;
@@ -154,8 +162,6 @@ int DeviceFrame::calcCorrectKoeff() const
             if(month_diff > 0)
                 koeff = month_diff / 128;
         }
-    //qDebug() << month_diff;
-    //qDebug() << koeff;
     return koeff;
 }
 
@@ -309,6 +315,11 @@ void N3Widget::makeFrame()
         if(QDate::currentDate() >= QDate(2028, 4, 1))
             et = DeviceFrame::ExpiredType::Atlas;
         break;
+    case N3Types::Atlas2:
+        if((m_device->revision() == 5) && (QDate::currentDate() >= QDate(2025, 8, 1)))
+            et = DeviceFrame::ExpiredType::Atlas2Rev5;
+        break;
+
     default:
         et = DeviceFrame::ExpiredType::None;
         break;

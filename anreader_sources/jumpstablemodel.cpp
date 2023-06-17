@@ -24,7 +24,7 @@ QVariant JumpsTableModel::data(const QModelIndex &index, int role) const
     j_atr = m_rows->at(index.row())->getPairs();
 
     QVariant row_value = (*j_atr).at(index.column()).second;
-    int inner_index = N3Jump::index((*j_atr).at(index.column()).first);
+    size_t inner_index = N3Jump::index((*j_atr).at(index.column()).first);
 
     if(Qt::DisplayRole == role && CustomJumpNames::Deleted != inner_index)
     {
@@ -81,7 +81,7 @@ Qt::ItemFlags JumpsTableModel::flags(const QModelIndex &index) const
 //----------------------------------------------------------------------------------------------------------------------
 int JumpsTableModel::rowCount(const QModelIndex&) const
 {
-    return (m_rows ? m_rows->size() : 0);
+    return (m_rows ? static_cast<int>(m_rows->size()) : 0);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -126,10 +126,10 @@ void JumpsTableModel::takeLastJump(int &value)
 bool JumpsTableModel::addItem(const std::shared_ptr<CustomJump>& jump)
 {
     std::unique_ptr<t_jump_attribute> j_atr = jump.get()->getPairs();
-    if(!checkColumns((*j_atr).size()))
+    if(!checkColumns(static_cast<int>((*j_atr).size())))
         return false;
 
-    this->beginInsertRows(QModelIndex(), m_rows->size(), m_rows->size());
+    this->beginInsertRows(QModelIndex(), static_cast<int>(m_rows->size()), static_cast<int>(m_rows->size()));
 
     m_rows->push_back(jump);
 
@@ -143,10 +143,10 @@ bool JumpsTableModel::addItems(const t_rows& jumps)
     if(!jumps.size()) return false;
 
     std::unique_ptr<t_jump_attribute> j_atr = jumps.at(0)->getPairs();
-    if(!checkColumns((*j_atr).size()))
+    if(!checkColumns(static_cast<int>((*j_atr).size())))
         return false;
 
-    this->beginInsertRows(QModelIndex(), m_rows->size(), m_rows->size() + jumps.size() - 1);
+    this->beginInsertRows(QModelIndex(), static_cast<int>(m_rows->size()), static_cast<int>(m_rows->size() + jumps.size() - 1));
 
     for(const auto& jump: jumps)
         m_rows->push_back(jump);
@@ -162,13 +162,13 @@ bool JumpsTableModel::moveItems(std::unique_ptr<t_rows> &jumps)
     if(!jumps->size()) return false;
 
     std::unique_ptr<t_jump_attribute> j_atr = jumps->at(0)->getPairs();
-    if(!checkColumns((*j_atr).size()))
+    if(!checkColumns(static_cast<int>((*j_atr).size())))
         return false;
 
     if(m_rows->size() > 0)
         clear();
 
-    this->beginInsertRows(QModelIndex(), 0, jumps->size() - 1);
+    this->beginInsertRows(QModelIndex(), 0, static_cast<int>(jumps->size() - 1));
 
     m_rows = std::move(jumps);
 
@@ -194,7 +194,7 @@ void JumpsTableModel::clear()
     if (m_rows->size() == 0)
             return;
 
-    this->beginRemoveRows(QModelIndex(), 0, m_rows->size() - 1);
+    this->beginRemoveRows(QModelIndex(), 0, static_cast<int>(m_rows->size() - 1));
     m_rows->clear();
     this->endRemoveRows();
 

@@ -103,7 +103,7 @@ const QString &N3Jump::field_name(const int n_field)
 
 
 //----------------------------------------------------------------------------------------------------------------------
-int N3Jump::index(const QString &field_name)
+size_t N3Jump::index(const QString &field_name)
 {
     int index = CustomJump::index(field_name);
     if(index < CustomJumpNames::CtUnk)

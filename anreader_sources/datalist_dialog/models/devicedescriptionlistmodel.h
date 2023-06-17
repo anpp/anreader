@@ -32,7 +32,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
-    int rowCount(const QModelIndex& = QModelIndex()) const override { return m_datalist.size(); }
+    int rowCount(const QModelIndex& = QModelIndex()) const override { return static_cast<int>(m_datalist.size()); }
     int columnCount(const QModelIndex& = QModelIndex()) const override {return m_num_columns; }
 
     void addItem(const t_device_description_item& item);

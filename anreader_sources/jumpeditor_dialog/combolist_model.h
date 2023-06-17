@@ -23,7 +23,7 @@ public:
     QModelIndex parent(const QModelIndex &) const override { return QModelIndex(); }
     QVariant data(const QModelIndex &index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
-    int rowCount(const QModelIndex&) const override { return m_data.size(); }
+    int rowCount(const QModelIndex&) const override { return static_cast<int>(m_data.size()); }
     int columnCount(const QModelIndex&) const override { return m_num_columns; }
     int indexByKey(const QString& key) const;
     const QString& keyByIndex(int index) const;

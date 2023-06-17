@@ -188,9 +188,10 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
 
     //для старых прыжков прошитого n3 надо отнимать 96 месяцев (это надо сделать в интерфейсе)
     //Непрошитые N3 и Atlas отсчитывают месяцы с 2007 года, только Atlas еще + 128 месяцев (то есть с 2017.08)
+    //Atlas 2 отсситывает дату с 2015 года как и прошитый N3 и Atlas 1 ревизии 3
     //прошитый N3 отсчитывает с 2015
-    QDate date(((m_software_revision >= 4 && m_product_type == N3Types::N3) ||
-                (m_software_revision == 3 && m_product_type == N3Types::Atlas)? 2015 : 2007) + (month - 1) / 12,
+    QDate date(((m_software_revision >= 4 && m_product_type == N3Types::N3) || (m_product_type == N3Types::Atlas2) ||
+                              (m_software_revision == 3 && m_product_type == N3Types::Atlas)? 2015 : 2007) + (month - 1) / 12,
                month % 12 == 0 ? 12 : month % 12,
                (raw_jump->at(13) >> 2) & 0b11111);
     QTime time((BytesOperations::bytesToUInt16(*raw_jump, 6) >> 6) & 0b11111,
@@ -245,7 +246,7 @@ void Neptune::executeCommand(N3Commands command, unsigned int address, unsigned 
         }
         else
         {
-            if(state() == DeviceStates::Sending && m_NumBlocks > 0 && N3Commands::WriteMemory == last_command.m_command)
+            if(state() == DeviceStates::Sending && m_NumBlocks > 0 && N3Commands::WriteMemory == command)
             {
                 last_command = {command, address, length, delay_ms, wbytes};
                 sendLastCommand();
@@ -742,7 +743,8 @@ std::unique_ptr<QByteArray> Neptune::cryptPacket(const QByteArray &packet, bool 
 #if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
         local_packet.append(0, packet_size - packet.size()); //для XP
 #else
-        local_packet.append('\0', packet_size - packet.size());
+        char zero = '\0';
+        local_packet.append(zero, packet_size - packet.size());
 #endif
 
         ref_packet = &local_packet;

@@ -89,7 +89,7 @@ Qt::ItemFlags DeviceDescriptionListModel::flags(const QModelIndex &index) const
 //---------------------------------------------------------------------------------------------------------------
 void DeviceDescriptionListModel::addItem(const t_device_description_item &item)
 {
-    this->beginInsertRows(QModelIndex(), m_datalist.size(), m_datalist.size());
+    this->beginInsertRows(QModelIndex(), static_cast<int>(m_datalist.size()), static_cast<int>(m_datalist.size()));
     m_datalist.push_back(item);
     this->endInsertRows();
 }

@@ -328,7 +328,7 @@ bool MainWindow::saveAsCSV(const QString& filename, const JumpsTableModel& jm, c
             for(uint i = 0; i < j_atr->size(); ++i)
             {
                 QString csv_field;
-                int inner_index = N3Jump::index(field_names[i]);
+                size_t inner_index = N3Jump::index(field_names[i]);
                 switch(inner_index)
                 {
                 case CustomJumpNames::JumpDate:
@@ -402,8 +402,8 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
             t_jump_attribute jump_data;
             std::shared_ptr<CustomJump> jump = std::make_shared<N3Jump>();
 
-            int index = 0;
-            int inner_index = 0;
+            size_t index = 0;
+            size_t inner_index = 0;
             auto checkFormat { [&] (bool greater) -> bool
                 {
                     if((index >= field_names.count() && greater) || (index < field_names.count() && !greater)){
@@ -417,7 +417,7 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
             for(const auto& item: qAsConst(*tokens))
             {
                 if(!checkFormat(true)) return false;
-                inner_index = N3Jump::index(field_names[index]);
+                inner_index = N3Jump::index(field_names[static_cast<int>(index)]);
 
                 QDateTime dt;
                 QString note;
@@ -427,15 +427,15 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
                 case CustomJumpNames::JumpDate:
                     dt = QDateTime::fromString(item, dateFormat);
                     if(dt.isNull() || !dt.isValid())
-                        dt = QDateTime::fromString(item, dateFormat_excel);                    
-                    jump_data.push_back(std::make_pair(field_names[index], dt));
+                        dt = QDateTime::fromString(item, dateFormat_excel);
+                    jump_data.push_back(std::make_pair(field_names[static_cast<int>(index)], dt));
                     break;
                 case CustomJumpNames::Note:
                     note = item;
-                    jump_data.push_back(std::make_pair(field_names[index], note.replace("\t", "\n")));
+                    jump_data.push_back(std::make_pair(field_names[static_cast<int>(index)], note.replace("\t", "\n")));
                     break;
                 default:
-                    jump_data.push_back(std::make_pair(field_names[index], item.trimmed()));
+                    jump_data.push_back(std::make_pair(field_names[static_cast<int>(index)], item.trimmed()));
                     break;
                 }
                 index++;
@@ -812,7 +812,7 @@ void MainWindow::copy_selected()
                 {
                     rows += (j > 0)? "\t": "";
 
-                    int inner_index = N3Jump::index(field_names[j]);
+                    size_t inner_index = N3Jump::index(field_names[static_cast<int>(j)]);
                     const datakind dk = (CustomJumpNames::AC == inner_index ? datakind::aircrafts : (CustomJumpNames::DZ == inner_index ? datakind::dropzones : datakind::canopies));
                     QString map_value;
 

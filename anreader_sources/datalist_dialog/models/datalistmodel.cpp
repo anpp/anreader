@@ -92,7 +92,7 @@ Qt::ItemFlags DataListModel::flags(const QModelIndex &index) const
 //---------------------------------------------------------------------------------------------------------------
 void DataListModel::addItem(const t_datalist_item &item)
 {
-    this->beginInsertRows(QModelIndex(), m_datalist.size(), m_datalist.size());
+    this->beginInsertRows(QModelIndex(), static_cast<int>(m_datalist.size()), static_cast<int>(m_datalist.size()));
     m_datalist.push_back(item);
     this->endInsertRows();
 }
