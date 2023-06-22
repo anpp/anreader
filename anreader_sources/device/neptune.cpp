@@ -188,7 +188,7 @@ std::unique_ptr<CustomJump> Neptune::jump_from_raw(uint index) const
 
     //для старых прыжков прошитого n3 надо отнимать 96 месяцев (это надо сделать в интерфейсе)
     //Непрошитые N3 и Atlas отсчитывают месяцы с 2007 года, только Atlas еще + 128 месяцев (то есть с 2017.08)
-    //Atlas 2 отсситывает дату с 2015 года как и прошитый N3 и Atlas 1 ревизии 3
+    //Atlas 2 отсчитывает дату с 2015 года как и прошитый N3 и Atlas 1 ревизии 3
     //прошитый N3 отсчитывает с 2015
     QDate date(((m_software_revision >= 4 && m_product_type == N3Types::N3) || (m_product_type == N3Types::Atlas2) ||
                               (m_software_revision == 3 && m_product_type == N3Types::Atlas)? 2015 : 2007) + (month - 1) / 12,
@@ -498,11 +498,9 @@ void Neptune::processType0Record(const QByteArray &data)
     if (static_cast<unsigned int>(Type0Record.size()) >= N3Constants::Type0RecordSizeInRaw)
     {
         emit log("Type0 record: " + Type0Record);
-        if (verifyType0Record()) {            
-            QVector<s_key_item> &vec_key = (m_software_revision >= 4 ? new_key: old_key);
-
-            if(m_product_type == N3Types::Atlas)
-                vec_key = m_software_revision == 1 ? atlas_key : new_key;
+        if (verifyType0Record()) {
+            QVector<s_key_item> &vec_key = (m_commutication_type == N3CommTypes::CT3 ? ct3_key :
+                                                (m_commutication_type == N3CommTypes::CT4 ? ct4_key : ct5_key));
 
             setEncryptionKey(vec_key);
 
@@ -801,7 +799,6 @@ bool Neptune::verifyType0Record()
     if (static_cast<uint>(Type0Record[1]) != 0) {
         return false;
     }
-
     type0Size = static_cast<uint>(Type0Record[0]);
     uint checksum = 0;
     for (uint i = 1; i < type0Size + 1; ++i) {
@@ -818,8 +815,11 @@ bool Neptune::verifyType0Record()
     if(Type0Record.at(15) <= 12)
         m_product_type = static_cast<N3Types>(Type0Record.at(15));
 
-    if(3 == Type0Record.at(2) || 4 == Type0Record.at(2) || 5 == Type0Record.at(2))
-        m_commutication_type = static_cast<N3CommTypes>(Type0Record.at(2));
+    if(Type0Record.at(2) <= 3)
+        m_commutication_type = N3CommTypes::CT3;
+    else
+        if(4 == Type0Record.at(2) || 5 == Type0Record.at(2))
+            m_commutication_type = static_cast<N3CommTypes>(Type0Record.at(2));
 
     m_software_revision = Type0Record[4];
 

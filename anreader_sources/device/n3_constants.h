@@ -17,6 +17,6 @@ enum N3Addresses: unsigned int {Summary = 0x000A, DeviceSettings = 0x002A, Speed
 
 
 enum class N3Types: int {Unknown = 0, Neptune = 1, Wave = 2, Tracker = 3, Data_Logger = 4, N3 = 5, N3A = 6, Atlas = 7, Atlas2 = 12};
-enum class N3CommTypes: int {Unknown = 0, N3Old = 3, N3 = 5, Atlas = 4};
+enum class N3CommTypes: int {Unknown = 0, CT3 = 3, CT4 = 4, CT5 = 5};
 
 #endif // CONSTANTS_H

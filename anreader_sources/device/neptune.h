@@ -126,9 +126,9 @@ private:
     bool checkInBuffer();
     void dequeueCommand();
 
-    QVector<s_key_item> new_key{{-86, true}, {21, false}, {4, false}, {11, false}, {22, false}, {20, false}, {10, false}, {105, true}, {5, false}, {6, false}, {8, false}, {68, true}, {7, false}, {9, false}, {24, false}, {23, false}};
-    QVector<s_key_item> old_key{{78, true}, {6, false}, {24, false}, {22, false}, {4, false}, {23, false}, {21, false}, {11, false}, {8, false}, {117, true}, {5, false}, {20, false}, {7, false}, {9, false}, {126, true}, {19, false}};
-    QVector<s_key_item> atlas_key{{56, true}, {21, false}, {4, false}, {11, false}, {22, false}, {20, false}, {10, false}, {-103, true}, {5, false}, {6, false}, {8, false}, {-49, true}, {7, false}, {9, false}, {24, false}, {23, false}};
+    QVector<s_key_item> ct3_key{{78, true}, {6, false}, {24, false}, {22, false}, {4, false}, {23, false}, {21, false}, {11, false}, {8, false}, {117, true}, {5, false}, {20, false}, {7, false}, {9, false}, {126, true}, {19, false}};
+    QVector<s_key_item> ct4_key{{56, true}, {21, false}, {4, false}, {11, false}, {22, false}, {20, false}, {10, false}, {-103, true}, {5, false}, {6, false}, {8, false}, {-49, true}, {7, false}, {9, false}, {24, false}, {23, false}};
+    QVector<s_key_item> ct5_key{{-86, true}, {21, false}, {4, false}, {11, false}, {22, false}, {20, false}, {10, false}, {105, true}, {5, false}, {6, false}, {8, false}, {68, true}, {7, false}, {9, false}, {24, false}, {23, false}};
 
     std::unique_ptr<QByteArray> outBuffer;
     QByteArray inBuffer;
