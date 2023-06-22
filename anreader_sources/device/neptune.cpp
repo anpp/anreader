@@ -4,6 +4,12 @@
 #include <QThread>
 #include <math.h>
 
+#include "jumps/n3jump.h"
+#include "n3summaryinfo.h"
+#include "n3devicesettings.h"
+#include "n3names.h"
+
+
 const static QString N3TypeNames[] =
 {QObject::tr("Unknown"),
  QObject::tr("Neptune"),

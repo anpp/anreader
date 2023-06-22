@@ -5,11 +5,7 @@
 #include <QTimer>
 #include <QQueue>
 
-#include "jumps/n3jump.h"
 #include "n3_constants.h"
-#include "n3summaryinfo.h"
-#include "n3devicesettings.h"
-#include "n3names.h"
 
 class Neptune;
 

@@ -1,4 +1,6 @@
 #include "n3widget.h"
+#include "device/n3names.h"
+#include "device/n3devicesettings.h"
 #include "device/neptune_hil.h"
 #include "choice_datetime_dialog.h"
 #include "mainwindow.h"
