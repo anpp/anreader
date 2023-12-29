@@ -8,6 +8,7 @@ CSVParser::CSVParser()
 
 }
 
+
 //----------------------------------------------------------------------------------------------------------------------
 std::unique_ptr<QStringList> CSVParser::csvToken(const QString &line, const QString& delimiter)
 {
