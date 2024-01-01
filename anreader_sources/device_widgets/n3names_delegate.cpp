@@ -6,7 +6,6 @@
 #include <QRadioButton>
 #include <QLineEdit>
 #include <QApplication>
-#include <QDebug>
 
 //------------------------------------------------------------------------------------------
 QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -150,19 +149,19 @@ void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
         opt.state |= (index.data(Qt::EditRole).toBool() ? QStyle::State_On : QStyle::State_Off);
 
         if(index.column() == static_cast<int>(N3NamesModel_defs::Used))
-            opt.state &= ~QStyle::State_Enabled;
+            opt.state |= QStyle::State_Sunken;
 
         if(index.column() != static_cast<int>(N3NamesModel_defs::Active)
                 && static_cast<const N3NamesModel*>(index.model())->used(index.row()))
-            opt.state &= ~QStyle::State_Enabled;
+            opt.state |= QStyle::State_Sunken;
 
         if(index.column() == static_cast<int>(N3NamesModel_defs::Active)
                 && static_cast<const N3NamesModel*>(index.model())->hidden(index.row()))
-            opt.state &= ~QStyle::State_Enabled;
+            opt.state |= QStyle::State_Sunken;
 
         if(index.column() == static_cast<int>(N3NamesModel_defs::Hidden)
                 && static_cast<const N3NamesModel*>(index.model())->active(index.row()))
-            opt.state &= ~QStyle::State_Enabled;
+            opt.state |= QStyle::State_Sunken;
 
         qApp->style()->drawPrimitive(pe, &opt, painter);
         return;
