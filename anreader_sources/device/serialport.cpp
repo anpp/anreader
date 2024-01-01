@@ -170,7 +170,7 @@ void SerialPortThread::sopen(QString com_port)
 {
     setPortName(com_port);
     if (!open(QIODevice::ReadWrite)){
-        emit errorSignal(errorString());
+        emit errorSignal(errorString() + " : " + com_port);
         return;
     }
 

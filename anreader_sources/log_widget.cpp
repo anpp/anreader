@@ -21,6 +21,7 @@ void LogWidget::add(const QString &value)
     QString date_color = "#0000ff";
     QString error_color = "#ff0000";
     QString warning_color = "#964b00";
+    QString hint_color = "#ff00ff";
     QString color;
     QString message = value;
 
@@ -29,6 +30,8 @@ void LogWidget::add(const QString &value)
         color = warning_color;
     if(message.contains("error", Qt::CaseInsensitive))
         color = error_color;
+    if(message.contains("hint", Qt::CaseInsensitive))
+        color = hint_color;
 
     if(!color.isEmpty())
         message = "<FONT color=" + color + ">" + message + "</FONT>";
