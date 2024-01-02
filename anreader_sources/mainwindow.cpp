@@ -894,13 +894,10 @@ void MainWindow::log(const QString& value)
         log_widget->add(value);
         if(value.contains("permission denied", Qt::CaseInsensitive))
         {
-            QString port = value.mid(value.indexOf(" : ") + 3);
 #ifdef Q_OS_LINUX
-            QString user = qgetenv("USER");
-            log_widget->add("Hint: run the command 'sudo chown " + user + " /dev/" + port + "'");
+            log_widget->add("Hint: run the command 'sudo chown " + qgetenv("USER") + " /dev/" + value.mid(value.indexOf(" : ") + 3) + "'");
 #elif Q_OS_FREEBSD
-            QString user = qgetenv("USER");
-            log_widget->add("Hint: run the command 'sudo chown " + user + " /dev/" + port + "'");
+            log_widget->add("Hint: run the command 'sudo chown " + qgetenv("USER") + " /dev/" + value.mid(value.indexOf(" : ") + 3) + "'");
 #endif
         }
     }

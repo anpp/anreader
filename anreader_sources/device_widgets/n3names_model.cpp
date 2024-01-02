@@ -35,6 +35,7 @@ bool N3NamesModel::setData(const QModelIndex &index, const QVariant &value, int 
     if(!index.isValid())
         return false;
 
+    QString name = "";
     if(Qt::EditRole == role)
         switch(static_cast<N3NamesModel_defs>(index.column()))
         {
@@ -60,7 +61,10 @@ bool N3NamesModel::setData(const QModelIndex &index, const QVariant &value, int 
             return true;
 
         case N3NamesModel_defs::Name:
-            m_data.setName(index.row(), value.toString());
+            name = value.toString();
+            if(name.isEmpty())
+                name = "---";
+            m_data.setName(index.row(), name);
             emit dataChanged(QModelIndex(), QModelIndex());
             return true;
 

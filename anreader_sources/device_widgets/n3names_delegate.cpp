@@ -6,6 +6,7 @@
 #include <QRadioButton>
 #include <QLineEdit>
 #include <QApplication>
+#include <QMouseEvent>
 
 //------------------------------------------------------------------------------------------
 QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -182,7 +183,12 @@ bool N3NamesDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, cons
         if (event->type() == QEvent::MouseButtonPress)
         {
             if(model->flags(index) & Qt::ItemIsEditable)
-                model->setData(index, !(index.model()->data(index, Qt::EditRole).toBool())  , Qt::EditRole);
+            {
+                QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+                QRect rect = calcRect(option, index);
+                if(rect.contains(mouseEvent->pos()))
+                    model->setData(index, !(index.model()->data(index, Qt::EditRole).toBool())  , Qt::EditRole);
+            }
         }
     }
     return QItemDelegate::editorEvent(event, model, option, index);
