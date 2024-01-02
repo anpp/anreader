@@ -153,3 +153,13 @@ bool N3NamesModel::active(uint index) const
 {
     return m_data.active(index);
 }
+
+//------------------------------------------------------------------------------------------
+void N3NamesModel::add()
+{
+    if(m_data.filled() < m_data.count())
+    {
+        m_data.setFilled(m_data.filled() + 1);
+        emit dataChanged(QModelIndex(), QModelIndex());
+    }
+}

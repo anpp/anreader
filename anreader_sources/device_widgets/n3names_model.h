@@ -28,6 +28,7 @@ public:
     bool used(uint index) const;
     bool hidden(uint index) const;
     bool active(uint index) const;
+    void add();
 
 };
 

@@ -106,7 +106,7 @@ void N3Names::setName(uint index, const QString value)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3Names::setFilled(const uchar value)
+void N3Names::setFilled(const uint value)
 {
     if(m_data.size() > static_cast<int>(N3NamesValues::offset))
         m_data[1] = value;

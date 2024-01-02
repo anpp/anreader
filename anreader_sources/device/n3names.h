@@ -30,7 +30,7 @@ public:
     void setHidden(uint index, bool value = true) override;
     void setUsed(uint index, bool value) override;
     void setName(uint index, const QString value) override;
-    void setFilled(const uchar value) override;
+    void setFilled(const uint value) override;
 
     friend bool operator==(const N3Names& left, const N3Names& right);
     N3Names& operator=(const N3Names& right);

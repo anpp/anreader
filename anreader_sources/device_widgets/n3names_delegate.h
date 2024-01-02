@@ -3,10 +3,15 @@
 
 #include <QItemDelegate>
 #include <QObject>
+#include <QPointer>
+
+class N3NamesModel;
 
 class N3NamesDelegate : public QItemDelegate
 {
     Q_OBJECT
+
+    mutable QPointer<N3NamesModel> m_model;
 public:
     N3NamesDelegate(QObject *parent = nullptr) : QItemDelegate(parent) {}
 
@@ -23,6 +28,7 @@ private:
 private slots:
     void radio_toggled(bool value);
     void check_toggled(bool value);
+    void add();
 };
 
 #endif // N3NAMESDELEGAT_H

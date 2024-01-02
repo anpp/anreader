@@ -7,6 +7,9 @@
 #include <QLineEdit>
 #include <QApplication>
 #include <QMouseEvent>
+#include <QToolButton>
+
+const static QString button_add = QObject::tr("Add");
 
 //------------------------------------------------------------------------------------------
 QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -15,7 +18,10 @@ QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
     if(!index.isValid())
         return nullptr;
 
-    if(index.row() < static_cast<const N3NamesModel*>(index.model())->filledCount())
+    if(!m_model)
+        m_model = static_cast<N3NamesModel*>(const_cast<QAbstractItemModel*>(index.model()));
+
+    if(index.row() < m_model->filledCount())
     {
         QRadioButton *rb = nullptr;
         QLineEdit *le = nullptr;
@@ -48,6 +54,18 @@ QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
             return nullptr;
         }
     }
+
+    if(index.row() == m_model->filledCount()
+            && index.row() < m_model->rowCount(QModelIndex())
+            && index.column() == static_cast<int>(N3NamesModel_defs::Active))
+    {
+        QToolButton *tb = nullptr;
+        tb = new QToolButton(parent);
+        tb->setText(button_add);
+        connect(tb, &QToolButton::clicked, this, &N3NamesDelegate::add);
+        return tb;
+
+    }
     return nullptr;
 }
 
@@ -59,6 +77,9 @@ void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
     QRadioButton *rb = nullptr;
     QCheckBox *cb = nullptr;
     QLineEdit *le = nullptr;
+
+    if(!m_model)
+        m_model = static_cast<N3NamesModel*>(const_cast<QAbstractItemModel*>(index.model()));
 
     switch(static_cast<N3NamesModel_defs>(index.column()))
     {
@@ -97,6 +118,9 @@ void N3NamesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, c
 {
     if(!index.isValid()) return;
 
+    if(!m_model)
+        m_model = static_cast<N3NamesModel*>(const_cast<QAbstractItemModel*>(index.model()));
+
     if(index.column() == static_cast<int>(N3NamesModel_defs::Active))
     {
         QRadioButton *rb = static_cast<QRadioButton*>(editor);
@@ -125,7 +149,9 @@ void N3NamesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, c
 //------------------------------------------------------------------------------------------
 void N3NamesDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    if(!index.isValid()) return;
+    if(!index.isValid())
+        return;
+
     editor->setGeometry(calcRect(option, index));
 }
 
@@ -134,15 +160,19 @@ void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
 {
     if(!index.isValid()) return;
 
+    if(!m_model)
+        m_model = static_cast<N3NamesModel*>(const_cast<QAbstractItemModel*>(index.model()));
+
     if((index.column() == static_cast<int>(N3NamesModel_defs::Active) ||
         index.column() == static_cast<int>(N3NamesModel_defs::Used) ||
         index.column() == static_cast<int>(N3NamesModel_defs::Hidden) )
-            && index.row() < static_cast<const N3NamesModel*>(index.model())->filledCount())
+            && index.row() < m_model->filledCount())
     {
-        QStyle::PrimitiveElement pe = (index.column() == static_cast<int>(N3NamesModel_defs::Active)) ? QStyle::PE_IndicatorRadioButton : QStyle::PE_IndicatorItemViewItemCheck;
+        QStyle::PrimitiveElement pe = (index.column() == static_cast<int>(N3NamesModel_defs::Active)) ? QStyle::PE_IndicatorRadioButton : QStyle::PE_IndicatorItemViewItemCheck;        
 
         drawBackground(painter, option, index);
         drawFocus(painter, option, option.rect);
+
         QStyleOptionViewItem opt(option);
         opt.rect = calcRect(option, index);
 
@@ -167,27 +197,59 @@ void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
         qApp->style()->drawPrimitive(pe, &opt, painter);
         return;
     }
+    else
+        if((index.column() == static_cast<int>(N3NamesModel_defs::Active)
+            && (index.row() == m_model->filledCount())
+            && (index.row() < m_model->rowCount(QModelIndex()))))
+        {
+            QStyle::PrimitiveElement pe = QStyle::PE_PanelButtonTool;
+
+            drawBackground(painter, option, index);
+            drawFocus(painter, option, option.rect);
+
+            QStyleOptionToolButton opt;
+            opt.rect = calcRect(option, index);
+            opt.text = button_add;
+            opt.toolButtonStyle = Qt::ToolButtonStyle::ToolButtonTextOnly;
+            opt.features = QStyleOptionToolButton::None;
+            opt.arrowType = Qt::NoArrow;
+            opt.subControls = 0;
+            qApp->style()->drawPrimitive(pe, &opt, painter);
+            qApp->style()->drawComplexControl(QStyle::CC_ToolButton, &opt, painter);
+            return;
+        }
     QItemDelegate::paint( painter, option, index );
 }
 
 //------------------------------------------------------------------------------------------
 bool N3NamesDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
+    Q_UNUSED(model);
+
     if(!index.isValid())
         return false;
 
-    if((index.column() == static_cast<int>(N3NamesModel_defs::Active) ||
-        index.column() == static_cast<int>(N3NamesModel_defs::Hidden) )
-            && index.row() < static_cast<const N3NamesModel*>(index.model())->filledCount())
+    if(!m_model)
+        m_model = static_cast<N3NamesModel*>(const_cast<QAbstractItemModel*>(index.model()));
+
+    if(event->type() == QEvent::MouseButtonPress)
     {
-        if (event->type() == QEvent::MouseButtonPress)
+        if(model->flags(index) & Qt::ItemIsEditable)
         {
-            if(model->flags(index) & Qt::ItemIsEditable)
+            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+            QRect rect = calcRect(option, index);
+
+            if(rect.contains(mouseEvent->pos()))
             {
-                QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-                QRect rect = calcRect(option, index);
-                if(rect.contains(mouseEvent->pos()))
-                    model->setData(index, !(index.model()->data(index, Qt::EditRole).toBool())  , Qt::EditRole);
+                if((index.column() == static_cast<int>(N3NamesModel_defs::Active) ||
+                    index.column() == static_cast<int>(N3NamesModel_defs::Hidden) )
+                        && index.row() < m_model->filledCount())
+                    m_model->setData(index, !(index.model()->data(index, Qt::EditRole).toBool())  , Qt::EditRole);
+                else
+                    if((index.column() == static_cast<int>(N3NamesModel_defs::Active)
+                        && (index.row() == m_model->filledCount())
+                        && (index.row() < m_model->rowCount(QModelIndex()))))
+                        m_model->add();
             }
         }
     }
@@ -198,7 +260,15 @@ bool N3NamesDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, cons
 //------------------------------------------------------------------------------------------
 QRect N3NamesDelegate::calcRect(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    if(!m_model)
+        m_model = static_cast<N3NamesModel*>(const_cast<QAbstractItemModel*>(index.model()));
+
     if(index.column() == static_cast<int>(N3NamesModel_defs::Name))
+        return option.rect;
+
+    if(index.row() == m_model->filledCount()
+            && index.row() < m_model->rowCount(QModelIndex())
+            && index.column() == static_cast<int>(N3NamesModel_defs::Active))
         return option.rect;
 
     QStyle::SubElement se = (index.column() == static_cast<int>(N3NamesModel_defs::Active)) ? QStyle::SE_RadioButtonIndicator : QStyle::SE_CheckBoxIndicator;
@@ -227,4 +297,14 @@ void N3NamesDelegate::check_toggled(bool value)
     QCheckBox *cb = static_cast<QCheckBox*>(sender());
     if(cb)
         commitData(cb);
+}
+
+//------------------------------------------------------------------------------------------
+void N3NamesDelegate::add()
+{
+    if(m_model)
+    {
+        closeEditor(static_cast<QToolButton*>(sender()));
+        m_model->add();
+    }
 }
