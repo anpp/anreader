@@ -38,7 +38,7 @@ ANReader - кросcплатформенный GUI-клиент к высотнику-пищалке Atlas/Neptune.
 ![alt text](screenshots/macOS.jpeg "macOS")
 
 ### Debian Linux
-![alt text](screenshots/andreader_linux.png "Debian Linux")
+![alt text](screenshots/anreader_linux.png "Debian Linux")
 
 ## Лицензия
 [BSD](https://choosealicense.com/licenses/bsd-2-clause/)
