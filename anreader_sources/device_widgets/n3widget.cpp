@@ -31,6 +31,7 @@ DeviceFrame::DeviceFrame(QWidget *parent, ExpiredType et) : QFrame (parent), m_e
     lSettings->addWidget(&tb_settings);
     lSettings->addWidget(&tb_dropzones);
     lSettings->addWidget(&tb_aircrafts);
+    lSettings->addWidget(&tb_alarms);
     lSettings->addStretch();
 
     tb_settings.setToolTip(tr("Device settings..."));
@@ -44,6 +45,10 @@ DeviceFrame::DeviceFrame(QWidget *parent, ExpiredType et) : QFrame (parent), m_e
     tb_aircrafts.setToolTip(tr("Aircrafts..."));
     tb_aircrafts.setIconSize(QSize(32, 32));
     tb_aircrafts.setIcon(QIcon(":/images/icons/buttons/airplane.png"));
+
+    tb_alarms.setToolTip(tr("Alarms..."));
+    tb_alarms.setIconSize(QSize(32, 32));
+    tb_alarms.setIcon(QIcon(":/images/icons/buttons/alarms.png"));
 
     lForm->setContentsMargins(0, 0, 0, 0);
     lClock->setContentsMargins(0, 0, 0, 0);
@@ -264,6 +269,7 @@ void N3Widget::addDeviceFrame()
     connect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::N3Settings);
     connect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::N3Dropzones);
     connect(&device_frame->tb_aircrafts, &QToolButton::clicked, this, &N3Widget::N3Airplanes);
+    //connect(&device_frame->tb_alarms, &QToolButton::clicked, this, &N3Widget::N3Alarms);
 
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_read_jumps, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_edit_clock, &QPushButton::setEnabled);
@@ -272,6 +278,7 @@ void N3Widget::addDeviceFrame()
     connect(this, &N3Widget::controls_is_enabled, &device_frame->tb_settings, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->tb_dropzones, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->tb_aircrafts, &QPushButton::setEnabled);
+    connect(this, &N3Widget::controls_is_enabled, &device_frame->tb_alarms, &QPushButton::setEnabled);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

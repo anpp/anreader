@@ -45,6 +45,7 @@ private:
     QToolButton tb_settings;
     QToolButton tb_dropzones;
     QToolButton tb_aircrafts;
+    QToolButton tb_alarms;
 
     QLineEdit le_clock;
     QToolButton pb_edit_clock;

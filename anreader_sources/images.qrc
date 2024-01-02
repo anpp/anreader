@@ -34,5 +34,6 @@
         <file>images/icons/buttons/dz.png</file>
         <file>images/icons/buttons/airplane.png</file>
         <file>images/icons/buttons/delete.png</file>
+        <file>images/icons/buttons/alarms.png</file>
     </qresource>
 </RCC>
