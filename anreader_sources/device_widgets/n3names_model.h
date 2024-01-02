@@ -29,6 +29,8 @@ public:
     bool hidden(uint index) const;
     bool active(uint index) const;
     void add();
+    void del();
+    QVariant value(int row, int col, int role = Qt::DisplayRole) const;
 
 };
 

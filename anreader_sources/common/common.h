@@ -2,7 +2,6 @@
 #define COMMON_H
 
 #include <memory>
-#include <QDebug>
 
 enum class dtype: uint {unk = 0, N3 = 1, Atlas = 2};
 const static QString sDeviceTypes[] = {"", "N3", "Atlas"};

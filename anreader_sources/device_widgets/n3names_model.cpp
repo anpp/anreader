@@ -5,27 +5,32 @@
 QVariant N3NamesModel::data(const QModelIndex &index, int role) const
 {
     if(index.isValid())
-    {
-        if(static_cast<uint>(index.row()) >= m_data.filled())
-            return QVariant();
+        return value(index.row(), index.column(), role);
+    return QVariant();
+}
 
-        if(Qt::EditRole == role)
-            switch(static_cast<N3NamesModel_defs>(index.column()))
-            {
-            case N3NamesModel_defs::Active:
-                return m_data.active(index.row());
-            case N3NamesModel_defs::Used:
-                return m_data.used(index.row());
-            case N3NamesModel_defs::Hidden:
-                return m_data.hidden(index.row());
-            case N3NamesModel_defs::Name:
-                return (static_cast<uint>(index.row()) < m_data.Names().size() ? *m_data.Names()[index.row()] : "");
-            default:
-                return QVariant();
-            }
-        if(Qt::DisplayRole == role && static_cast<int>(N3NamesModel_defs::Name) == index.column())
-            return (static_cast<uint>(index.row()) < m_data.Names().size() ? *m_data.Names()[index.row()] : "");
-    }
+//------------------------------------------------------------------------------------------
+QVariant N3NamesModel::value(int row, int col , int role) const
+{
+    if(static_cast<uint>(row) >= m_data.filled())
+        return QVariant();
+
+    if(Qt::EditRole == role)
+        switch(static_cast<N3NamesModel_defs>(col))
+        {
+        case N3NamesModel_defs::Active:
+            return m_data.active(row);
+        case N3NamesModel_defs::Used:
+            return m_data.used(row);
+        case N3NamesModel_defs::Hidden:
+            return m_data.hidden(row);
+        case N3NamesModel_defs::Name:
+            return (static_cast<uint>(row) < m_data.Names().size() ? *m_data.Names()[row] : "");
+        default:
+            return QVariant();
+        }
+    if(Qt::DisplayRole == role && static_cast<int>(N3NamesModel_defs::Name) == col)
+        return (static_cast<uint>(row) < m_data.Names().size() ? *m_data.Names()[row] : "");
     return QVariant();
 }
 
@@ -163,3 +168,15 @@ void N3NamesModel::add()
         emit dataChanged(QModelIndex(), QModelIndex());
     }
 }
+//------------------------------------------------------------------------------------------
+void N3NamesModel::del()
+{
+    if(m_data.filled() <= m_data.count() && m_data.filled() > 0)
+    {
+        m_data.setName(m_data.filled() - 1, "");
+        m_data.setHidden(m_data.filled() - 1, false);
+        m_data.setFilled(m_data.filled() - 1);
+        emit dataChanged(QModelIndex(), QModelIndex());
+    }
+}
+

@@ -106,7 +106,7 @@ bool JumpsTableModel::checkColumns(const int value)
         setColumnCount(value);
     if(num_cols != value)
     {
-        qDebug() << "Error columns number!";
+        //qDebug() << "Error columns number!";
         return false;
     }
     return true;

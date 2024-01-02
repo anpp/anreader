@@ -1,8 +1,6 @@
 #ifndef ABSTRACTDEVICE_H
 #define ABSTRACTDEVICE_H
 
-
-#include <QDebug>
 #include <QTimer>
 
 #include "serialport.h"

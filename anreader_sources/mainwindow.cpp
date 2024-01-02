@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "csvparser.h"
 
+#include <QTextStream>
+
 const static QString sDataList_Titles[] = {QObject::tr("Aircrafts"), QObject::tr("Dropzones"), QObject::tr("Canopies"), QObject::tr("Jump types")};
 
 MainWindow* MainWindow::m_self = nullptr;
@@ -406,7 +408,7 @@ bool MainWindow::openFromCSV(const QString &filename, JumpsTableModel& jm, const
             size_t inner_index = 0;
             auto checkFormat { [&] (bool greater) -> bool
                 {
-                    if((index >= field_names.count() && greater) || (index < field_names.count() && !greater)){
+                    if((index >= static_cast<size_t>(field_names.count()) && greater) || (index < static_cast<size_t>(field_names.count()) && !greater)){
                         log("Error - file format: " + filename);
                         return false;
                     }
@@ -888,7 +890,7 @@ void MainWindow::enableActions(const bool enable)
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::log(const QString& value)
 {
-    qDebug() << value;
+    //qDebug() << value;
     if(log_widget)
     {
         log_widget->add(value);

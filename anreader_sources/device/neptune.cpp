@@ -443,7 +443,7 @@ void Neptune::processData(QByteArray data)
         if(!checkAcknowledgment(data, true))
         {
             keep_alive_worker.stop();
-            qDebug() << "Unknown: " << data.toHex();
+            //qDebug() << "Unknown: " << data.toHex();
         }
         else //если пришло подтверждение в состоянии Ready - это от keep_alive_worker
         {
