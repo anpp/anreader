@@ -23,15 +23,16 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     int rowCount(const QModelIndex&) const override;
     int columnCount(const QModelIndex&) const override {return static_cast<int>(N3NamesModel_defs::NumColumns); }
+    QVariant value(int row, int col, int role = Qt::DisplayRole) const;
 
     int filledCount() const;
     bool used(uint index) const;
     bool hidden(uint index) const;
     bool active(uint index) const;
-    void add();
-    void del();
-    QVariant value(int row, int col, int role = Qt::DisplayRole) const;
 
+public slots:
+    void add() const;
+    void del() const;
 };
 
 

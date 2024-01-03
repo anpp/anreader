@@ -160,23 +160,20 @@ bool N3NamesModel::active(uint index) const
 }
 
 //------------------------------------------------------------------------------------------
-void N3NamesModel::add()
+void N3NamesModel::add() const
 {
     if(m_data.filled() < m_data.count())
-    {
         m_data.setFilled(m_data.filled() + 1);
-        emit dataChanged(QModelIndex(), QModelIndex());
-    }
 }
+
 //------------------------------------------------------------------------------------------
-void N3NamesModel::del()
+void N3NamesModel::del() const
 {
     if(m_data.filled() <= m_data.count() && m_data.filled() > 0)
     {
         m_data.setName(m_data.filled() - 1, "");
         m_data.setHidden(m_data.filled() - 1, false);
         m_data.setFilled(m_data.filled() - 1);
-        emit dataChanged(QModelIndex(), QModelIndex());
     }
 }
 

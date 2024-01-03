@@ -11,9 +11,6 @@ class N3NamesDelegate : public QItemDelegate
 {
     Q_OBJECT
 
-    mutable QPointer<N3NamesModel> m_model;
-
-    void setModel(const QModelIndex& index) const;
 public:
     N3NamesDelegate(QObject *parent = nullptr) : QItemDelegate(parent) {}
 
