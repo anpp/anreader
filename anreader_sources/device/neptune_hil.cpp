@@ -33,14 +33,22 @@ void Neptune_HiL::read_settings()
     executeCommand(N3Commands::ReadMemory, N3Addresses::DeviceSettings, N3Constants::DeviceSettingsSize);
 }
 
+//----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::read_dropzones()
 {
     executeCommand(N3Commands::ReadMemory, N3Addresses::DropZones, N3Constants::N3NamesSize);
 }
 
+//----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::read_airplanes()
 {
     executeCommand(N3Commands::ReadMemory, N3Addresses::Airplanes, N3Constants::N3NamesSize);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void Neptune_HiL::read_alarms()
+{
+    executeCommand(N3Commands::ReadMemory, N3Addresses::AlarmNames, N3Constants::N3NamesSize);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

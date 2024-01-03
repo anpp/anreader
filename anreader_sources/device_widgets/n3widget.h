@@ -106,6 +106,8 @@ public slots:
     void N3Settings();
     void N3Dropzones();
     void N3Airplanes();
+    void N3Alarms();
+    void edit_alarms();
 };
 
 #endif // N3WIDGET_H

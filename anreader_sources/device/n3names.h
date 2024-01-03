@@ -11,16 +11,13 @@ class N3Names : public ANames
 {
     mutable QMap<uint, bool> m_map_active;
 public:    
-    explicit N3Names(QByteArray& adata): ANames(adata){
-        for(uint i = 0; i < count(); ++i)
-            setActive(i, false);
-    };
+    explicit N3Names(QByteArray& adata): ANames(adata){ };
     virtual ~N3Names() override {}
     void calculateCheckSum();
 
     uint count() const override;
     uint filled() const override;
-    virtual void clear() override { m_names->clear(); }    
+    virtual void clear() override;
     bool used(uint index) const override;
     bool hidden(uint index) const override;    
     bool active(uint index) const override;

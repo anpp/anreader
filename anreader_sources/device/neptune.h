@@ -95,6 +95,7 @@ protected:
     QByteArray rawDataSettings;
     QByteArray rawDZNames;
     QByteArray rawAPNames;
+    QByteArray rawAlarmsNames;
     QByteArray rawDateTime;
 
     volatile unsigned int m_NumBlocks{0};

@@ -160,20 +160,28 @@ bool N3NamesModel::active(uint index) const
 }
 
 //------------------------------------------------------------------------------------------
-void N3NamesModel::add() const
+void N3NamesModel::add()
 {
     if(m_data.filled() < m_data.count())
+    {
         m_data.setFilled(m_data.filled() + 1);
+
+        emit dataChanged(createIndex(m_data.filled() - 1, static_cast<int>(N3NamesModel_defs::Active)),
+                         createIndex(m_data.filled(), static_cast<int>(N3NamesModel_defs::Name)));
+    }
 }
 
 //------------------------------------------------------------------------------------------
-void N3NamesModel::del() const
+void N3NamesModel::del()
 {
     if(m_data.filled() <= m_data.count() && m_data.filled() > 0)
     {
         m_data.setName(m_data.filled() - 1, "");
         m_data.setHidden(m_data.filled() - 1, false);
         m_data.setFilled(m_data.filled() - 1);
+
+        emit dataChanged(createIndex(m_data.filled() - 1, static_cast<int>(N3NamesModel_defs::Active)),
+                         createIndex(m_data.filled(), static_cast<int>(N3NamesModel_defs::Name)));
     }
 }
 

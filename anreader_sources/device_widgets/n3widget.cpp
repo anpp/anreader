@@ -269,7 +269,7 @@ void N3Widget::addDeviceFrame()
     connect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::N3Settings);
     connect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::N3Dropzones);
     connect(&device_frame->tb_aircrafts, &QToolButton::clicked, this, &N3Widget::N3Airplanes);
-    //connect(&device_frame->tb_alarms, &QToolButton::clicked, this, &N3Widget::N3Alarms);
+    connect(&device_frame->tb_alarms, &QToolButton::clicked, this, &N3Widget::N3Alarms);
 
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_read_jumps, &QPushButton::setEnabled);
     connect(this, &N3Widget::controls_is_enabled, &device_frame->pb_edit_clock, &QPushButton::setEnabled);
@@ -292,6 +292,7 @@ void N3Widget::deleteDeviceFrame()
     disconnect(&device_frame->tb_settings, &QToolButton::clicked, this, &N3Widget::N3Settings);
     disconnect(&device_frame->tb_dropzones, &QToolButton::clicked, this, &N3Widget::N3Dropzones);
     disconnect(&device_frame->tb_aircrafts, &QToolButton::clicked, this, &N3Widget::N3Airplanes);
+    disconnect(&device_frame->tb_alarms, &QToolButton::clicked, this, &N3Widget::N3Alarms);
 
     delete device_frame;
     device_frame = nullptr;
@@ -349,7 +350,7 @@ void N3Widget::read_summary_settings()
     m_device->read_summary_jumps();    
     m_device->read_settings();
     m_device->read_dropzones();
-    m_device->read_airplanes();    
+    m_device->read_airplanes();
     m_device->read_datetime();
 }
 
@@ -587,6 +588,27 @@ void N3Widget::N3Airplanes()
 {
     if(!m_device) return;    
     N3Names_dialog("Airplanes", static_cast<const N3Names&>(m_device->airplanes()));
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Widget::N3Alarms()
+{
+    if(!m_device) return;
+
+    if(m_device->alarms_names().count() > 0)
+        edit_alarms();
+    else
+    {
+        connect(m_device.get(), &Neptune::allCommandsComplete, this, &N3Widget::edit_alarms, Qt::QueuedConnection);
+        m_device->read_alarms();
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Widget::edit_alarms()
+{
+    if(!m_device) return;
+    N3Names_dialog("Alarms", static_cast<const N3Names&>(m_device->alarms_names()));
 }
 
 

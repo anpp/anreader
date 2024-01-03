@@ -40,6 +40,7 @@ public:
     virtual void read_settings() = 0;
     virtual void read_dropzones() = 0;
     virtual void read_airplanes() = 0;
+    virtual void read_alarms() = 0;
     virtual void read_datetime() = 0;
     virtual void end_communication() = 0;    
     virtual uint n_iterations_by_jumps(const uint n_jumps) = 0;
@@ -59,6 +60,7 @@ public:
     ADeviceSettings& settings() const;
     ANames& dropzones() const;
     ANames& airplanes() const;
+    ANames& alarms_names() const;
     const QString& state_str() const;
     const QDateTime& dateTime() const;
 
@@ -74,6 +76,7 @@ protected:
     std::unique_ptr<ADeviceSettings> m_settings;
     std::unique_ptr<ANames> m_dropzones;
     std::unique_ptr<ANames> m_airplanes;
+    std::unique_ptr<ANames> m_alarms_names;
 
     std::unique_ptr<QStateMachine> sm;
     std::unique_ptr<QState> commonState;

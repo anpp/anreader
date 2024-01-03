@@ -92,6 +92,7 @@ Neptune::Neptune(QString portName, QObject *parent) : AbstractDevice(portName, p
     m_settings = std::make_unique<N3DeviceSettings>(rawDataSettings);
     m_dropzones = std::make_unique<N3Names>(rawDZNames);
     m_airplanes = std::make_unique<N3Names>(rawAPNames);
+    m_alarms_names = std::make_unique<N3Names>(rawAlarmsNames);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -125,6 +126,10 @@ unsigned int Neptune::n_jumps_readed() const
 void Neptune::open()
 {
     AbstractDevice::open();
+
+    m_dropzones->clear();
+    m_airplanes->clear();
+    m_alarms_names->clear();
 }
 
 
@@ -687,6 +692,9 @@ QByteArray *Neptune::getRawData(const unsigned int address)
 
     if((address >= N3Addresses::Airplanes) && (address < N3Addresses::Airplanes + N3Constants::N3NamesSize))
         result = &rawAPNames;
+
+    if((address >= N3Addresses::AlarmNames) && (address < N3Addresses::AlarmNames + N3Constants::N3NamesSize))
+        result = &rawAlarmsNames;
 
     return result;
 }

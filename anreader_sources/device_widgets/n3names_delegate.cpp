@@ -246,7 +246,7 @@ bool N3NamesDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, cons
                     if((index.column() == static_cast<int>(N3NamesModel_defs::Active)
                         && (index.row() == static_cast<const N3NamesModel*>(index.model())->filledCount())
                         && (index.row() < static_cast<const N3NamesModel*>(index.model())->rowCount(QModelIndex()))))
-                        static_cast<const N3NamesModel*>(index.model())->add();
+                        static_cast<N3NamesModel*>(model)->add();
             }
         }
     }

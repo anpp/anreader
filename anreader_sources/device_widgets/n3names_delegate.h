@@ -2,10 +2,6 @@
 #define N3NAMESDELEGAT_H
 
 #include <QItemDelegate>
-#include <QObject>
-#include <QPointer>
-
-class N3NamesModel;
 
 class N3NamesDelegate : public QItemDelegate
 {

@@ -31,8 +31,8 @@ public:
     bool active(uint index) const;
 
 public slots:
-    void add() const;
-    void del() const;
+    void add();
+    void del();
 };
 
 

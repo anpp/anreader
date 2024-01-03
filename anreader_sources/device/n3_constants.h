@@ -12,7 +12,7 @@ enum N3Commands: unsigned char {None = 0, InitCommand = 1, AckSuccess = 0x31, Ac
                                 ReadMemory = 0xA0, EndComm = 0xAF, KeepAlive = 0xA4, ReadDateTime = 0xA2, SetDateTime = 0xB2,
                                 WriteMemory = 0xB0};
 
-enum N3Addresses: unsigned int {Summary = 0x000A, DeviceSettings = 0x002A, SpeedGroups = 0x003A, DropZones = 0x0054, Airplanes = 0x0196, AlarmNames = 0x0196,
+enum N3Addresses: unsigned int {Summary = 0x000A, DeviceSettings = 0x002A, SpeedGroups = 0x003A, DropZones = 0x0054, Airplanes = 0x0196, AlarmNames = 0x2D8,
                            AlarmToneDirectory = 0x041A, AlarmToneData = 0x042C, AlarmSettings = 0x04CC, JumpDetails = 0x0520};
 
 

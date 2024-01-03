@@ -29,6 +29,13 @@ uint N3Names::filled() const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void N3Names::clear()
+{
+    m_names->clear();
+    m_data.clear();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 bool N3Names::used(uint index) const
 {
     uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
