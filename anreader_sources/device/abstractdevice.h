@@ -1,8 +1,6 @@
 #ifndef ABSTRACTDEVICE_H
 #define ABSTRACTDEVICE_H
 
-#include <QTimer>
-
 #include "serialport.h"
 
 #include "jumps/customjump.h"
@@ -15,6 +13,7 @@ class QDateTime;
 class QStateMachine;
 class QState;
 class QAbstractTransition;
+class QTimer;
 
 class AbstractDevice : public QObject
 {    
@@ -91,8 +90,7 @@ protected:
 
     t_jumps m_jumps;    
 
-    mutable QTimer timeout_timer;
-
+    std::unique_ptr<QTimer> timeout_timer;
 
 private:
     QString m_ErrorMessage;

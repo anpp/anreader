@@ -2,7 +2,6 @@
 #define N3_H
 
 #include "abstractdevice.h"
-#include <QTimer>
 #include <QQueue>
 
 #include "n3_constants.h"

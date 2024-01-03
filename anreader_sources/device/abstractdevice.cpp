@@ -6,6 +6,7 @@
 #include <QFinalState>
 #include <QDateTime>
 #include <algorithm>
+#include <QTimer>
 
 const static QString StateNames[] = {QObject::tr("Disconnected"),
                                QObject::tr("Connected"),
@@ -24,6 +25,8 @@ AbstractDevice::AbstractDevice(QString portName, QObject *parent) : QObject(pare
     m_datetime_temp = std::make_unique<QDateTime>();
     m_datetime_clock = std::make_unique<QDateTime>();
     m_datetime = std::make_unique<QDateTime>();
+
+    timeout_timer = std::make_unique<QTimer>();
 
     sm = std::make_unique<QStateMachine>();
 
@@ -103,16 +106,16 @@ void AbstractDevice::initStateMachine()
 //----------------------------------------------------------------------------------------------------------------------
 void AbstractDevice::startTimeoutTimer(const int ms) const
 {
-    timeout_timer.setInterval(ms);
-    connect(&timeout_timer, &QTimer::timeout, this, &AbstractDevice::timeout);
-    timeout_timer.start();
+    timeout_timer->setInterval(ms);
+    connect(timeout_timer.get(), &QTimer::timeout, this, &AbstractDevice::timeout);
+    timeout_timer->start();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void AbstractDevice::stopTimeoutTimer() const
 {
-    timeout_timer.stop();
-    disconnect(&timeout_timer, &QTimer::timeout, this, &AbstractDevice::timeout);
+    timeout_timer->stop();
+    disconnect(timeout_timer.get(), &QTimer::timeout, this, &AbstractDevice::timeout);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

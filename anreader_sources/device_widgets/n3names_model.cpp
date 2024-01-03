@@ -47,13 +47,6 @@ bool N3NamesModel::setData(const QModelIndex &index, const QVariant &value, int 
         case N3NamesModel_defs::Active:
             if(value.toBool())
             {
-                /*
-                for(uint i = 0; i < m_data.filled(); ++i)
-                    if(i != static_cast<uint>(index.row()))
-                        m_data.setActive(i, false);
-                    else
-                        m_data.setActive(i);
-*/
                 m_data.setActive(index.row());
                 emit dataChanged(QModelIndex(), QModelIndex());
                 return true;
