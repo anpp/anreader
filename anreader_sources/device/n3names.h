@@ -21,7 +21,7 @@ public:
     bool used(uint index) const override;
     bool hidden(uint index) const override;    
     bool active(uint index) const override;
-    uint active_index_one() const override;
+    uint active_index() const override;
 
     void setActive(uint index, bool value = true) override;
     void setHidden(uint index, bool value = true) override;
@@ -31,6 +31,7 @@ public:
 
     friend bool operator==(const N3Names& left, const N3Names& right);
     N3Names& operator=(const N3Names& right);
+    const QMap<uint, bool>& map_active() const { return m_map_active; };
 
 private:
     QString byIndex(uint index) const override;

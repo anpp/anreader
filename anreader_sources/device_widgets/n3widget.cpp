@@ -394,8 +394,8 @@ void N3Widget::N3Names_dialog(const QString& title, const N3Names &names)
             {
                 if(nd->isChangedCurrentName())
                 {
-                    m_device->airplanes().setActive(nd->new_n3names().active_index_one());
-                    m_device->summary().setAPIndex(nd->new_n3names().active_index_one());
+                    m_device->airplanes().setActive(nd->new_n3names().active_index());
+                    m_device->summary().setAPIndex(nd->new_n3names().active_index());
                     m_device->write_summary_jumps();
                 }
 
@@ -409,8 +409,8 @@ void N3Widget::N3Names_dialog(const QString& title, const N3Names &names)
             {                
                 if(nd->isChangedCurrentName())
                 {
-                    m_device->dropzones().setActive(nd->new_n3names().active_index_one());
-                    m_device->summary().setDZIndex(nd->new_n3names().active_index_one());
+                    m_device->dropzones().setActive(nd->new_n3names().active_index());
+                    m_device->summary().setDZIndex(nd->new_n3names().active_index());
                     m_device->write_summary_jumps();
                 }
 

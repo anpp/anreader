@@ -5,6 +5,8 @@
 #include "n3names_model.h"
 #include "n3names_delegate.h"
 
+#include <QPushButton>
+
 //--------------------------------------------------------------------------------------------------------------
 N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget *parent) :
     QDialog(parent),
@@ -13,7 +15,7 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
 {
     ui->setupUi(this);
     m_title = title;
-    this->setWindowTitle(m_title);
+    this->setWindowTitle(tr(m_title.toStdString().c_str()));
 
     raw_names = m_n3names.data();
     m_new_n3names = std::make_unique<N3Names>(raw_names);
@@ -31,6 +33,9 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
 
     ui->tvNames->resizeColumnsToContents();
     ui->tvNames->resizeRowsToContents();
+
+    connect(ui->tvNames->model(), &QAbstractItemModel::dataChanged, [&] () { dataChanged();});
+    dataChanged();
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -48,13 +53,21 @@ bool N3NamesDialog::isChanged() const
 //--------------------------------------------------------------------------------------------------------------
 bool N3NamesDialog::isChangedCurrentName() const
 {
-    return (m_new_n3names->active_index_one() != m_n3names.active_index_one());
+    return (m_new_n3names->map_active() != m_n3names.map_active());
 }
 
 //--------------------------------------------------------------------------------------------------------------
 bool N3NamesDialog::isChangedData() const
 {
     return m_new_n3names->data() != m_n3names.data();
+}
+
+//--------------------------------------------------------------------------------------------------------------
+void N3NamesDialog::dataChanged()
+{
+    bool is_changed = isChanged();
+    ui->buttonBox->button(QDialogButtonBox::StandardButton::Ok)->setEnabled(is_changed);
+    setWindowTitle(tr(m_title.toStdString().c_str()) + (is_changed ? "*" : ""));
 }
 
 

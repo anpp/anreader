@@ -37,7 +37,7 @@ private:
     Ui::N3NamesDialog *ui;
 
 private slots:
-
+    void dataChanged();
     void on_buttonBox_accepted();
 };
 
