@@ -14,8 +14,8 @@ class N3Names : public ANames
 public:
     enum N3NamesValues: int {size = 32, length = 10, offset = 2};
 
-    explicit N3Names(QByteArray& adata, N3NamesType atype = N3NamesType::Undefined):
-        ANames(adata), m_type(atype) { };
+    explicit N3Names(N3NamesType atype = N3NamesType::Undefined):
+        m_type(atype) { };
     virtual ~N3Names() override {}
     void calculateCheckSum();
 

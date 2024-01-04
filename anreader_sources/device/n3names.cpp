@@ -125,6 +125,7 @@ N3Names &N3Names::operator=(const N3Names &right)
     if (this == &right)
         return *this;
 
+    m_data = right.m_data;
     m_map_active = right.m_map_active;
     m_type = right.m_type;
     return *this;

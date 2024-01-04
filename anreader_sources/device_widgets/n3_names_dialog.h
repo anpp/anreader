@@ -2,7 +2,7 @@
 #define N3_NAMES_DIALOG_H
 
 #include <QDialog>
-#include <memory>
+//#include <memory>
 
 
 namespace Ui {
@@ -19,7 +19,6 @@ class N3NamesDialog : public QDialog
 
     const N3Names& m_n3names;
     std::unique_ptr<N3Names> m_new_n3names;
-    QByteArray raw_names;
     QString m_title;
     std::unique_ptr<N3NamesModel> m_model;
     std::unique_ptr<N3NamesDelegate> m_delegate;

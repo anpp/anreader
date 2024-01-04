@@ -105,7 +105,7 @@ Qt::ItemFlags N3NamesModel::flags(const QModelIndex &index) const
     if(index.isValid())
     {
         if(index.column() == static_cast<int>(N3NamesModel_defs::Active)
-                && !m_data.hidden(index.row()) && m_data.type() != N3NamesType::Alarms)
+                && ((!m_data.hidden(index.row()) && m_data.type() != N3NamesType::Alarms) || index.row() == static_cast<int>(m_data.filled())))
             flags |= Qt::ItemIsEditable;
 
         if(index.column() == static_cast<int>(N3NamesModel_defs::Hidden)

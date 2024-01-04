@@ -59,7 +59,7 @@ public:
     ADeviceSettings& settings() const;
     ANames& dropzones() const;
     ANames& airplanes() const;
-    ANames& alarms_names() const;
+    ANames& alarms() const;
     const QString& state_str() const;
     const QDateTime& dateTime() const;
 

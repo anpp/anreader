@@ -9,7 +9,7 @@
 class ANames
 {    
 public:
-    explicit ANames(QByteArray& adata): m_data(adata) {};
+    explicit ANames(): m_data() {};
     virtual ~ANames() {}
 
     virtual uint count() const = 0;
@@ -27,13 +27,14 @@ public:
     virtual void setName(uint index, const QString value) = 0;
     virtual void setFilled(const uint value) = 0;
 
-    QByteArray& data() const {return m_data; }
+    QByteArray& data() {return m_data; }
+    const QByteArray& data_const() const {return m_data; }
 
 protected:
     virtual QString byIndex(uint index) const = 0;
     virtual void setHighBit(uint index, uint byte_number, bool value) = 0;
 
-    QByteArray& m_data;
+    QByteArray m_data;
     std::unique_ptr<std::vector<std::unique_ptr<QString>>> m_names = std::make_unique<std::vector<std::unique_ptr<QString>>>();
 };
 

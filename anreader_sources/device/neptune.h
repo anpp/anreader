@@ -76,9 +76,6 @@ public:
 
     void setCorrectDateKoeff(int value) { m_correct_date_koeff = value; }
     void setRawDataSettings(const QByteArray& value) { rawDataSettings = value; }
-    void setRawDataAPNames(const QByteArray& value) { rawAPNames = value; }
-    void setRawDataDZNames(const QByteArray& value) { rawDZNames = value; }
-
 
 protected:
     void setupComPort() override;
@@ -92,9 +89,6 @@ protected:
     QByteArray rawDataDetails;
     QByteArray rawDataSummary;
     QByteArray rawDataSettings;
-    QByteArray rawDZNames;
-    QByteArray rawAPNames;
-    QByteArray rawAlarmsNames;
     QByteArray rawDateTime;
 
     volatile unsigned int m_NumBlocks{0};

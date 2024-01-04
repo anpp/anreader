@@ -403,7 +403,7 @@ void N3Widget::N3Names_dialog(const N3Names &names)
 
                 if(nd->isChangedData())
                 {
-                    ((Neptune*)m_device.get())->setRawDataAPNames(nd->new_n3names().data());
+                    ((Neptune*)m_device.get())->airplanes().data() = nd->new_n3names().data_const();
                     m_device->write_airplanes();
                 }
             }
@@ -418,7 +418,7 @@ void N3Widget::N3Names_dialog(const N3Names &names)
 
                 if(nd->isChangedData())
                 {
-                    ((Neptune*)m_device.get())->setRawDataDZNames(nd->new_n3names().data());
+                    ((Neptune*)m_device.get())->dropzones().data() = nd->new_n3names().data_const();
                     m_device->write_dropzones();
                 }
             }
@@ -597,7 +597,7 @@ void N3Widget::N3Alarms()
 {
     if(!m_device) return;
 
-    if(m_device->alarms_names().count() > 0)
+    if(m_device->alarms().count() > 0)
         edit_alarms();
     else
     {
@@ -611,7 +611,7 @@ void N3Widget::edit_alarms()
 {
     if(!m_device) return;
     disconnect(m_device.get(), &Neptune::allCommandsComplete, nullptr, nullptr);
-    N3Names_dialog(static_cast<const N3Names&>(m_device->alarms_names()));
+    N3Names_dialog(static_cast<const N3Names&>(m_device->alarms()));
 }
 
 

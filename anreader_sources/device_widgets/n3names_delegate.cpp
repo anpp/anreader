@@ -85,9 +85,6 @@ void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
 {
     if(!index.isValid()) return;
 
-    if(static_cast<const N3NamesModel*>(index.model())->n3data().type() == N3NamesType::Alarms)
-        return;
-
     QRadioButton *rb = nullptr;
     QCheckBox *cb = nullptr;
     QLineEdit *le = nullptr;
@@ -129,10 +126,8 @@ void N3NamesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, c
 {
     if(!index.isValid()) return;
 
-    if(static_cast<const N3NamesModel*>(index.model())->n3data().type() == N3NamesType::Alarms)
-        return;
-
-    if(index.column() == static_cast<int>(N3NamesModel_defs::Active))
+    if(index.column() == static_cast<int>(N3NamesModel_defs::Active)
+            && static_cast<const N3NamesModel*>(index.model())->n3data().type() != N3NamesType::Alarms)
     {
         QRadioButton *rb = static_cast<QRadioButton*>(editor);
         if(nullptr != rb)

@@ -79,13 +79,13 @@ void Neptune_HiL::write_settings()
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::write_dropzones()
 {
-    write_to_memory(N3Addresses::DropZones, N3Constants::N3NamesSize, rawDZNames);
+    write_to_memory(N3Addresses::DropZones, N3Constants::N3NamesSize, dropzones().data());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::write_airplanes()
 {
-    write_to_memory(N3Addresses::Airplanes, N3Constants::N3NamesSize, rawAPNames);
+    write_to_memory(N3Addresses::Airplanes, N3Constants::N3NamesSize, airplanes().data());
 }
 
 //----------------------------------------------------------------------------------------------------------------------

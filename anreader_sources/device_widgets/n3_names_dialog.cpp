@@ -16,9 +16,8 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
     ui->setupUi(this);
     m_title = title;
 
-    raw_names = m_n3names.data();
-    m_new_n3names = std::make_unique<N3Names>(raw_names);
-    *m_new_n3names = m_n3names; //оператор = перегружен, в m_new_n3names полная копия m_n3names (raw_names отдельно копируется, на него ссылка)
+    m_new_n3names = std::make_unique<N3Names>();
+    *m_new_n3names = m_n3names; //оператор = перегружен, в m_new_n3names полная копия m_n3names
 
     m_delegate = std::make_unique<N3NamesDelegate>();
 
@@ -62,12 +61,13 @@ bool N3NamesDialog::isChangedCurrentName() const
 //--------------------------------------------------------------------------------------------------------------
 bool N3NamesDialog::isChangedData() const
 {
-    return m_new_n3names->data() != m_n3names.data();
+    return m_new_n3names->data() != m_n3names.data_const();
 }
 
 //--------------------------------------------------------------------------------------------------------------
 void N3NamesDialog::dataChanged()
 {
+
     bool is_changed = isChanged();
     ui->buttonBox->button(QDialogButtonBox::StandardButton::Ok)->setEnabled(is_changed);
     setWindowTitle(tr(m_title.toStdString().c_str()) + (is_changed ? "*" : ""));

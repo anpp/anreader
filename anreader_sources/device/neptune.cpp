@@ -90,9 +90,9 @@ Neptune::Neptune(QString portName, QObject *parent) : AbstractDevice(portName, p
 
     m_summary = std::make_unique<N3SummaryInfo>(rawDataSummary);
     m_settings = std::make_unique<N3DeviceSettings>(rawDataSettings);
-    m_dropzones = std::make_unique<N3Names>(rawDZNames, N3NamesType::Dropzones);
-    m_airplanes = std::make_unique<N3Names>(rawAPNames, N3NamesType::Airplanes);
-    m_alarms_names = std::make_unique<N3Names>(rawAlarmsNames, N3NamesType::Alarms);
+    m_dropzones = std::make_unique<N3Names>(N3NamesType::Dropzones);
+    m_airplanes = std::make_unique<N3Names>(N3NamesType::Airplanes);
+    m_alarms_names = std::make_unique<N3Names>(N3NamesType::Alarms);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -688,13 +688,13 @@ QByteArray *Neptune::getRawData(const unsigned int address)
         result = &rawDataSettings;
 
     if((address >= N3Addresses::DropZones) && (address < N3Addresses::DropZones + N3Constants::N3NamesSize))
-        result = &rawDZNames;
+        result = &dropzones().data();
 
     if((address >= N3Addresses::Airplanes) && (address < N3Addresses::Airplanes + N3Constants::N3NamesSize))
-        result = &rawAPNames;
+        result = &airplanes().data();
 
     if((address >= N3Addresses::AlarmNames) && (address < N3Addresses::AlarmNames + N3Constants::N3NamesSize))
-        result = &rawAlarmsNames;
+        result = &alarms().data();
 
     return result;
 }

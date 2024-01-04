@@ -197,7 +197,7 @@ ANames &AbstractDevice::airplanes() const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-ANames &AbstractDevice::alarms_names() const
+ANames &AbstractDevice::alarms() const
 {
     return *m_alarms_names;
 }
