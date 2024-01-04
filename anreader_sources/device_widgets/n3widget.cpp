@@ -383,14 +383,16 @@ void N3Widget::read_last_jumps(unsigned int n_jumps)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3Widget::N3Names_dialog(const QString& title, const N3Names &names)
+void N3Widget::N3Names_dialog(const N3Names &names)
 {
+    QString title = (names.type() == N3NamesType::Airplanes ? "Airplanes" :
+                                                              (names.type() == N3NamesType::Dropzones ? "Dropzones" : "Alarms"));
     std::unique_ptr<N3NamesDialog> nd = std::make_unique<N3NamesDialog>(title, names, this);
     if(nd->exec() == QDialog::Accepted)
     {
         if(nd->isChanged())
         {
-            if(title == "Airplanes")
+            if(names.type() == N3NamesType::Airplanes)
             {
                 if(nd->isChangedCurrentName())
                 {
@@ -405,7 +407,7 @@ void N3Widget::N3Names_dialog(const QString& title, const N3Names &names)
                     m_device->write_airplanes();
                 }
             }
-            if(title == "Dropzones")
+            if(names.type() == N3NamesType::Dropzones)
             {                
                 if(nd->isChangedCurrentName())
                 {
@@ -580,14 +582,14 @@ void N3Widget::N3Settings()
 void N3Widget::N3Dropzones()
 {
     if(!m_device) return;
-    N3Names_dialog("Dropzones", static_cast<const N3Names&>(m_device->dropzones()));
+    N3Names_dialog(static_cast<const N3Names&>(m_device->dropzones()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void N3Widget::N3Airplanes()
 {
     if(!m_device) return;    
-    N3Names_dialog("Airplanes", static_cast<const N3Names&>(m_device->airplanes()));
+    N3Names_dialog(static_cast<const N3Names&>(m_device->airplanes()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -608,7 +610,8 @@ void N3Widget::N3Alarms()
 void N3Widget::edit_alarms()
 {
     if(!m_device) return;
-    N3Names_dialog("Alarms", static_cast<const N3Names&>(m_device->alarms_names()));
+    disconnect(m_device.get(), &Neptune::allCommandsComplete, nullptr, nullptr);
+    N3Names_dialog(static_cast<const N3Names&>(m_device->alarms_names()));
 }
 
 

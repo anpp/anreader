@@ -14,7 +14,7 @@ void N3Names::calculateCheckSum()
 uint N3Names::count() const
 {
     if(m_data.size() > 0)
-        return static_cast<uint>(N3NamesValues::count);
+        return N3NamesValues::size;
 
     return 0;
 }
@@ -22,7 +22,7 @@ uint N3Names::count() const
 //----------------------------------------------------------------------------------------------------------------------
 uint N3Names::filled() const
 {
-    if(m_data.size() > static_cast<int>(N3NamesValues::offset))
+    if(m_data.size() > N3NamesValues::offset)
         return m_data[1];
 
     return 0;
@@ -38,7 +38,7 @@ void N3Names::clear()
 //----------------------------------------------------------------------------------------------------------------------
 bool N3Names::used(uint index) const
 {
-    uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
+    int offset = (index * N3NamesValues::length) + N3NamesValues::offset;
 
     if(index < filled())
         return (m_data[offset + 1] & 0b10000000) >> 7;
@@ -49,7 +49,7 @@ bool N3Names::used(uint index) const
 //----------------------------------------------------------------------------------------------------------------------
 bool N3Names::hidden(uint index) const
 {
-    uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
+    int offset = (index * N3NamesValues::length) + N3NamesValues::offset;
 
     if(index < filled())
         return (m_data[offset] & 0b10000000) >> 7;
@@ -97,7 +97,7 @@ void N3Names::setName(uint index, const QString value)
 
     if(index <= count())
     {
-        uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
+        int offset = (index * N3NamesValues::length) + N3NamesValues::offset;
         for(int i = 0; i < static_cast<int>(N3NamesValues::length); ++i)
         {
             m_data[i + offset] = 0;
@@ -115,7 +115,7 @@ void N3Names::setName(uint index, const QString value)
 //----------------------------------------------------------------------------------------------------------------------
 void N3Names::setFilled(const uint value)
 {
-    if(m_data.size() > static_cast<int>(N3NamesValues::offset))
+    if(m_data.size() > N3NamesValues::offset)
         m_data[1] = value;
 }
 
@@ -126,13 +126,14 @@ N3Names &N3Names::operator=(const N3Names &right)
         return *this;
 
     m_map_active = right.m_map_active;
+    m_type = right.m_type;
     return *this;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 bool operator==(const N3Names& left, const N3Names& right)
 {
-    return (left.m_data == right.m_data && left.m_map_active == right.m_map_active);
+    return (left.m_data == right.m_data && left.m_map_active == right.m_map_active && left.m_type == right.m_type);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -140,12 +141,12 @@ QString N3Names::byIndex(uint index) const
 {    
     QString result = "";
 
-    uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset);
+    int offset = (index * N3NamesValues::length) + N3NamesValues::offset;
 
     if(index < filled())
     {
-        QByteArray bytes_name(static_cast<uint>(N3NamesValues::length), 0);
-        for(uint i = offset; i < offset + static_cast<uint>(N3NamesValues::length); ++i)
+        QByteArray bytes_name(N3NamesValues::length, 0);
+        for(int i = offset; i < offset + N3NamesValues::length; ++i)
             bytes_name[i - offset] = m_data[i];
 
         bytes_name[0] = bytes_name[0] & 0b01111111;
@@ -158,7 +159,7 @@ QString N3Names::byIndex(uint index) const
 //----------------------------------------------------------------------------------------------------------------------
 void N3Names::setHighBit(uint index, uint byte_number, bool value)
 {
-    uint offset = (index * static_cast<uint>(N3NamesValues::length)) + static_cast<uint>(N3NamesValues::offset) + byte_number;
+    int offset = (index * N3NamesValues::length) + N3NamesValues::offset + byte_number;
 
     if(index < count())
     {

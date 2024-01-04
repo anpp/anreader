@@ -90,9 +90,9 @@ Neptune::Neptune(QString portName, QObject *parent) : AbstractDevice(portName, p
 
     m_summary = std::make_unique<N3SummaryInfo>(rawDataSummary);
     m_settings = std::make_unique<N3DeviceSettings>(rawDataSettings);
-    m_dropzones = std::make_unique<N3Names>(rawDZNames);
-    m_airplanes = std::make_unique<N3Names>(rawAPNames);
-    m_alarms_names = std::make_unique<N3Names>(rawAlarmsNames);
+    m_dropzones = std::make_unique<N3Names>(rawDZNames, N3NamesType::Dropzones);
+    m_airplanes = std::make_unique<N3Names>(rawAPNames, N3NamesType::Airplanes);
+    m_alarms_names = std::make_unique<N3Names>(rawAlarmsNames, N3NamesType::Alarms);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

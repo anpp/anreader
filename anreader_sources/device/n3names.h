@@ -5,13 +5,17 @@
 
 #include <QMap>
 
-enum class N3NamesValues: uint {count = 32, length = 10, offset = 2};
+enum class N3NamesType: int {Undefined = -1, Dropzones = 0, Airplanes, Alarms};
 
 class N3Names : public ANames
 {
     mutable QMap<uint, bool> m_map_active;
-public:    
-    explicit N3Names(QByteArray& adata): ANames(adata){ };
+    N3NamesType m_type = N3NamesType::Undefined;
+public:
+    enum N3NamesValues: int {size = 32, length = 10, offset = 2};
+
+    explicit N3Names(QByteArray& adata, N3NamesType atype = N3NamesType::Undefined):
+        ANames(adata), m_type(atype) { };
     virtual ~N3Names() override {}
     void calculateCheckSum();
 
@@ -32,6 +36,7 @@ public:
     friend bool operator==(const N3Names& left, const N3Names& right);
     N3Names& operator=(const N3Names& right);
     const QMap<uint, bool>& map_active() const { return m_map_active; };
+    N3NamesType type() const { return m_type; };
 
 private:
     QString byIndex(uint index) const override;

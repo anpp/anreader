@@ -29,6 +29,9 @@ QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
         switch(static_cast<N3NamesModel_defs>(index.column()))
         {
         case N3NamesModel_defs::Active:
+            if(static_cast<const N3NamesModel*>(index.model())->n3data().type() == N3NamesType::Alarms)
+                return new QCheckBox(parent);
+
             rb = new QRadioButton(parent);
             connect(rb, &QRadioButton::toggled, this, &N3NamesDelegate::radio_toggled);
             rb->setCheckable(true);
@@ -46,7 +49,7 @@ QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
         {
             le = new QLineEdit(parent);
             le->setValidator(new QRegExpValidator(QRegExp("^[a-zA-Z0-9:;/-,. !]{0,20}$")));
-            le->setMaxLength(static_cast<uint>(N3NamesValues::length));
+            le->setMaxLength(static_cast<uint>(N3Names::N3NamesValues::length));
 
             if(index.row() == static_cast<const N3NamesModel*>(index.model())->filledCount() - 1 && static_cast<const N3NamesModel*>(index.model())->filledCount() > 0
                     && !static_cast<const N3NamesModel*>(index.model())->value(index.row(), static_cast<int>(N3NamesModel_defs::Active), Qt::EditRole).toBool()
@@ -92,6 +95,14 @@ void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
     switch(static_cast<N3NamesModel_defs>(index.column()))
     {
     case N3NamesModel_defs::Active:
+        //для alarms первая колонка с чекбоксами
+        if(static_cast<const N3NamesModel*>(index.model())->n3data().type() == N3NamesType::Alarms)
+        {
+            cb = static_cast<QCheckBox*>(editor);
+            cb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
+            break;
+        }
+
         rb = static_cast<QRadioButton*>(editor);
         if(nullptr != rb)
             rb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
@@ -125,6 +136,9 @@ void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
 void N3NamesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     if(!index.isValid()) return;
+
+    if(static_cast<const N3NamesModel*>(index.model())->n3data().type() == N3NamesType::Alarms)
+        return;
 
     if(index.column() == static_cast<int>(N3NamesModel_defs::Active))
     {
@@ -170,7 +184,9 @@ void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
         index.column() == static_cast<int>(N3NamesModel_defs::Hidden) )
             && index.row() < static_cast<const N3NamesModel*>(index.model())->filledCount())
     {
-        QStyle::PrimitiveElement pe = (index.column() == static_cast<int>(N3NamesModel_defs::Active)) ? QStyle::PE_IndicatorRadioButton : QStyle::PE_IndicatorItemViewItemCheck;        
+        QStyle::PrimitiveElement pe =
+                (index.column() == static_cast<int>(N3NamesModel_defs::Active) && static_cast<const N3NamesModel*>(index.model())->n3data().type() != N3NamesType::Alarms) ?
+                    QStyle::PE_IndicatorRadioButton : QStyle::PE_IndicatorItemViewItemCheck;
 
         drawBackground(painter, option, index);
         drawFocus(painter, option, option.rect);
@@ -178,22 +194,9 @@ void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
         QStyleOptionViewItem opt(option);
         opt.rect = calcRect(option, index);
 
-        //opt.state = opt.state & ~QStyle::State_HasFocus;
         opt.state |= (index.data(Qt::EditRole).toBool() ? QStyle::State_On : QStyle::State_Off);
 
-        if(index.column() == static_cast<int>(N3NamesModel_defs::Used))
-            opt.state |= QStyle::State_Sunken;
-
-        if(index.column() != static_cast<int>(N3NamesModel_defs::Active)
-                && static_cast<const N3NamesModel*>(index.model())->used(index.row()))
-            opt.state |= QStyle::State_Sunken;
-
-        if(index.column() == static_cast<int>(N3NamesModel_defs::Active)
-                && static_cast<const N3NamesModel*>(index.model())->hidden(index.row()))
-            opt.state |= QStyle::State_Sunken;
-
-        if(index.column() == static_cast<int>(N3NamesModel_defs::Hidden)
-                && static_cast<const N3NamesModel*>(index.model())->active(index.row()))
+        if(!(index.model()->flags(index) & Qt::ItemIsEditable))
             opt.state |= QStyle::State_Sunken;
 
         qApp->style()->drawPrimitive(pe, &opt, painter);

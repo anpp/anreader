@@ -15,7 +15,6 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
 {
     ui->setupUi(this);
     m_title = title;
-    this->setWindowTitle(tr(m_title.toStdString().c_str()));
 
     raw_names = m_n3names.data();
     m_new_n3names = std::make_unique<N3Names>(raw_names);
