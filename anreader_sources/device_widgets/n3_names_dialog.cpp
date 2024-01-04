@@ -33,6 +33,10 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
     ui->tvNames->resizeColumnsToContents();
     ui->tvNames->resizeRowsToContents();
 
+    ui->tabWidget->setTabText(0, tr("List"));
+    ui->tabWidget->setTabText(1, tr("Alarms settings"));
+    ui->tabWidget->setTabVisible(1, names.type() == N3NamesType::Alarms);
+
     connect(ui->tvNames->model(), &QAbstractItemModel::dataChanged, [&] () { dataChanged();});
     dataChanged();
 }
