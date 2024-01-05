@@ -55,7 +55,7 @@ QByteArray BytesOperations::UIntToBytes(const quint32 &dword)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-uint16_t BytesOperations::getValue16(const QByteArray &bytes, const unsigned offset)
+uint16_t BytesOperations::getValue16(const QByteArray &bytes, unsigned offset)
 {
     if(static_cast<uint16_t>(bytes.size()) < offset + sizeof(uint16_t))
         return 0;
@@ -64,7 +64,7 @@ uint16_t BytesOperations::getValue16(const QByteArray &bytes, const unsigned off
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-uint32_t BytesOperations::getValue32(const QByteArray &bytes, const unsigned offset)
+uint32_t BytesOperations::getValue32(const QByteArray &bytes, unsigned offset)
 {
     if(static_cast<uint16_t>(bytes.size()) < offset + sizeof (uint32_t))
         return 0;

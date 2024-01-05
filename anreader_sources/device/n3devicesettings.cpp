@@ -131,17 +131,17 @@ void N3DeviceSettings::setCanopyAlarmsMode(canopy_alarms_mode value)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-uint8_t N3DeviceSettings::getByte(int offset) const
+uint8_t N3DeviceSettings::getByte(ds_offsets offset) const
 {
-    if(m_data.size() >= offset)
-        return m_data[offset];
+    if(m_data.size() >= static_cast<int>(offset))
+        return m_data[static_cast<int>(offset)];
     return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3DeviceSettings::setByte(uint8_t byte, int offset)
+void N3DeviceSettings::setByte(uint8_t byte, ds_offsets offset)
 {
-    if(m_data.size() >= offset)
-        m_data[offset] = byte;
+    if(m_data.size() >= static_cast<int>(offset))
+        m_data[static_cast<int>(offset)] = byte;
 }
 

@@ -9,7 +9,7 @@
 class ANames
 {    
 public:
-    explicit ANames(): m_data() {};
+    explicit ANames() {};
     virtual ~ANames() {}
 
     virtual uint count() const = 0;

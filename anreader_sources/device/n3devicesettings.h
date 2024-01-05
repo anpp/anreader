@@ -3,20 +3,20 @@
 
 #include "adevicesettings.h"
 
-enum ds_offsets: int      {altitudeMeasure = 2,
-                           speedMeasure = 3,
-                           temperatureMeasure = 4,
-                           displayFlipped = 5,
-                           logbookEnabled = 6,
-                           timeFormat = 7,
-                           dateFormat = 8,
-                           canopyDisplayEnabled = 9,
-                           climbDisplayMode = 10,
-                           canopyAlarmsMode = 14};
-
 
 class N3DeviceSettings : public ADeviceSettings
 {
+    enum class ds_offsets: int      {altitudeMeasure = 2,
+                                     speedMeasure = 3,
+                                     temperatureMeasure = 4,
+                                     displayFlipped = 5,
+                                     logbookEnabled = 6,
+                                     timeFormat = 7,
+                                     dateFormat = 8,
+                                     canopyDisplayEnabled = 9,
+                                     climbDisplayMode = 10,
+                                     canopyAlarmsMode = 14};
+
 public:
     N3DeviceSettings() {};
     virtual ~N3DeviceSettings() override {}
@@ -47,8 +47,8 @@ public:
 
 private:    
 
-    uint8_t getByte(int offset) const;
-    void setByte(uint8_t byte, int offset);
+    uint8_t getByte(ds_offsets offset) const;
+    void setByte(uint8_t byte, ds_offsets offset);
 
 };
 

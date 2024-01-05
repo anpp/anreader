@@ -21,8 +21,8 @@ public:
     static uint32_t bytesToUInt32(const QByteArray &data, uint pos);
     static uint32_t bytesToUInt(const char &byte0, const char &byte1, const char &byte2, const char &byte3);
     static QByteArray UIntToBytes(const quint32 &dword);
-    static uint16_t getValue16(const QByteArray &bytes, const unsigned offset);
-    static uint32_t getValue32(const QByteArray &bytes, const unsigned offset);
+    static uint16_t getValue16(const QByteArray &bytes, unsigned offset);
+    static uint32_t getValue32(const QByteArray &bytes, unsigned offset);
 
 
 };

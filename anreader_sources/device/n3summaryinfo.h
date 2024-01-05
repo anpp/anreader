@@ -3,22 +3,20 @@
 
 #include "asummaryinfo.h"
 
-
-enum si_offsets: unsigned {odometerJumps = 2,
-                           totalJumps = 4,
-                           totalJumps_not_del = 6,
-                           totalFreeFallTime = 8,
-                           totalCanopyTime = 12,
-                           nextJumpNumber = 16,
-                           topJumpNumber = 18,
-                           lastJumpOffset = 20,
-                           firstJumpNumber = 22,
-                           currentDZ = 24,
-                           currentAP = 26};
-
-
 class N3SummaryInfo : public ASummaryInfo
 {
+    enum class si_offsets: unsigned {odometerJumps = 2,
+                                     totalJumps = 4,
+                                     totalJumps_not_del = 6,
+                                     totalFreeFallTime = 8,
+                                     totalCanopyTime = 12,
+                                     nextJumpNumber = 16,
+                                     topJumpNumber = 18,
+                                     lastJumpOffset = 20,
+                                     firstJumpNumber = 22,
+                                     currentDZ = 24,
+                                     currentAP = 26};
+
 public:
     explicit N3SummaryInfo() {};
     virtual ~N3SummaryInfo() override {}
@@ -39,7 +37,7 @@ public:
     void setAPIndex(uint16_t value) override;
 
 private:
-    void setWord(uint16_t value, int offset);
+    void setWord(uint16_t value, si_offsets offset);
 
 };
 
