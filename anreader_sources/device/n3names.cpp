@@ -1,5 +1,6 @@
 #include "n3names.h"
 #include "n3_constants.h"
+#include "bytes_operations.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 void N3Names::calculateCheckSum()
@@ -41,7 +42,7 @@ bool N3Names::used(uint index) const
     int offset = (index * N3NamesValues::length) + N3NamesValues::offset;
 
     if(index < filled())
-        return (m_data[offset + 1] & 0b10000000) >> 7;
+        return BytesOperations::checkBit(m_data[offset + 1], 7);
     return false;
 
 }
@@ -52,7 +53,7 @@ bool N3Names::hidden(uint index) const
     int offset = (index * N3NamesValues::length) + N3NamesValues::offset;
 
     if(index < filled())
-        return (m_data[offset] & 0b10000000) >> 7;
+        return BytesOperations::checkBit(m_data[offset], 7);
     return false;
 }
 
@@ -150,8 +151,8 @@ QString N3Names::byIndex(uint index) const
         for(int i = offset; i < offset + N3NamesValues::length; ++i)
             bytes_name[i - offset] = m_data[i];
 
-        bytes_name[0] = bytes_name[0] & 0b01111111;
-        bytes_name[1] = bytes_name[1] & 0b01111111;
+        bytes_name[0] = BytesOperations::setHighBit(bytes_name[0], false);
+        bytes_name[1] = BytesOperations::setHighBit(bytes_name[1], false);
         result = QString::fromLatin1(bytes_name);
     }
     return result;
@@ -163,11 +164,6 @@ void N3Names::setHighBit(uint index, uint byte_number, bool value)
     int offset = (index * N3NamesValues::length) + N3NamesValues::offset + byte_number;
 
     if(index < count())
-    {
-        if(value)
-            m_data[offset] = m_data[offset] | 0b10000000;
-        else
-            m_data[offset] = m_data[offset] & ~0b10000000;
-    }
+        m_data[offset] = BytesOperations::setHighBit(m_data[offset], value);
 }
 

@@ -72,3 +72,24 @@ uint32_t BytesOperations::getValue32(const QByteArray &bytes, unsigned offset)
     return BytesOperations::bytesToUInt32(bytes, offset);
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+uint8_t BytesOperations::setHighBit(uint8_t byte, bool value)
+{
+    return setBit(byte, 7, value);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+uint8_t BytesOperations::setBit(uint8_t byte, int index, bool value)
+{
+    if(value)
+        return byte | (1 << index);
+    else
+        return byte & ~(1 << index);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+bool BytesOperations::checkBit(u_int8_t byte, int index)
+{
+    return (byte & (1 << index)) != 0;
+}
+

@@ -7,6 +7,7 @@
 #include "jumps/n3jump.h"
 #include "n3summaryinfo.h"
 #include "n3devicesettings.h"
+#include "n3alarms_settings.h"
 #include "n3names.h"
 
 
@@ -93,6 +94,7 @@ Neptune::Neptune(QString portName, QObject *parent) : AbstractDevice(portName, p
     m_dropzones = std::make_unique<N3Names>(N3NamesType::Dropzones);
     m_airplanes = std::make_unique<N3Names>(N3NamesType::Airplanes);
     m_alarms_names = std::make_unique<N3Names>(N3NamesType::Alarms);
+    m_alarms_settings = std::make_unique<N3AlarmsSettings>();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -150,6 +152,12 @@ void Neptune::set_date_time(const QDateTime &a_datetime)
     AbstractDevice::set_date_time(a_datetime);
 
     executeCommand(N3Commands::SetDateTime);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+N3AlarmsSettings &Neptune::alarms_settings() const
+{
+    return *m_alarms_settings;
 }
 
 
@@ -693,8 +701,11 @@ QByteArray *Neptune::getRawData(const unsigned int address)
     if((address >= N3Addresses::Airplanes) && (address < N3Addresses::Airplanes + N3Constants::N3NamesSize))
         result = &airplanes().data();
 
-    if((address >= N3Addresses::AlarmNames) && (address < N3Addresses::AlarmNames + N3Constants::N3NamesSize))
+    if((address >= N3Addresses::AlarmsNames) && (address < N3Addresses::AlarmsNames + N3Constants::N3NamesSize))
         result = &alarms().data();
+
+    if((address >= N3Addresses::AlarmsSettings) && (address < N3Addresses::AlarmsSettings + N3Constants::AlarmsSettingsSize))
+        result = &alarms_settings().data();
 
     return result;
 }

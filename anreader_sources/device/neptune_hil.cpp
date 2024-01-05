@@ -48,7 +48,8 @@ void Neptune_HiL::read_airplanes()
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::read_alarms()
 {
-    executeCommand(N3Commands::ReadMemory, N3Addresses::AlarmNames, N3Constants::N3NamesSize);
+    executeCommand(N3Commands::ReadMemory, N3Addresses::AlarmsNames, N3Constants::N3NamesSize);
+    executeCommand(N3Commands::ReadMemory, N3Addresses::AlarmsSettings, N3Constants::AlarmsSettingsSize);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

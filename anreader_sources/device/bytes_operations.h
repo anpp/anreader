@@ -23,6 +23,9 @@ public:
     static QByteArray UIntToBytes(const quint32 &dword);
     static uint16_t getValue16(const QByteArray &bytes, unsigned offset);
     static uint32_t getValue32(const QByteArray &bytes, unsigned offset);
+    static uint8_t setHighBit(uint8_t byte, bool value);
+    static uint8_t setBit(uint8_t byte, int index, bool value);
+    static bool checkBit(u_int8_t byte, int index);
 
 
 };

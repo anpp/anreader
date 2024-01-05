@@ -7,6 +7,7 @@
 #include "n3_constants.h"
 
 class Neptune;
+class N3AlarmsSettings;
 
 struct queue_command
 {
@@ -75,6 +76,8 @@ public:
     virtual int product_type() const override { return static_cast<int>(m_product_type); }
 
     void setCorrectDateKoeff(int value) { m_correct_date_koeff = value; }
+    N3AlarmsSettings& alarms_settings() const;
+
 protected:
     void setupComPort() override;
     void executeCommand(N3Commands command, unsigned int address = 0, unsigned int length = 0, char *wbytes = nullptr, quint16 delay_ms = N3Constants::DelayBetweenCommands);
@@ -86,6 +89,7 @@ protected:
 
     QByteArray rawDataDetails;
     QByteArray rawDateTime;
+    std::unique_ptr<N3AlarmsSettings> m_alarms_settings;
 
     volatile unsigned int m_NumBlocks{0};
 
