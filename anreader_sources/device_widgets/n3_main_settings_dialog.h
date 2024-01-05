@@ -25,7 +25,6 @@ private:
     Ui::N3MainSettingsDialog *ui;
     const N3DeviceSettings& m_n3settings;
     std::unique_ptr<N3DeviceSettings> m_new_n3settings;
-    QByteArray raw_settings;
     QString m_title;
 
     void fillComboBoxes();

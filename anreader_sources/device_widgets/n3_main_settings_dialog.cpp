@@ -15,9 +15,9 @@ N3MainSettingsDialog::N3MainSettingsDialog(const N3DeviceSettings& n3settings, Q
     ui->setupUi(this);
 
     m_title = windowTitle();
-    raw_settings = m_n3settings.data();
 
-    m_new_n3settings = std::make_unique<N3DeviceSettings>(raw_settings);
+    m_new_n3settings = std::make_unique<N3DeviceSettings>();
+    m_new_n3settings->data() = m_n3settings.data();
 
     fillComboBoxes();
     initComboBoxes();

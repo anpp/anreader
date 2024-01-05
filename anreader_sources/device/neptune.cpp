@@ -88,8 +88,8 @@ Neptune::Neptune(QString portName, QObject *parent) : AbstractDevice(portName, p
     connect(&keep_alive_thread, &QThread::started, &keep_alive_worker, &WorkerKeepAlive::process);
     connect(&keep_alive_worker, &WorkerKeepAlive::finished, &keep_alive_thread, &QThread::quit, Qt::DirectConnection);
 
-    m_summary = std::make_unique<N3SummaryInfo>(rawDataSummary);
-    m_settings = std::make_unique<N3DeviceSettings>(rawDataSettings);
+    m_summary = std::make_unique<N3SummaryInfo>();
+    m_settings = std::make_unique<N3DeviceSettings>();
     m_dropzones = std::make_unique<N3Names>(N3NamesType::Dropzones);
     m_airplanes = std::make_unique<N3Names>(N3NamesType::Airplanes);
     m_alarms_names = std::make_unique<N3Names>(N3NamesType::Alarms);
@@ -679,13 +679,13 @@ QByteArray *Neptune::getRawData(const unsigned int address)
     QByteArray *result = nullptr;
 
     if((address >= N3Addresses::Summary) && (address < N3Addresses::Summary + N3Constants::SummarySize))
-        result = &rawDataSummary;
+        result = &summary().data();
 
     if((address >= N3Addresses::JumpDetails) && (address < N3Addresses::JumpDetails + N3Constants::JumpDetailsSize))
         result = &rawDataDetails;
 
     if((address >= N3Addresses::DeviceSettings) && (address < N3Addresses::DeviceSettings + N3Constants::DeviceSettingsSize))
-        result = &rawDataSettings;
+        result = &settings().data();
 
     if((address >= N3Addresses::DropZones) && (address < N3Addresses::DropZones + N3Constants::N3NamesSize))
         result = &dropzones().data();

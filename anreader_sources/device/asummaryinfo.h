@@ -7,7 +7,7 @@
 class ASummaryInfo
 {
 public:
-    explicit ASummaryInfo(QByteArray& adata): m_data(adata) {};
+    explicit ASummaryInfo() {};
     virtual ~ASummaryInfo() {}
 
     virtual uint16_t odometerJumps() const = 0;
@@ -24,10 +24,10 @@ public:
     virtual void setDZIndex(uint16_t value) = 0;
     virtual void setAPIndex(uint16_t value) = 0;
 
-    QByteArray& data() const {return m_data; }
+    QByteArray& data() {return m_data; }
 
 protected:
-    QByteArray& m_data;
+    QByteArray m_data;
 };
 
 #endif // ASUMMARYINFO_H

@@ -18,7 +18,7 @@ enum ds_offsets: int      {altitudeMeasure = 2,
 class N3DeviceSettings : public ADeviceSettings
 {
 public:
-    N3DeviceSettings(QByteArray& adata) : ADeviceSettings(adata) {};
+    N3DeviceSettings() {};
     virtual ~N3DeviceSettings() override {}
     void calculateCheckSum();
 

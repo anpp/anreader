@@ -73,7 +73,7 @@ uint Neptune_HiL::n_iterations_by_jumps(const uint n_jumps)
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::write_settings()
 {
-    write_to_memory(N3Addresses::DeviceSettings, N3Constants::DeviceSettingsSize, rawDataSettings);
+    write_to_memory(N3Addresses::DeviceSettings, N3Constants::DeviceSettingsSize, settings().data());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ void Neptune_HiL::write_airplanes()
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::write_summary_jumps()
 {
-    write_to_memory(N3Addresses::Summary, N3Constants::SummarySize, rawDataSummary);
+    write_to_memory(N3Addresses::Summary, N3Constants::SummarySize, summary().data());
 }
 
 //----------------------------------------------------------------------------------------------------------------------

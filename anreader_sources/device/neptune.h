@@ -75,8 +75,6 @@ public:
     virtual int product_type() const override { return static_cast<int>(m_product_type); }
 
     void setCorrectDateKoeff(int value) { m_correct_date_koeff = value; }
-    void setRawDataSettings(const QByteArray& value) { rawDataSettings = value; }
-
 protected:
     void setupComPort() override;
     void executeCommand(N3Commands command, unsigned int address = 0, unsigned int length = 0, char *wbytes = nullptr, quint16 delay_ms = N3Constants::DelayBetweenCommands);
@@ -87,8 +85,6 @@ protected:
     N3CommTypes m_commutication_type = N3CommTypes::Unknown;
 
     QByteArray rawDataDetails;
-    QByteArray rawDataSummary;
-    QByteArray rawDataSettings;
     QByteArray rawDateTime;
 
     volatile unsigned int m_NumBlocks{0};

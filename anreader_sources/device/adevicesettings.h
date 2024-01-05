@@ -21,7 +21,7 @@ class ADeviceSettings
 {
     mutable QStringList m_dstlist;
 public:
-    explicit ADeviceSettings(QByteArray& adata);
+    explicit ADeviceSettings();
     virtual ~ADeviceSettings() {}
 
     virtual altitude_measure    altitudeMeasure() const = 0;
@@ -46,11 +46,12 @@ public:
     virtual void                setClimbDisplayMode(climb_display_mode value) = 0;
     virtual void                setCanopyAlarmsMode(canopy_alarms_mode value) = 0;
 
-    QByteArray& data() const {return m_data; }
+    QByteArray& data() {return m_data; }
+    const QByteArray& data() const {return m_data; }
     const QStringList& listBySettingType(device_setting_type dst) const;
 
 protected:
-    QByteArray& m_data;
+    QByteArray m_data;
 };
 
 #endif // ADEVICESETTINGS_H

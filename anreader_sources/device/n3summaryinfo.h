@@ -20,7 +20,7 @@ enum si_offsets: unsigned {odometerJumps = 2,
 class N3SummaryInfo : public ASummaryInfo
 {
 public:
-    explicit N3SummaryInfo(QByteArray& adata): ASummaryInfo(adata) {};
+    explicit N3SummaryInfo() {};
     virtual ~N3SummaryInfo() override {}
     void calculateCheckSum();
 
