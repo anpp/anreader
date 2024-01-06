@@ -1,6 +1,12 @@
 #include "n3alarms_settings.h"
 #include "n3_constants.h"
+#include "n3devicesettings.h"
 #include "bytes_operations.h"
+
+//----------------------------------------------------------------------------------------------------------------------
+N3AlarmsSettings::N3AlarmsSettings(N3DeviceSettings* device_settings) : m_device_settings(device_settings)
+{
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::calculateCheckSum()
@@ -46,7 +52,7 @@ bool N3AlarmsSettings::enabledCanopyAlarms() const
 //----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::setActiveFreeFallIndex(int index)
 {
-    if(m_data.size() > static_cast<int>(as_offsets::activeFreeFallItem) && index >= 0 && index < 10)
+    if(m_data.size() > static_cast<int>(as_offsets::activeFreeFallItem) && index >= 0 && index < 8)
     {
         bool enabled_alarms = enabledFreeFallAlarms();
         m_data[static_cast<int>(as_offsets::activeFreeFallItem)] = index;
@@ -57,7 +63,7 @@ void N3AlarmsSettings::setActiveFreeFallIndex(int index)
 //----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::setActiveCanopyIndex(int index)
 {
-    if(m_data.size() > static_cast<int>(as_offsets::activeCanopyItem) && index >= 0 && index < 10)
+    if(m_data.size() > static_cast<int>(as_offsets::activeCanopyItem) && index >= 0 && index < 8)
     {
         bool enabled_alarms = enabledCanopyAlarms();
         m_data[static_cast<int>(as_offsets::activeCanopyItem)] = index;
@@ -78,3 +84,22 @@ void N3AlarmsSettings::enableCanopyAlarms(bool enable)
     if(m_data.size() > static_cast<int>(as_offsets::activeCanopyItem))
         m_data[static_cast<int>(as_offsets::activeCanopyItem)] = BytesOperations::setHighBit(m_data[static_cast<int>(as_offsets::activeCanopyItem)], !enable);
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+bool operator==(const N3AlarmsSettings& left, const N3AlarmsSettings& right)
+{
+    return (left.m_data == right.m_data);
+}
+/*
+//----------------------------------------------------------------------------------------------------------------------
+N3AlarmsSettings& N3AlarmsSettings::operator=(const N3AlarmsSettings &right) noexcept
+{
+    if (this == &right)
+        return *this;
+
+    m_data = right.m_data;
+    return *this;
+}
+*/
+
+

@@ -2,6 +2,8 @@
 #include "ui_n3_names_dialog.h"
 
 #include "device/n3names.h"
+#include "device/n3alarms_names.h"
+#include "device/n3alarms_settings.h"
 #include "n3names_model.h"
 #include "n3names_delegate.h"
 
@@ -16,7 +18,11 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
     ui->setupUi(this);
     m_title = title;
 
-    m_new_n3names = std::make_unique<N3Names>();
+    if(names.type() == N3NamesType::Alarms)
+        m_new_n3names = std::make_unique<N3AlarmsNames>(static_cast<const N3AlarmsNames&>(names).deviceSettings());
+    else
+        m_new_n3names = std::make_unique<N3Names>();
+
     *m_new_n3names = m_n3names; //оператор = перегружен, в m_new_n3names полная копия m_n3names
 
     m_delegate = std::make_unique<N3NamesDelegate>();

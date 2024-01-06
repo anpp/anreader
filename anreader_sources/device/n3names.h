@@ -9,7 +9,8 @@ enum class N3NamesType: int {Undefined = -1, Dropzones = 0, Airplanes, Alarms};
 
 class N3Names : public ANames
 {
-    mutable QMap<uint, bool> m_map_active;
+protected:
+    QMap<uint, bool> m_map_active;
     N3NamesType m_type = N3NamesType::Undefined;
 public:
     enum N3NamesValues: int {size = 32, length = 10, offset = 2};

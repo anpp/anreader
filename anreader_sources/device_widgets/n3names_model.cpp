@@ -1,11 +1,21 @@
 #include "n3names_model.h"
 #include "device/n3names.h"
+#include <QFont>
 
 //------------------------------------------------------------------------------------------
 QVariant N3NamesModel::data(const QModelIndex &index, int role) const
 {
     if(index.isValid())
-        return value(index.row(), index.column(), role);
+    {
+        if(Qt::EditRole == role || Qt::DisplayRole == role)
+            return value(index.row(), index.column(), role);
+        if(Qt::FontRole == role && m_data.active(index.row()))
+        {
+            QFont font;
+            font.setBold(true);
+            return font;
+        }
+    }
     return QVariant();
 }
 

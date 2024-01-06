@@ -13,7 +13,8 @@ HEADERS += \
     device/bytes_operations.h \
     device/n3devicesettings.h \
     device/n3names.h \
-    device/n3alarms_settings.h
+    device/n3alarms_settings.h \
+    device/n3alarms_names.h
 
 SOURCES += \
     device/anames.cpp \
@@ -29,4 +30,5 @@ SOURCES += \
     device/bytes_operations.cpp \
     device/n3devicesettings.cpp \
     device/n3names.cpp \
-    device/n3alarms_settings.cpp
+    device/n3alarms_settings.cpp \
+    device/n3alarms_names.cpp \

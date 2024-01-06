@@ -390,7 +390,7 @@ void N3Widget::N3Names_dialog(N3Names &names)
     std::unique_ptr<N3NamesDialog> nd = std::make_unique<N3NamesDialog>(title, names, this);
     if(nd->exec() == QDialog::Accepted)
     {
-        if(nd->isChanged())
+        if(nd->isChanged() && m_device)
         {
             bool is_changed_current = nd->isChangedCurrentName();
             bool is_changed_data = nd->isChangedData();
@@ -572,7 +572,7 @@ void N3Widget::N3Settings()
     std::unique_ptr<N3MainSettingsDialog> sd = std::make_unique<N3MainSettingsDialog>(static_cast<const N3DeviceSettings&>(m_device->settings()), this);
     if(sd->exec() == QDialog::Accepted)
     {
-        if(sd->isChanged())
+        if(sd->isChanged() && m_device)
         {
             m_device->settings().data() = sd->new_settings().data();
             m_device->write_settings();
