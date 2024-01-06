@@ -35,7 +35,6 @@ N3MainSettingsDialog::~N3MainSettingsDialog()
 //-------------------------------------------------------------------------------------
 bool N3MainSettingsDialog::isChanged() const
 {
-    //если прибор отключится - тут может быть падение
     return m_new_n3settings->data() != m_n3settings.data();
 }
 

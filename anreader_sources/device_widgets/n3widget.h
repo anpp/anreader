@@ -74,6 +74,7 @@ public slots:
 
 class N3Widget : public DWidget
 {
+    Q_OBJECT
 public:
     explicit N3Widget(dtype device_type, QWidget *parent = nullptr);
     explicit N3Widget(QWidget *parent = nullptr);
@@ -94,6 +95,8 @@ private:
     DeviceFrame *device_frame = nullptr;
     std::unique_ptr<QTimer> m_clock_timer;
 
+signals:
+    void device_disconnect();
 
 public slots:
     virtual void stateChanged() override;

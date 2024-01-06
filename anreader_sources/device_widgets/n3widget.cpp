@@ -388,6 +388,8 @@ void N3Widget::N3Names_dialog(N3Names &names)
     QString title = (names.type() == N3NamesType::Airplanes ? "Airplanes" :
                                                               (names.type() == N3NamesType::Dropzones ? "Dropzones" : "Alarms"));
     std::unique_ptr<N3NamesDialog> nd = std::make_unique<N3NamesDialog>(title, names, this);
+    connect(this, &N3Widget::device_disconnect, nd.get(), &QDialog::close, Qt::QueuedConnection);
+
     if(nd->exec() == QDialog::Accepted)
     {
         if(nd->isChanged() && m_device)
@@ -439,6 +441,7 @@ void N3Widget::stateChanged()
         setImage("n3_off.png");
         deleteDeviceFrame();
         deleteConnectButton();
+        emit device_disconnect();
     }
     else
     {
@@ -454,6 +457,7 @@ void N3Widget::stateChanged()
             break;
         case AbstractDevice::DeviceStates::Disconnected:
             setImage("n3_com.png");
+            emit device_disconnect();
             deleteDeviceFrame();
             break;
         case AbstractDevice::DeviceStates::Initializing:
@@ -474,6 +478,7 @@ void N3Widget::stateChanged()
             break;
         case AbstractDevice::DeviceStates::Error:
             setImage("n3_error.png");
+            emit device_disconnect();
             break;
         default:
            setImage("n3_off.png");
@@ -557,6 +562,8 @@ void N3Widget::choice_datetime()
     if(!m_device) return;
 
     std::unique_ptr<ChoiceDateTimeDialog> cdtDialog = std::make_unique<ChoiceDateTimeDialog>(m_device->dateTime(), this);
+    connect(this, &N3Widget::device_disconnect, cdtDialog.get(), &QDialog::close, Qt::QueuedConnection);
+
     if(QDialog::Accepted == cdtDialog->exec())
     {
         if(m_device)
@@ -570,6 +577,8 @@ void N3Widget::N3Settings()
     if(!m_device) return;
 
     std::unique_ptr<N3MainSettingsDialog> sd = std::make_unique<N3MainSettingsDialog>(static_cast<const N3DeviceSettings&>(m_device->settings()), this);
+    connect(this, &N3Widget::device_disconnect, sd.get(), &QDialog::close, Qt::QueuedConnection);
+
     if(sd->exec() == QDialog::Accepted)
     {
         if(sd->isChanged() && m_device)
