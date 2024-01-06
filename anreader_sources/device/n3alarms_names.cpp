@@ -14,6 +14,13 @@ N3DeviceSettings* N3AlarmsNames::deviceSettings() const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void N3AlarmsNames::calculateCheckSum()
+{
+    N3Names::calculateCheckSum();
+    m_settings->calculateCheckSum();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 bool operator==(const N3AlarmsNames& left, const N3AlarmsNames& right)
 {
     return (static_cast<const N3Names&>(left) == static_cast<const N3Names&>(right) && *left.m_settings == *right.m_settings);

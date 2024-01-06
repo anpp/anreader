@@ -18,7 +18,7 @@ public:
     explicit N3Names(N3NamesType atype = N3NamesType::Undefined):
         m_type(atype) { };
     virtual ~N3Names() override {};
-    void calculateCheckSum();
+    virtual void calculateCheckSum();
 
     uint count() const override;
     uint filled() const override;

@@ -14,6 +14,7 @@ public:
 
     N3AlarmsSettings& settings() const { return *m_settings; };
     N3DeviceSettings* deviceSettings() const;
+    void calculateCheckSum() override;
 
     friend bool operator==(const N3AlarmsNames& left, const N3AlarmsNames& right);
     N3AlarmsNames& operator=(const N3AlarmsNames& right) noexcept;

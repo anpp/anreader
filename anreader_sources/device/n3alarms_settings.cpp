@@ -49,12 +49,7 @@ bool N3AlarmsSettings::enabledCanopyAlarms() const
 int8_t N3AlarmsSettings::nameIndex(int index) const
 {
     if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10))
-    {
-        uint8_t result = m_data[static_cast<int>(as_offsets::beginArray) + (index * 10)];
-        result = BytesOperations::setBit(result, 0, false);
-        result = BytesOperations::setBit(result, 1, false);
-        return result >> 2;
-    }
+        return (m_data[static_cast<int>(as_offsets::beginArray) + (index * 10)] >> 2);
     return -1;
 }
 
@@ -74,9 +69,7 @@ N3AlarmsSettings::alarm_type N3AlarmsSettings::type(int index) const
 int8_t N3AlarmsSettings::tone(int index, int altindex) const
 {
     if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10) + 1 + altindex)
-    {
         return m_data[static_cast<int>(as_offsets::beginArray) + (index * 10) + 1 + altindex];
-    }
     return -1;
 }
 
