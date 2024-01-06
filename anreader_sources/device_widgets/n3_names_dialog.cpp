@@ -18,12 +18,16 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
     ui->setupUi(this);
     m_title = title;
 
-    if(names.type() == N3NamesType::Alarms)
+    if(m_n3names.type() == N3NamesType::Alarms)
+    {
         m_new_n3names = std::make_unique<N3AlarmsNames>(static_cast<const N3AlarmsNames&>(names).deviceSettings());
+        static_cast<N3AlarmsNames&>(*m_new_n3names) = static_cast<const N3AlarmsNames&>(m_n3names);
+    }
     else
+    {
         m_new_n3names = std::make_unique<N3Names>();
-
-    *m_new_n3names = m_n3names; //оператор = перегружен, в m_new_n3names полная копия m_n3names
+        *m_new_n3names = m_n3names; //оператор = перегружен, в m_new_n3names полная копия m_n3names
+    }
 
     m_delegate = std::make_unique<N3NamesDelegate>();
 
@@ -55,6 +59,8 @@ N3NamesDialog::~N3NamesDialog()
 //--------------------------------------------------------------------------------------------------------------
 bool N3NamesDialog::isChanged() const
 {
+    if(m_n3names.type() == N3NamesType::Alarms)
+        return !(static_cast<const N3AlarmsNames&>(*m_new_n3names) == static_cast<const N3AlarmsNames&>(m_n3names));
     return !(*m_new_n3names == m_n3names);
 }
 
