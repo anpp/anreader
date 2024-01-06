@@ -938,13 +938,13 @@ void MainWindow::initDataInLists(const QString &aircraft, const QString &dropzon
         return;
 
     if(aircraft != "" && dl.aircrafts().find(aircraft) == dl.aircrafts().end())
-        dl.aircrafts()[aircraft] = "";
+        dl.aircrafts()[aircraft.trimmed()] = "";
 
     if(dropzone != "" && dl.dropzones().find(dropzone) == dl.dropzones().end())
-        dl.dropzones()[dropzone] = "";
+        dl.dropzones()[dropzone.trimmed()] = "";
 
     if(canopy != "" && dl.canopies().find(canopy) == dl.canopies().end())
-        dl.canopies()[canopy] = "";
+        dl.canopies()[canopy.trimmed()] = "";
 
 }
 

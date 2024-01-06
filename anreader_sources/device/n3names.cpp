@@ -121,7 +121,7 @@ void N3Names::setFilled(const uint value)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-N3Names &N3Names::operator=(const N3Names &right)
+N3Names &N3Names::operator=(const N3Names &right) noexcept
 {
     if (this == &right)
         return *this;

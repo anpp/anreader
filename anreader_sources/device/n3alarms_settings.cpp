@@ -4,11 +4,6 @@
 #include "bytes_operations.h"
 
 //----------------------------------------------------------------------------------------------------------------------
-N3AlarmsSettings::N3AlarmsSettings(N3DeviceSettings* device_settings) : m_device_settings(device_settings)
-{
-}
-
-//----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::calculateCheckSum()
 {
     if(m_data.size() < static_cast<int>(N3Constants::DeviceSettingsSize)) return;
@@ -90,7 +85,7 @@ bool operator==(const N3AlarmsSettings& left, const N3AlarmsSettings& right)
 {
     return (left.m_data == right.m_data);
 }
-/*
+
 //----------------------------------------------------------------------------------------------------------------------
 N3AlarmsSettings& N3AlarmsSettings::operator=(const N3AlarmsSettings &right) noexcept
 {
@@ -100,6 +95,6 @@ N3AlarmsSettings& N3AlarmsSettings::operator=(const N3AlarmsSettings &right) noe
     m_data = right.m_data;
     return *this;
 }
-*/
+
 
 

@@ -28,7 +28,6 @@ N3AlarmsNames &N3AlarmsNames::operator=(const N3AlarmsNames &right) noexcept
     m_data = right.m_data;
     m_map_active = right.m_map_active;
     m_type = right.m_type;
-    //*m_settings = *right.m_settings;
-    m_settings->data() = right.m_settings->data();
+    *m_settings = *right.m_settings;
     return *this;
 }

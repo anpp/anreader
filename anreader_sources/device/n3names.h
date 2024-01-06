@@ -17,7 +17,7 @@ public:
 
     explicit N3Names(N3NamesType atype = N3NamesType::Undefined):
         m_type(atype) { };
-    virtual ~N3Names() override {}
+    virtual ~N3Names() override {};
     void calculateCheckSum();
 
     uint count() const override;
@@ -35,7 +35,7 @@ public:
     void setFilled(const uint value) override;
 
     friend bool operator==(const N3Names& left, const N3Names& right);
-    N3Names& operator=(const N3Names& right);
+    N3Names& operator=(const N3Names& right) noexcept;
     const QMap<uint, bool>& map_active() const { return m_map_active; };
     N3NamesType type() const { return m_type; };
 

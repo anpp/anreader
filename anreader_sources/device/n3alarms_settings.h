@@ -18,10 +18,9 @@ class N3AlarmsSettings
     QByteArray m_data;
     N3DeviceSettings *m_device_settings = nullptr;
     //std::unique_ptr<std::vector<std::unique_ptr<QString>>> m_names = std::make_unique<std::vector<std::unique_ptr<QString>>>();
-
 public:
-    explicit N3AlarmsSettings(N3DeviceSettings* device_settings = nullptr);
-    virtual ~N3AlarmsSettings() {}
+    explicit N3AlarmsSettings(N3DeviceSettings* device_settings = nullptr) : m_device_settings(device_settings) {};
+    virtual ~N3AlarmsSettings() {};
 
     void calculateCheckSum();
     int activeFreeFallIndex(N3AlarmsSettings) const;
@@ -34,14 +33,11 @@ public:
     void enableFreeFallAlarms(bool enable);
     void enableCanopyAlarms(bool enable);
 
-    QByteArray& data() {return m_data; }
-    N3DeviceSettings* deviceSettings() const { return m_device_settings; }
+    QByteArray& data() {return m_data; };
+    N3DeviceSettings* deviceSettings() const { return m_device_settings; };
 
     friend bool operator==(const N3AlarmsSettings& left, const N3AlarmsSettings& right);
-    //N3DeviceSettings& operator=(const N3DeviceSettings& right) noexcept;
-
-protected:
-
+    N3AlarmsSettings& operator=(const N3AlarmsSettings& right) noexcept;
 
 };
 

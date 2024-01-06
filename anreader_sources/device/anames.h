@@ -10,7 +10,7 @@ class ANames
 {    
 public:
     explicit ANames() {};
-    virtual ~ANames() {}
+    virtual ~ANames() {};
 
     virtual uint count() const = 0;
     virtual uint filled() const = 0;        
@@ -27,8 +27,8 @@ public:
     virtual void setName(uint index, const QString value) = 0;
     virtual void setFilled(const uint value) = 0;
 
-    QByteArray& data() {return m_data; }
-    const QByteArray& data_const() const {return m_data; }
+    QByteArray& data() {return m_data; };
+    const QByteArray& data_const() const {return m_data; };
 
 protected:
     virtual QString byIndex(uint index) const = 0;
