@@ -10,10 +10,12 @@ class N3DeviceSettings;
 
 class N3AlarmsSettings
 {
-    enum class as_offsets: int      {activeFreeFallItem = 2,
-                                     activeCanopyItem = 3,
-                                     beginArray = 4
-                                    };
+    enum class as_offsets: int {activeFreeFallItem = 2,
+                                activeCanopyItem = 3,
+                                beginArray = 4,
+                                altitudeOffset = 4
+                               };
+    enum class alarm_type: uint8_t {FreeFall = 0, Camopy = 1, unk = 2};
 
     QByteArray m_data;
     N3DeviceSettings *m_device_settings = nullptr;
@@ -27,6 +29,10 @@ public:
     int activeCanopyIndex(N3AlarmsSettings) const;
     bool enabledFreeFallAlarms() const;
     bool enabledCanopyAlarms() const;
+    int8_t nameIndex(int index) const;
+    alarm_type type(int index) const;
+    int8_t tone(int index, int altindex) const;
+    uint16_t altitude(int index, int altindex) const;
 
     void setActiveFreeFallIndex(int index);
     void setActiveCanopyIndex(int index);
