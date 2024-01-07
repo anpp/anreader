@@ -3,12 +3,24 @@
 #include "bytes_operations.h"
 
 //----------------------------------------------------------------------------------------------------------------------
+N3Names::N3Names(N3NamesType atype) : m_type(atype)
+{
+}
+
 void N3Names::calculateCheckSum()
 {
     if(m_data.size() < static_cast<int>(N3Constants::N3NamesSize)) return;
     m_data[0] = 1;
     for(unsigned int i = 1; i < N3Constants::N3NamesSize; i++)
         m_data[0] = m_data[0] + m_data[i];
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3Names::initAfterLoad()
+{
+    //заполнение массива чистыми данными, разделенными нулями (в приборе встречается мусор между данными)
+    for(uint i = 0; i < N3NamesValues::size; ++i)
+        setName(i, byIndex(i));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -91,7 +103,7 @@ void N3Names::setUsed(uint index, bool value)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void N3Names::setName(uint index, const QString value)
+void N3Names::setName(uint index, const QString& value)
 {
     bool saved_used = used(index);
     bool saved_hidden = hidden(index);

@@ -1,6 +1,5 @@
 #include "csvparser.h"
 #include <QStringList>
-#include <QDebug>
 
 //----------------------------------------------------------------------------------------------------------------------
 CSVParser::CSVParser()

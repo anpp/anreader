@@ -24,7 +24,7 @@ public:
     virtual void setActive(uint index, bool value = true) = 0;
     virtual void setHidden(uint index, bool value = true) = 0;
     virtual void setUsed(uint index, bool value) = 0;
-    virtual void setName(uint index, const QString value) = 0;
+    virtual void setName(uint index, const QString& value) = 0;
     virtual void setFilled(const uint value) = 0;
 
     QByteArray& data() {return m_data; };

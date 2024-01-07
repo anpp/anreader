@@ -15,10 +15,10 @@ protected:
 public:
     enum N3NamesValues: int {size = 32, length = 10, offset = 2};
 
-    explicit N3Names(N3NamesType atype = N3NamesType::Undefined):
-        m_type(atype) { };
+    explicit N3Names(N3NamesType atype = N3NamesType::Undefined);
     virtual ~N3Names() override {};
     virtual void calculateCheckSum();
+    void initAfterLoad();
 
     uint count() const override;
     uint filled() const override;
@@ -31,7 +31,7 @@ public:
     void setActive(uint index, bool value = true) override;
     void setHidden(uint index, bool value = true) override;
     void setUsed(uint index, bool value) override;
-    void setName(uint index, const QString value) override;
+    void setName(uint index, const QString& value) override;
     void setFilled(const uint value) override;
 
     friend bool operator==(const N3Names& left, const N3Names& right);

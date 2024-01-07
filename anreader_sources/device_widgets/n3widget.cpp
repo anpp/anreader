@@ -521,6 +521,9 @@ void N3Widget::readed_summary_settings()
 
         m_clock_timer->start(1000);
 
+        static_cast<N3Names&>(m_device->airplanes()).initAfterLoad();
+        static_cast<N3Names&>(m_device->dropzones()).initAfterLoad();
+
         m_device->airplanes().setActive(summary.currentAPIndex());
         m_device->dropzones().setActive(summary.currentDZIndex());
     }
@@ -622,6 +625,7 @@ void N3Widget::edit_alarms()
 {
     if(!m_device) return;
     disconnect(m_device.get(), &Neptune::allCommandsComplete, nullptr, nullptr);
+    static_cast<N3Names&>(m_device->alarms()).initAfterLoad();
     N3Names_dialog(static_cast<N3Names&>(m_device->alarms()));
 }
 
