@@ -144,6 +144,7 @@ N3AlarmsSettings& N3AlarmsSettings::operator=(const N3AlarmsSettings &right) noe
         return *this;
 
     m_data = right.m_data;
+    m_device_settings = right.m_device_settings;
     return *this;
 }
 

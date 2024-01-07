@@ -8,12 +8,6 @@ N3AlarmsNames::N3AlarmsNames(N3DeviceSettings* device_settings) : N3Names(N3Name
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-N3DeviceSettings* N3AlarmsNames::deviceSettings() const
-{
-    return m_settings->deviceSettings();
-}
-
-//----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsNames::calculateCheckSum()
 {
     N3Names::calculateCheckSum();

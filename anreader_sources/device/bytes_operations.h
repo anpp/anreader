@@ -25,7 +25,7 @@ public:
     static uint32_t getValue32(const QByteArray &bytes, unsigned offset);
     static uint8_t setHighBit(uint8_t byte, bool value);
     static uint8_t setBit(uint8_t byte, int index, bool value);
-    static bool checkBit(u_int8_t byte, int index);
+    static bool checkBit(uint8_t byte, int index);
 
 
 };

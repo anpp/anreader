@@ -20,7 +20,7 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
 
     if(m_n3names.type() == N3NamesType::Alarms)
     {
-        m_new_n3names = std::make_unique<N3AlarmsNames>(static_cast<const N3AlarmsNames&>(names).deviceSettings());
+        m_new_n3names = std::make_unique<N3AlarmsNames>();
         static_cast<N3AlarmsNames&>(*m_new_n3names) = static_cast<const N3AlarmsNames&>(m_n3names);
 
         qDebug() << static_cast<N3AlarmsNames&>(*m_new_n3names).settings().altitude(0, 0);
@@ -59,10 +59,13 @@ N3NamesDialog::~N3NamesDialog()
 {
     delete ui;
 }
-
+#include <QDebug>
 //--------------------------------------------------------------------------------------------------------------
 bool N3NamesDialog::isChanged() const
 {
+    //qDebug() << m_new_n3names->data();
+    //qDebug() << m_n3names.data_const();
+
     if(m_n3names.type() == N3NamesType::Alarms)
         return !(static_cast<const N3AlarmsNames&>(*m_new_n3names) == static_cast<const N3AlarmsNames&>(m_n3names));
     return !(*m_new_n3names == m_n3names);

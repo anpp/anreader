@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <QToolButton>
 #include <QAction>
+#include <QApplication>
 
 const static QString button_add = QObject::tr("Add");
 
@@ -184,7 +185,12 @@ void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
         opt.state |= (index.data(Qt::EditRole).toBool() ? QStyle::State_On : QStyle::State_Off);
 
         if(!(index.model()->flags(index) & Qt::ItemIsEditable))
-            opt.state |= QStyle::State_Sunken;
+        {
+            if(QApplication::style()->objectName() == "fusion")
+                opt.state |= QStyle::State_Sunken;
+            else
+                opt.state &= ~QStyle::State_Enabled;
+        }
 
         qApp->style()->drawPrimitive(pe, &opt, painter);
         return;

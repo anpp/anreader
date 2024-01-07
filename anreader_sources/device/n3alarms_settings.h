@@ -40,7 +40,6 @@ public:
     void enableCanopyAlarms(bool enable);
 
     QByteArray& data() {return m_data; };
-    N3DeviceSettings* deviceSettings() const { return m_device_settings; };
 
     friend bool operator==(const N3AlarmsSettings& left, const N3AlarmsSettings& right);
     N3AlarmsSettings& operator=(const N3AlarmsSettings& right) noexcept;

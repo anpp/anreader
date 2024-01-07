@@ -88,7 +88,7 @@ uint8_t BytesOperations::setBit(uint8_t byte, int index, bool value)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-bool BytesOperations::checkBit(u_int8_t byte, int index)
+bool BytesOperations::checkBit(uint8_t byte, int index)
 {
     return (byte & (1 << index)) != 0;
 }
