@@ -13,8 +13,8 @@ public:
     virtual ~ANames() {};
 
     virtual uint count() const = 0;
-    virtual uint filled() const = 0;        
-    const std::vector<std::unique_ptr<QString>>& Names() const;
+    virtual uint filled() const = 0;
+    const std::vector<std::unique_ptr<QString>>& Names();
     virtual void clear() =0;
     virtual bool used(uint index) const = 0;
     virtual bool hidden(uint index) const = 0;
@@ -26,6 +26,7 @@ public:
     virtual void setUsed(uint index, bool value) = 0;
     virtual void setName(uint index, const QString& value) = 0;
     virtual void setFilled(const uint value) = 0;
+    virtual void init() = 0;
 
     QByteArray& data() {return m_data; };
     const QByteArray& data_const() const {return m_data; };

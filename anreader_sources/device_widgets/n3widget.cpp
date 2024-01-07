@@ -404,22 +404,14 @@ void N3Widget::N3Names_dialog(N3Names &names)
             {
             case N3NamesType::Airplanes:
                 if(is_changed_current)
-                {
-                    m_device->airplanes().setActive(nd->new_n3names().active_index());
                     m_device->summary().setAPIndex(nd->new_n3names().active_index());
-                    m_device->write_summary_jumps();
-                }
 
                 if(is_changed_data)
                     m_device->write_airplanes();
                 break;
             case N3NamesType::Dropzones:
                 if(is_changed_current)
-                {
-                    m_device->dropzones().setActive(nd->new_n3names().active_index());
                     m_device->summary().setDZIndex(nd->new_n3names().active_index());
-                    m_device->write_summary_jumps();
-                }
 
                 if(is_changed_data)
                     m_device->write_dropzones();
@@ -427,6 +419,13 @@ void N3Widget::N3Names_dialog(N3Names &names)
             default:
                 break;
             }
+
+            if(is_changed_current)
+            {
+                names.setActive(nd->new_n3names().active_index());
+                m_device->write_summary_jumps();
+            }
+
         }
     }
 }
@@ -521,8 +520,8 @@ void N3Widget::readed_summary_settings()
 
         m_clock_timer->start(1000);
 
-        static_cast<N3Names&>(m_device->airplanes()).initAfterLoad();
-        static_cast<N3Names&>(m_device->dropzones()).initAfterLoad();
+        m_device->airplanes().init();
+        m_device->dropzones().init();
 
         m_device->airplanes().setActive(summary.currentAPIndex());
         m_device->dropzones().setActive(summary.currentDZIndex());
@@ -625,7 +624,7 @@ void N3Widget::edit_alarms()
 {
     if(!m_device) return;
     disconnect(m_device.get(), &Neptune::allCommandsComplete, nullptr, nullptr);
-    static_cast<N3Names&>(m_device->alarms()).initAfterLoad();
+    m_device->alarms().init();
     N3Names_dialog(static_cast<N3Names&>(m_device->alarms()));
 }
 

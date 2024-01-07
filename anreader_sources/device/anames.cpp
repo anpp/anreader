@@ -2,7 +2,7 @@
 
 
 //----------------------------------------------------------------------------------------------------------------------
-const std::vector<std::unique_ptr<QString>> &ANames::Names() const
+const std::vector<std::unique_ptr<QString>> &ANames::Names()
 {
     if(m_names->size() == 0)
     {
@@ -11,6 +11,6 @@ const std::vector<std::unique_ptr<QString>> &ANames::Names() const
             std::unique_ptr<QString> name = std::make_unique<QString>(byIndex(i));
                 m_names->push_back(std::move(name));
         }
-    }
+    }    
     return *m_names;
 }

@@ -17,8 +17,7 @@ public:
 
     explicit N3Names(N3NamesType atype = N3NamesType::Undefined);
     virtual ~N3Names() override {};
-    virtual void calculateCheckSum();
-    void initAfterLoad();
+    virtual void calculateCheckSum();    
 
     uint count() const override;
     uint filled() const override;
@@ -42,6 +41,7 @@ public:
 private:
     QString byIndex(uint index) const override;
     void setHighBit(uint index, uint byte_number, bool value) override;
+    void init() override;
 
 };
 

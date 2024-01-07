@@ -3,6 +3,7 @@
 
 #include "abstractdevice.h"
 #include <QQueue>
+#include <QVector>
 
 #include "n3_constants.h"
 

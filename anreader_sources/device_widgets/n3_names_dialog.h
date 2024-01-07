@@ -2,7 +2,7 @@
 #define N3_NAMES_DIALOG_H
 
 #include <QDialog>
-//#include <memory>
+#include <memory>
 
 
 namespace Ui {

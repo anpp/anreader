@@ -26,8 +26,11 @@ void JumpsTable::paintEvent(QPaintEvent *event)
         painter.setPen(Qt::gray);
 
         QFontMetrics fm = painter.fontMetrics();
+#if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
+        int text_width = fm.width(m_NoDataToDisplayInfoText);
+#else
         int text_width = fm.horizontalAdvance(m_NoDataToDisplayInfoText);
-
+#endif
         QPoint point = viewport()->geometry().center();
         point.setX(point.x() - text_width / 2);
 

@@ -71,7 +71,7 @@ bool N3NamesModel::setData(const QModelIndex &index, const QVariant &value, int 
         case N3NamesModel_defs::Name:
             name = value.toString();
             if(name.isEmpty())
-                name = "---";
+                name = "----";
             if(m_data.Names().size() <= index.row() || *m_data.Names().at(index.row()) != name)
             {
                 m_data.setName(index.row(), name);

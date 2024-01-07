@@ -48,8 +48,13 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
 
     ui->tabWidget->setTabText(0, tr("List"));
     ui->tabWidget->setTabText(1, tr("Alarms settings"));
-    ui->tabWidget->setTabVisible(1, names.type() == N3NamesType::Alarms);
 
+#if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
+    if(names.type() != N3NamesType::Alarms)
+        ui->tabWidget->removeTab(1);
+#else
+    ui->tabWidget->setTabVisible(1, names.type() == N3NamesType::Alarms);
+#endif
     connect(ui->tvNames->model(), &QAbstractItemModel::dataChanged, [&] () { dataChanged();});
     dataChanged();
 }
