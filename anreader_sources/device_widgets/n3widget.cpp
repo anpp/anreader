@@ -397,8 +397,7 @@ void N3Widget::N3Names_dialog(N3Names &names)
             bool is_changed_current = nd->isChangedCurrentName();
             bool is_changed_data = nd->isChangedData();
 
-            if(is_changed_data)
-                names.data() = nd->new_n3names().data_const();
+            names = nd->new_n3names();
 
             switch(names.type())
             {
@@ -419,13 +418,8 @@ void N3Widget::N3Names_dialog(N3Names &names)
             default:
                 break;
             }
-
             if(is_changed_current)
-            {
-                names.setActive(nd->new_n3names().active_index());
                 m_device->write_summary_jumps();
-            }
-
         }
     }
 }
