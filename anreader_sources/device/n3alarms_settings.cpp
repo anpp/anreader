@@ -14,7 +14,7 @@ void N3AlarmsSettings::calculateCheckSum()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-int N3AlarmsSettings::activeFreeFallIndex(N3AlarmsSettings) const
+int N3AlarmsSettings::activeFreeFallIndex() const
 {
     if(m_data.size() > static_cast<int>(as_offsets::activeFreeFallItem))
         return BytesOperations::setHighBit(m_data[static_cast<int>(as_offsets::activeFreeFallItem)], false);
@@ -22,7 +22,7 @@ int N3AlarmsSettings::activeFreeFallIndex(N3AlarmsSettings) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-int N3AlarmsSettings::activeCanopyIndex(N3AlarmsSettings) const
+int N3AlarmsSettings::activeCanopyIndex() const
 {
     if(m_data.size() > static_cast<int>(as_offsets::activeCanopyItem))
         return BytesOperations::setHighBit(m_data[static_cast<int>(as_offsets::activeCanopyItem)], false);

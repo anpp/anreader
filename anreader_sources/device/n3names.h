@@ -32,6 +32,7 @@ public:
     void setUsed(uint index, bool value) override;
     void setName(uint index, const QString& value) override;
     void setFilled(const uint value) override;
+    void init() override;
 
     friend bool operator==(const N3Names& left, const N3Names& right);
     N3Names& operator=(const N3Names& right) noexcept;
@@ -41,7 +42,6 @@ public:
 private:
     QString byIndex(uint index) const override;
     void setHighBit(uint index, uint byte_number, bool value) override;
-    void init() override;
 
 };
 

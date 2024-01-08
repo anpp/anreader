@@ -9,11 +9,15 @@ class N3DeviceSettings;
 class N3AlarmsNames : public N3Names
 {
     std::unique_ptr<N3AlarmsSettings> m_settings;
+
+    void setActives();
 public:
     explicit N3AlarmsNames(N3DeviceSettings* device_settings = nullptr);
 
     N3AlarmsSettings& settings() const { return *m_settings; };
     void calculateCheckSum() override;
+    void setActive(uint index, bool value = true) override;
+    void init() override;
 
     friend bool operator==(const N3AlarmsNames& left, const N3AlarmsNames& right);
     N3AlarmsNames& operator=(const N3AlarmsNames& right) noexcept;

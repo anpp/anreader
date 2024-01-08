@@ -9,7 +9,7 @@
 class Neptune_HiL : public Neptune
 {
     Q_OBJECT
-    enum Neptune_HiL_defs: uint {jumps_rate = 500};
+    enum Neptune_HiL_defs: uint {jumps_rate = 400};
 public:
     explicit Neptune_HiL(QString portName, QObject *parent): Neptune(portName, parent) {}
     ~Neptune_HiL() override {}

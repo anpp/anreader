@@ -86,7 +86,7 @@ protected:
     N3Types m_product_type = N3Types::Unknown;
     N3CommTypes m_commutication_type = N3CommTypes::Unknown;
 
-    QByteArray rawDataDetails;
+    mutable QByteArray rawDataDetails;
     QByteArray rawDateTime;
 
     volatile unsigned int m_NumBlocks{0};
@@ -107,7 +107,7 @@ private:
     bool verifyType0Record();
     void setEncryptionKey(const QVector<s_key_item> &vec_key);
     bool checkAcknowledgment (const QByteArray &buffer, const bool single = false) const;
-    QByteArray* getRawData(const unsigned int address);
+    QByteArray* getRawData(unsigned int address) const;
     unsigned int n_jumps_readed() const;
     void addJumpsToVector();
     void sendLastCommand();

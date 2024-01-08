@@ -483,7 +483,7 @@ void Neptune::processData(QByteArray data)
     case N3Commands::ReadDateTime:
         processReadDateTime(data);
         break;
-    case N3Commands::KeepAlive:
+    case N3Commands::KeepAlive:        
         processDefault(data);
         break;
     case N3Commands::SetDateTime:
@@ -558,7 +558,6 @@ void Neptune::processReadMemory(const QByteArray &data)
                 emit log("Readed data: <FONT color=#006b00>" + rawData->toHex() + "</FONT>");
                 emit log("Number blocks: " + QString::number(m_NumBlocks));
             }
-
             emit readyStateSignal();
         }
     }
@@ -626,13 +625,13 @@ void Neptune::processReadDateTime(const QByteArray &data)
         emit readyStateSignal();
     }
 }
-
+#include <QDebug>
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::processDefault(const QByteArray &data)
 {
     inBuffer.append(data);
 
-    if(state() == DeviceStates::Processing)
+    if(state() == DeviceStates::Processing || last_command.m_command == N3Commands::KeepAlive)
     {
         if(checkAcknowledgment(inBuffer))
         {
@@ -644,6 +643,7 @@ void Neptune::processDefault(const QByteArray &data)
             if(inBuffer.size() == 1)
                 return;
 
+            //qDebug() << inBuffer.toHex();
             emit errorSignal("Acknowledgement error");
             return;
         }
@@ -656,7 +656,8 @@ bool Neptune::checkAcknowledgment(const QByteArray &buffer, const bool single) c
     if(buffer.size() == 1 && single)
         return ((buffer.at(0) == N3Commands::AckSuccess) || (buffer.at(0) == N3Commands::AckReady));
     else
-        return ((2 <= buffer.size()) && (buffer.at(0) == N3Commands::AckSuccess) && (buffer.at(1) == N3Commands::AckReady));
+        return ((2 <= buffer.size()) && (buffer.at(0) == N3Commands::AckSuccess) && (buffer.at(1) == N3Commands::AckReady))
+               || (buffer.at(0) == N3Commands::AckRepeat);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -676,7 +677,7 @@ void Neptune::setAckBuffer(const QByteArray &data)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-QByteArray *Neptune::getRawData(const unsigned int address)
+QByteArray *Neptune::getRawData(unsigned int address) const
 {
     QByteArray *result = nullptr;
 

@@ -25,8 +25,8 @@ public:
     virtual ~N3AlarmsSettings() {};
 
     void calculateCheckSum();
-    int activeFreeFallIndex(N3AlarmsSettings) const;
-    int activeCanopyIndex(N3AlarmsSettings) const;
+    int activeFreeFallIndex() const;
+    int activeCanopyIndex() const;
     bool enabledFreeFallAlarms() const;
     bool enabledCanopyAlarms() const;
     int8_t nameIndex(int index) const;
