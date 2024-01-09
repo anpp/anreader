@@ -82,7 +82,7 @@ bool N3NamesDialog::isChangedCurrentName() const
 //--------------------------------------------------------------------------------------------------------------
 bool N3NamesDialog::isChangedData() const
 {
-    return m_new_n3names->data() != m_n3names.data_const();
+    return m_new_n3names->data() != m_n3names.data();
 }
 
 //--------------------------------------------------------------------------------------------------------------

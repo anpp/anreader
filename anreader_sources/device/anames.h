@@ -29,7 +29,7 @@ public:
     virtual void init() = 0;
 
     QByteArray& data() {return m_data; };
-    const QByteArray& data_const() const {return m_data; };
+    const QByteArray& data() const {return m_data; };
 
 protected:
     virtual QString byIndex(uint index) const = 0;

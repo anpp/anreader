@@ -625,13 +625,13 @@ void Neptune::processReadDateTime(const QByteArray &data)
         emit readyStateSignal();
     }
 }
-#include <QDebug>
+
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::processDefault(const QByteArray &data)
 {
     inBuffer.append(data);
 
-    if(state() == DeviceStates::Processing || last_command.m_command == N3Commands::KeepAlive)
+    if(state() == DeviceStates::Processing)
     {
         if(checkAcknowledgment(inBuffer))
         {
