@@ -4,6 +4,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsNames::setActives()
 {
+    m_map_active.clear();
     setActive(m_settings->nameIndex(m_settings->activeFreeFallIndex()), true);
     setActive(m_settings->nameIndex(m_settings->activeCanopyIndex()), true);
 }

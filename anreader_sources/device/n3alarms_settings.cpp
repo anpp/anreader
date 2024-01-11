@@ -81,14 +81,14 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
         uint16_t result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
 
         altitude_measure am = altitude_measure::feet;
-        float koeff = (type(index) == alarm_type::FreeFall ? 100.0 : 10.0);
+        double koeff = (type(index) == alarm_type::FreeFall ? 100.0 : 10.0);
         if(nullptr != m_device_settings)
             am = m_device_settings->altitudeMeasure();
 
         if(altitude_measure::meters == am)
-            result = round((koeff * (result / 2.0)) / koeff);
+            result = koeff * round((result / 2.0) / koeff);
         else
-            result = round((((((result / 2.0) * 1000) / 25.4) / 12) / koeff) * koeff);
+            result = round((((((result / 2.0) * 1000) / 25.4) / 12) / koeff)) * koeff;
 
         return result;
     }
