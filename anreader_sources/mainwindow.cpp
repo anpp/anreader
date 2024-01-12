@@ -15,7 +15,7 @@ StatusFrame::StatusFrame(QWidget *parent) : QWidget (parent)
     layout->addWidget(&m_status);
     layout->addWidget(&m_progress);
 
-    m_progress.setFixedHeight(12);
+    m_progress.setFixedHeight(18);
 }
 
 void StatusFrame::setStatusText(const QString &text)

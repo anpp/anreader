@@ -274,7 +274,7 @@ void N3NamesDelegate::radio_toggled(bool value)
 {
     if(!value)
         return;
-    commitData(static_cast<QRadioButton*>(sender()));
+    emit commitData(static_cast<QRadioButton*>(sender()));
 }
 
 //------------------------------------------------------------------------------------------
@@ -282,17 +282,17 @@ void N3NamesDelegate::check_toggled(bool value)
 {
     Q_UNUSED(value);
 
-    commitData(static_cast<QCheckBox*>(sender()));
+    emit commitData(static_cast<QCheckBox*>(sender()));
 }
 
 //------------------------------------------------------------------------------------------
 void N3NamesDelegate::add()
 {
-    closeEditor(static_cast<QToolButton*>(sender()));
+    emit closeEditor(static_cast<QToolButton*>(sender()));
 }
 
 //------------------------------------------------------------------------------------------
 void N3NamesDelegate::del()
 {
-    closeEditor(static_cast<QLineEdit*>(static_cast<QAction*>(sender())->parent()));
+    emit closeEditor(static_cast<QLineEdit*>(static_cast<QAction*>(sender())->parent()));
 }
