@@ -6,9 +6,10 @@
 #include "device/n3alarms_settings.h"
 #include "n3names_model.h"
 #include "n3names_delegate.h"
+#include "n3alarms_settings_model.h"
 
 #include <QPushButton>
-#include <QDebug>
+
 //--------------------------------------------------------------------------------------------------------------
 N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget *parent) :
     QDialog(parent),
@@ -23,9 +24,20 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
         m_new_n3names = std::make_unique<N3AlarmsNames>();
         static_cast<N3AlarmsNames&>(*m_new_n3names) = static_cast<const N3AlarmsNames&>(m_n3names);
 
-        qDebug() << static_cast<N3AlarmsNames&>(*m_new_n3names).settings().altitude(0, 0);
-        qDebug() << static_cast<N3AlarmsNames&>(*m_new_n3names).settings().altitude(0, 1);
-        qDebug() << static_cast<N3AlarmsNames&>(*m_new_n3names).settings().altitude(0, 2);
+        ui->gbxFreeFall->setChecked(static_cast<N3AlarmsNames&>(*m_new_n3names).settings().enabledFreeFallAlarms());
+        ui->gbxCanopy->setChecked(static_cast<N3AlarmsNames&>(*m_new_n3names).settings().enabledCanopyAlarms());
+
+        m_alarms_settings_model = std::make_unique<N3AlarmsSettingsModel>(static_cast<N3AlarmsNames&>(*m_new_n3names).settings());
+        m_alarms_settings_freefall_model = std::make_unique<N3FilterAlarmsSettingsModel>(m_alarms_settings_model.get(), static_cast<uint8_t>(N3AlarmsSettings::alarm_type::FreeFall));
+        m_alarms_settings_canopy_model = std::make_unique<N3FilterAlarmsSettingsModel>(m_alarms_settings_model.get(), static_cast<uint8_t>(N3AlarmsSettings::alarm_type::Canopy));
+
+        ui->tvFreefall->setModel(m_alarms_settings_freefall_model.get());
+        ui->tvCanopy->setModel(m_alarms_settings_canopy_model.get());
+
+        ui->tvFreefall->resizeColumnsToContents();
+        ui->tvFreefall->resizeRowsToContents();
+        ui->tvCanopy->resizeColumnsToContents();
+        ui->tvCanopy->resizeRowsToContents();
     }
     else
     {
@@ -41,7 +53,6 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
     ui->tvNames->setItemDelegateForColumn(static_cast<int>(N3NamesModel_defs::Used), m_delegate.get());
     ui->tvNames->setItemDelegateForColumn(static_cast<int>(N3NamesModel_defs::Hidden), m_delegate.get());
     ui->tvNames->setItemDelegateForColumn(static_cast<int>(N3NamesModel_defs::Name), m_delegate.get());
-    ui->tvNames->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
     ui->tvNames->resizeColumnsToContents();
     ui->tvNames->resizeRowsToContents();
@@ -50,10 +61,10 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
     ui->tabWidget->setTabText(1, tr("Alarms settings"));
 
 #if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
-    if(names.type() != N3NamesType::Alarms)
+    if(m_n3names.type() != N3NamesType::Alarms)
         ui->tabWidget->removeTab(1);
 #else
-    ui->tabWidget->setTabVisible(1, names.type() == N3NamesType::Alarms);
+    ui->tabWidget->setTabVisible(1, m_n3names.type() == N3NamesType::Alarms);
 #endif
     connect(ui->tvNames->model(), &QAbstractItemModel::dataChanged, [&] () { dataChanged();});
     dataChanged();

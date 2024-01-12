@@ -96,6 +96,12 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+bool N3AlarmsSettings::active(int index) const
+{
+    return (activeFreeFallIndex() == index || activeCanopyIndex() == index);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::setActiveFreeFallIndex(int index)
 {
     if(m_data.size() > static_cast<int>(as_offsets::activeFreeFallItem) && index >= 0 && index < 8)

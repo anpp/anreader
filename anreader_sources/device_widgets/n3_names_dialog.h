@@ -12,6 +12,8 @@ class N3NamesDialog;
 class N3Names;
 class N3NamesModel;
 class N3NamesDelegate;
+class N3AlarmsSettingsModel;
+class N3FilterAlarmsSettingsModel;
 
 class N3NamesDialog : public QDialog
 {
@@ -22,6 +24,10 @@ class N3NamesDialog : public QDialog
     QString m_title;
     std::unique_ptr<N3NamesModel> m_model;
     std::unique_ptr<N3NamesDelegate> m_delegate;
+
+    std::unique_ptr<N3AlarmsSettingsModel> m_alarms_settings_model;
+    std::unique_ptr<N3FilterAlarmsSettingsModel> m_alarms_settings_freefall_model;
+    std::unique_ptr<N3FilterAlarmsSettingsModel> m_alarms_settings_canopy_model;
 
 public:
     explicit N3NamesDialog(const QString& title, const N3Names& names,  QWidget *parent = nullptr);

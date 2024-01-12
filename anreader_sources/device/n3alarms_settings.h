@@ -14,13 +14,14 @@ class N3AlarmsSettings
                                 activeCanopyItem = 3,
                                 beginArray = 4,
                                 altitudeOffset = 4
-                               };
-    enum class alarm_type: uint8_t {FreeFall = 0, Camopy = 1, unk = 2};
+                               };    
 
     QByteArray m_data;
     N3DeviceSettings *m_device_settings = nullptr;
     //std::unique_ptr<std::vector<std::unique_ptr<QString>>> m_names = std::make_unique<std::vector<std::unique_ptr<QString>>>();
 public:
+    enum class alarm_type: uint8_t {FreeFall = 0, Canopy = 1, unk = 2};
+
     explicit N3AlarmsSettings(N3DeviceSettings* device_settings = nullptr) : m_device_settings(device_settings) {};
     virtual ~N3AlarmsSettings() {};
 
@@ -33,6 +34,7 @@ public:
     alarm_type type(int index) const;
     int8_t tone(int index, int altindex) const;
     uint16_t altitude(int index, int altindex) const;
+    bool active(int index) const;
 
     void setActiveFreeFallIndex(int index);
     void setActiveCanopyIndex(int index);
