@@ -7,6 +7,7 @@ class N3NamesDelegate : public QItemDelegate
 {
     Q_OBJECT
 
+    const QString button_add = tr("Add");
 public:
     N3NamesDelegate(QObject *parent = nullptr) : QItemDelegate(parent) {}
 

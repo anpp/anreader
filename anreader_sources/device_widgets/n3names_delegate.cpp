@@ -11,9 +11,6 @@
 #include <QAction>
 #include <QApplication>
 
-const static QString button_add = QObject::tr("Add");
-
-
 //------------------------------------------------------------------------------------------
 QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
@@ -211,7 +208,7 @@ void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
             opt.toolButtonStyle = Qt::ToolButtonStyle::ToolButtonTextOnly;
             opt.features = QStyleOptionToolButton::None;
             opt.arrowType = Qt::NoArrow;
-            opt.subControls = 0;
+            opt.subControls = QStyle::SC_None;
             qApp->style()->drawPrimitive(pe, &opt, painter);
             qApp->style()->drawComplexControl(QStyle::CC_ToolButton, &opt, painter);
             return;
