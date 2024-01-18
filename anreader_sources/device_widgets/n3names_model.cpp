@@ -25,7 +25,7 @@ QVariant N3NamesModel::value(int row, int col , int role) const
     if(static_cast<uint>(row) >= m_data.filled())
         return QVariant();
 
-    if(Qt::EditRole == role)
+    if(Qt::EditRole == role || Qt::DisplayRole == role)
         switch(static_cast<N3NamesModel_defs>(col))
         {
         case N3NamesModel_defs::Active:
@@ -39,8 +39,6 @@ QVariant N3NamesModel::value(int row, int col , int role) const
         default:
             return QVariant();
         }
-    if(Qt::DisplayRole == role && static_cast<int>(N3NamesModel_defs::Name) == col)
-        return (static_cast<uint>(row) < m_data.Names().size() ? *m_data.Names()[row] : "");
     return QVariant();
 }
 

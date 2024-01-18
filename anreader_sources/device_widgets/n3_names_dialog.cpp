@@ -99,7 +99,6 @@ bool N3NamesDialog::isChangedData() const
 //--------------------------------------------------------------------------------------------------------------
 void N3NamesDialog::dataChanged()
 {
-
     bool is_changed = isChanged();
     ui->buttonBox->button(QDialogButtonBox::StandardButton::Ok)->setEnabled(is_changed);
     setWindowTitle(tr(m_title.toStdString().c_str()) + (is_changed ? "*" : ""));

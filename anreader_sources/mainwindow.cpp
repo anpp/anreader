@@ -29,16 +29,17 @@ void StatusFrame::setStatusText(const QString &text)
 
 
 
-
 //----------------------------------------------------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       jumps_model(dl)
 {
     m_self = this;
-    this->resize(MainWindow_defs::BaseWidht, MainWindow_defs::BaseHeight);    
+    this->resize(MainWindow_defs::BaseWidht, MainWindow_defs::BaseHeight);
     setWindowIcon(QIcon(":/images/icons/main/anreader.ico"));
-    //QApplication::setStyle("fusion");
+#ifdef Q_OS_WIN64
+    QApplication::setStyle("fusion");
+#endif
     initMainWindow();
     createActions();    
 

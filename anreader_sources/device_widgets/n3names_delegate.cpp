@@ -179,7 +179,7 @@ void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
         QStyleOptionViewItem opt(option);
         opt.rect = calcRect(option, index);
 
-        opt.state |= (index.data(Qt::EditRole).toBool() ? QStyle::State_On : QStyle::State_Off);
+        opt.state = QStyle::State_Enabled | (index.data(Qt::DisplayRole).toBool() ? QStyle::State_On : QStyle::State_Off);
 
         if(!(index.model()->flags(index) & Qt::ItemIsEditable))
         {
