@@ -27,6 +27,7 @@ public:
     virtual void setName(uint index, const QString& value) = 0;
     virtual void setFilled(const uint value) = 0;
     virtual void init() = 0;
+    virtual bool isEqual(const ANames& right) const = 0;
 
     QByteArray& data() {return m_data; };
     const QByteArray& data() const {return m_data; };

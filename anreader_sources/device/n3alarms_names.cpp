@@ -36,20 +36,24 @@ void N3AlarmsNames::init()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-bool operator==(const N3AlarmsNames& left, const N3AlarmsNames& right)
+bool N3AlarmsNames::isEqual(const ANames &right) const
 {
-    return (static_cast<const N3Names&>(left) == static_cast<const N3Names&>(right) && *left.m_settings == *right.m_settings);
+    return N3Names::isEqual(right) && *m_settings == *static_cast<const N3AlarmsNames&>(right).m_settings;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-N3AlarmsNames &N3AlarmsNames::operator=(const N3AlarmsNames &right) noexcept
+N3AlarmsNames& N3AlarmsNames::operator=(const N3Names &right) noexcept
 {
     if (this == &right)
         return *this;
+    N3Names::operator =(right);
+    *m_settings = *static_cast<const N3AlarmsNames&>(right).m_settings;
+    return *this;
+}
 
-    m_data = right.m_data;
-    m_map_active = right.m_map_active;
-    m_type = right.m_type;
-    *m_settings = *right.m_settings;
+//----------------------------------------------------------------------------------------------------------------------
+N3AlarmsNames& N3AlarmsNames::operator=(const N3AlarmsNames &right) noexcept
+{
+    N3AlarmsNames::operator = (static_cast<const N3Names&>(right));
     return *this;
 }

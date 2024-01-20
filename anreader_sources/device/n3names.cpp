@@ -24,6 +24,14 @@ void N3Names::init()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+bool N3Names::isEqual(const ANames &right) const
+{
+    return (m_data == static_cast<const N3Names&>(right).m_data
+            && m_map_active == static_cast<const N3Names&>(right).m_map_active
+            && m_type == static_cast<const N3Names&>(right).m_type);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 uint N3Names::count() const
 {
     if(m_data.size() > 0)
@@ -147,7 +155,7 @@ N3Names &N3Names::operator=(const N3Names &right) noexcept
 //----------------------------------------------------------------------------------------------------------------------
 bool operator==(const N3Names& left, const N3Names& right)
 {
-    return (left.m_data == right.m_data && left.m_map_active == right.m_map_active && left.m_type == right.m_type);
+    return left.isEqual(right);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

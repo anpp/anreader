@@ -22,7 +22,7 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
     if(m_n3names.type() == N3NamesType::Alarms)
     {
         m_new_n3names = std::make_unique<N3AlarmsNames>();
-        static_cast<N3AlarmsNames&>(*m_new_n3names) = static_cast<const N3AlarmsNames&>(m_n3names);
+        *m_new_n3names = m_n3names;
 
         ui->gbxFreeFall->setChecked(static_cast<N3AlarmsNames&>(*m_new_n3names).settings().enabledFreeFallAlarms());
         ui->gbxCanopy->setChecked(static_cast<N3AlarmsNames&>(*m_new_n3names).settings().enabledCanopyAlarms());
@@ -79,8 +79,6 @@ N3NamesDialog::~N3NamesDialog()
 //--------------------------------------------------------------------------------------------------------------
 bool N3NamesDialog::isChanged() const
 {
-    if(m_n3names.type() == N3NamesType::Alarms)
-        return !(static_cast<const N3AlarmsNames&>(*m_new_n3names) == static_cast<const N3AlarmsNames&>(m_n3names));
     return !(*m_new_n3names == m_n3names);
 }
 

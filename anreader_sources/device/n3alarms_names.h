@@ -18,8 +18,9 @@ public:
     void calculateCheckSum() override;
     void setActive(uint index, bool value = true) override;
     void init() override;
+    bool isEqual(const ANames& right) const override;
 
-    friend bool operator==(const N3AlarmsNames& left, const N3AlarmsNames& right);
+    N3AlarmsNames& operator=(const N3Names& right) noexcept override;
     N3AlarmsNames& operator=(const N3AlarmsNames& right) noexcept;
 
 };

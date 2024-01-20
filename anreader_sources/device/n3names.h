@@ -33,9 +33,10 @@ public:
     void setName(uint index, const QString& value) override;
     void setFilled(const uint value) override;
     void init() override;
+    bool isEqual(const ANames& right) const override;
 
     friend bool operator==(const N3Names& left, const N3Names& right);
-    N3Names& operator=(const N3Names& right) noexcept;
+    virtual N3Names& operator=(const N3Names& right) noexcept;
     const QMap<uint, bool>& map_active() const { return m_map_active; };
     N3NamesType type() const { return m_type; };
 
