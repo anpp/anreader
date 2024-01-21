@@ -19,11 +19,11 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
     ui->setupUi(this);
     m_title = title;
 
+    m_new_n3names = (m_n3names.type() == N3NamesType::Alarms? std::make_unique<N3AlarmsNames>(): std::make_unique<N3Names>());
+    *m_new_n3names = m_n3names; //оператор = перегружен, в m_new_n3names полная копия m_n3names
+
     if(m_n3names.type() == N3NamesType::Alarms)
     {
-        m_new_n3names = std::make_unique<N3AlarmsNames>();
-        *m_new_n3names = m_n3names;
-
         ui->gbxFreeFall->setChecked(static_cast<N3AlarmsNames&>(*m_new_n3names).settings().enabledFreeFallAlarms());
         ui->gbxCanopy->setChecked(static_cast<N3AlarmsNames&>(*m_new_n3names).settings().enabledCanopyAlarms());
 
@@ -38,11 +38,6 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
         ui->tvFreefall->resizeRowsToContents();
         ui->tvCanopy->resizeColumnsToContents();
         ui->tvCanopy->resizeRowsToContents();
-    }
-    else
-    {
-        m_new_n3names = std::make_unique<N3Names>();
-        *m_new_n3names = m_n3names; //оператор = перегружен, в m_new_n3names полная копия m_n3names
     }
 
     m_delegate = std::make_unique<N3NamesDelegate>();
