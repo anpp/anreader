@@ -92,7 +92,7 @@ void N3NamesDialog::initAlarms()
         ui->tvCanopy->resizeColumnsToContents();
         ui->tvCanopy->resizeRowsToContents();
     }
-#if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
+#if QT_VERSION <= QT_VERSION_CHECK(5, 15, 0)
     if(m_n3names.type() != N3NamesType::Alarms)
         ui->tabWidget->removeTab(1);
 #else
