@@ -42,7 +42,7 @@ public:
 
 private:
     QString byIndex(uint index) const override;
-    void setHighBit(uint index, uint byte_number, bool value) override;
+    void setHighBit(uint index, uint byte_number, bool value);
 
 };
 

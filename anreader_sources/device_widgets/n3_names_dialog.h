@@ -41,6 +41,9 @@ public:
 private:
     Ui::N3NamesDialog *ui;
 
+    void initNames();
+    void initAlarms();
+
 private slots:
     void dataChanged();
     void on_buttonBox_accepted();

@@ -2,9 +2,6 @@
 #define N3ALARMSSETTINGS_H
 
 #include <QByteArray>
-//#include <QString>
-//#include <vector>
-//#include <memory>
 
 class N3DeviceSettings;
 
@@ -17,8 +14,7 @@ class N3AlarmsSettings
                                };    
 
     QByteArray m_data;
-    N3DeviceSettings *m_device_settings = nullptr;
-    //std::unique_ptr<std::vector<std::unique_ptr<QString>>> m_names = std::make_unique<std::vector<std::unique_ptr<QString>>>();
+    N3DeviceSettings *m_device_settings = nullptr;    
 public:
     enum class alarm_type: uint8_t {FreeFall = 0, Canopy = 1, unk = 2};
 

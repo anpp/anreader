@@ -34,7 +34,6 @@ public:
 
 protected:
     virtual QString byIndex(uint index) const = 0;
-    virtual void setHighBit(uint index, uint byte_number, bool value) = 0;
 
     QByteArray m_data;
     std::unique_ptr<std::vector<std::unique_ptr<QString>>> m_names = std::make_unique<std::vector<std::unique_ptr<QString>>>();

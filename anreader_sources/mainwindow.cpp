@@ -669,10 +669,10 @@ void MainWindow::afterConnect(const DWidget &widget)
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::prepareTableAfterEdit(JumpsTable &table) const
 { 
-    table.horizontalHeader()->setStretchLastSection(false);
+    //table.horizontalHeader()->setStretchLastSection(false);
     table.resizeColumnsToContents();
     table.resizeRowsToContents();
-    table.horizontalHeader()->setStretchLastSection(true);
+    //table.horizontalHeader()->setStretchLastSection(true);
 }
 
 
