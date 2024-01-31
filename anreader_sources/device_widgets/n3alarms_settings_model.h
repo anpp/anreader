@@ -8,9 +8,10 @@
 class N3AlarmsSettings;
 class N3FilterAlarmsSettingsModel;
 
+enum N3AlarmsSettings_defs: int {NumColumns = 5, Active = 0, NameIndex = 1, AlarmAltitude1 = 2,  AlarmAltitude2 = 3, AlarmAltitude3 = 4};
+
 class N3AlarmsSettingsModel : public QAbstractItemModel
-{
-    enum N3AlarmsSettings_defs: int {NumColumns = 5, Active = 0, NameIndex = 1, AlarmAltitude1 = 2,  AlarmAltitude2 = 3, AlarmAltitude3 = 4};
+{    
     N3AlarmsSettings& m_data;
 public:
     explicit N3AlarmsSettingsModel(N3AlarmsSettings& data, QObject *parent = nullptr);

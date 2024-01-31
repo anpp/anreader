@@ -7,6 +7,8 @@ class N3NamesDelegate : public QItemDelegate
 {
     Q_OBJECT
 
+    enum class ModelType: unsigned {Unk = 0, N3Names = 1, N3AlarmsSettings = 2};
+
     const QString button_add = tr("Add");
 public:
     N3NamesDelegate(QObject *parent = nullptr) : QItemDelegate(parent) {}
@@ -19,7 +21,18 @@ public:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
 
 private:
+    QWidget *createEditorN3Names(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QWidget *createEditorN3AlarmsSettings(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void setEditorDataN3Names(QWidget *editor, const QModelIndex &index) const;
+    void setEditorDataN3AlarmsSettings(QWidget *editor, const QModelIndex &index) const;
+    void setModelDataN3Names(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+    void setModelDataN3AlarmsSettings(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+    void paintN3Names(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void paintN3AlarmsSettings(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+    void drawPrimitive(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index, QStyle::PrimitiveElement pe) const;
     QRect calcRect(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    ModelType modelType(const QAbstractItemModel& model) const;
 
 private slots:
     void radio_toggled(bool value);

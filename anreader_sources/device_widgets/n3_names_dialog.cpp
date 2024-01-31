@@ -23,7 +23,6 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
     *m_new_n3names = m_n3names; //оператор = перегружен, в m_new_n3names полная копия m_n3names
 
     m_delegate = std::make_unique<N3NamesDelegate>();
-    m_model = std::make_unique<N3NamesModel>(*m_new_n3names);
 
     initNames();
     initAlarms();
@@ -62,6 +61,9 @@ bool N3NamesDialog::isChangedData() const
 //--------------------------------------------------------------------------------------------------------------
 void N3NamesDialog::initNames()
 {
+    m_model = std::make_unique<N3NamesModel>(*m_new_n3names);
+    m_model->setProperty("model_type", "N3Names");
+
     ui->tvNames->setModel(m_model.get());
     ui->tvNames->setItemDelegateForColumn(static_cast<int>(N3NamesModel_defs::Active), m_delegate.get());
     ui->tvNames->setItemDelegateForColumn(static_cast<int>(N3NamesModel_defs::Used), m_delegate.get());
@@ -84,8 +86,14 @@ void N3NamesDialog::initAlarms()
         m_alarms_settings_freefall_model = std::make_unique<N3FilterAlarmsSettingsModel>(m_alarms_settings_model.get(), static_cast<uint8_t>(N3AlarmsSettings::alarm_type::FreeFall));
         m_alarms_settings_canopy_model = std::make_unique<N3FilterAlarmsSettingsModel>(m_alarms_settings_model.get(), static_cast<uint8_t>(N3AlarmsSettings::alarm_type::Canopy));
 
+        m_alarms_settings_freefall_model->setProperty("model_type", "N3AlarmsSettings");
+        m_alarms_settings_canopy_model->setProperty("model_type", "N3AlarmsSettings");
+
         ui->tvFreefall->setModel(m_alarms_settings_freefall_model.get());
         ui->tvCanopy->setModel(m_alarms_settings_canopy_model.get());
+
+        ui->tvFreefall->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::Active), m_delegate.get());
+        ui->tvCanopy->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::Active), m_delegate.get());
 
         ui->tvFreefall->resizeColumnsToContents();
         ui->tvFreefall->resizeRowsToContents();

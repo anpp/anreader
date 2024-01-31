@@ -3,8 +3,7 @@
 
 #include <QSettings>
 #include <QSerialPort>
-
-#include "common/common.h"
+#include <memory>
 
 
 class QMainWindow;

@@ -1,5 +1,6 @@
 #include "n3names_delegate.h"
 #include "n3names_model.h"
+#include "n3alarms_settings_model.h"
 #include "device/n3names.h"
 
 #include <QCheckBox>
@@ -13,6 +14,24 @@
 
 //------------------------------------------------------------------------------------------
 QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    Q_UNUSED(option);
+    if(!index.isValid())
+        return nullptr;
+
+    switch(modelType(*index.model()))
+    {
+    case ModelType::N3Names:
+        return createEditorN3Names(parent, option, index);
+    case ModelType::N3AlarmsSettings:
+        return createEditorN3AlarmsSettings(parent, option, index);
+    default:
+        return nullptr;
+    }
+}
+
+//------------------------------------------------------------------------------------------
+QWidget *N3NamesDelegate::createEditorN3Names(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(option);
     if(!index.isValid())
@@ -47,8 +66,8 @@ QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
             le->setMaxLength(N3Names::N3NamesValues::length);
 
             if(index.row() == static_cast<const N3NamesModel*>(index.model())->filledCount() - 1 && static_cast<const N3NamesModel*>(index.model())->filledCount() > 0
-                    && !static_cast<const N3NamesModel*>(index.model())->value(index.row(), static_cast<int>(N3NamesModel_defs::Active), Qt::EditRole).toBool()
-                    && !static_cast<const N3NamesModel*>(index.model())->value(index.row(), static_cast<int>(N3NamesModel_defs::Used), Qt::EditRole).toBool())
+                && !static_cast<const N3NamesModel*>(index.model())->value(index.row(), static_cast<int>(N3NamesModel_defs::Active), Qt::EditRole).toBool()
+                && !static_cast<const N3NamesModel*>(index.model())->value(index.row(), static_cast<int>(N3NamesModel_defs::Used), Qt::EditRole).toBool())
             {
                 QAction *adel = le->addAction(QIcon(":/images/icons/buttons/delete.png"), QLineEdit::TrailingPosition);
                 adel->setToolTip(tr("Delete this item"));
@@ -64,8 +83,8 @@ QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
     }
 
     if(index.row() == static_cast<const N3NamesModel*>(index.model())->filledCount()
-            && index.row() < static_cast<const N3NamesModel*>(index.model())->rowCount(QModelIndex())
-            && index.column() == static_cast<int>(N3NamesModel_defs::Active))
+        && index.row() < static_cast<const N3NamesModel*>(index.model())->rowCount(QModelIndex())
+        && index.column() == static_cast<int>(N3NamesModel_defs::Active))
     {
         QToolButton *tb = nullptr;
         tb = new QToolButton(parent);
@@ -79,7 +98,13 @@ QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewIt
 }
 
 //------------------------------------------------------------------------------------------
-void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+QWidget *N3NamesDelegate::createEditorN3AlarmsSettings(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    return nullptr;
+}
+
+//------------------------------------------------------------------------------------------
+void N3NamesDelegate::setEditorDataN3Names(QWidget *editor, const QModelIndex &index) const
 {
     if(!index.isValid()) return;
 
@@ -120,12 +145,18 @@ void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
 }
 
 //------------------------------------------------------------------------------------------
-void N3NamesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void N3NamesDelegate::setEditorDataN3AlarmsSettings(QWidget *editor, const QModelIndex &index) const
+{
+
+}
+
+//------------------------------------------------------------------------------------------
+void N3NamesDelegate::setModelDataN3Names(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     if(!index.isValid()) return;
 
     if(index.column() == static_cast<int>(N3NamesModel_defs::Active)
-            && static_cast<const N3NamesModel*>(index.model())->n3data().type() != N3NamesType::Alarms)
+        && static_cast<const N3NamesModel*>(index.model())->n3data().type() != N3NamesType::Alarms)
     {
         QRadioButton *rb = static_cast<QRadioButton*>(editor);
         if(nullptr != rb)
@@ -147,55 +178,35 @@ void N3NamesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, c
             model->setData(index, le->text() , Qt::EditRole);
         }
     }
-
 }
 
 //------------------------------------------------------------------------------------------
-void N3NamesDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void N3NamesDelegate::setModelDataN3AlarmsSettings(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
-    if(!index.isValid())
-        return;
 
-    editor->setGeometry(calcRect(option, index));
 }
 
 //------------------------------------------------------------------------------------------
-void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void N3NamesDelegate::paintN3Names(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     if(!index.isValid()) return;
 
     if((index.column() == static_cast<int>(N3NamesModel_defs::Active) ||
-        index.column() == static_cast<int>(N3NamesModel_defs::Used) ||
-        index.column() == static_cast<int>(N3NamesModel_defs::Hidden) )
-            && index.row() < static_cast<const N3NamesModel*>(index.model())->filledCount())
+         index.column() == static_cast<int>(N3NamesModel_defs::Used) ||
+         index.column() == static_cast<int>(N3NamesModel_defs::Hidden) )
+        && index.row() < static_cast<const N3NamesModel*>(index.model())->filledCount())
     {
         QStyle::PrimitiveElement pe =
-                (index.column() == static_cast<int>(N3NamesModel_defs::Active) && static_cast<const N3NamesModel*>(index.model())->n3data().type() != N3NamesType::Alarms) ?
-                    QStyle::PE_IndicatorRadioButton : QStyle::PE_IndicatorItemViewItemCheck;
+            (index.column() == static_cast<int>(N3NamesModel_defs::Active) && static_cast<const N3NamesModel*>(index.model())->n3data().type() != N3NamesType::Alarms) ?
+                QStyle::PE_IndicatorRadioButton : QStyle::PE_IndicatorItemViewItemCheck;
 
-        drawBackground(painter, option, index);
-        drawFocus(painter, option, option.rect);
-
-        QStyleOptionViewItem opt(option);
-        opt.rect = calcRect(option, index);
-
-        opt.state = QStyle::State_Enabled | (index.data(Qt::DisplayRole).toBool() ? QStyle::State_On : QStyle::State_Off);
-
-        if(!(index.model()->flags(index) & Qt::ItemIsEditable))
-        {
-            if(QApplication::style()->objectName() == "fusion")
-                opt.state |= QStyle::State_Sunken;
-            else
-                opt.state &= ~QStyle::State_Enabled;
-        }
-
-        qApp->style()->drawPrimitive(pe, &opt, painter);
+        drawPrimitive(painter, option, index, pe);
         return;
     }
     else
         if((index.column() == static_cast<int>(N3NamesModel_defs::Active)
-            && (index.row() == static_cast<const N3NamesModel*>(index.model())->filledCount())
-            && (index.row() < static_cast<const N3NamesModel*>(index.model())->rowCount(QModelIndex()))))
+             && (index.row() == static_cast<const N3NamesModel*>(index.model())->filledCount())
+             && (index.row() < static_cast<const N3NamesModel*>(index.model())->rowCount(QModelIndex()))))
         {
             QStyle::PrimitiveElement pe = QStyle::PE_PanelButtonTool;
 
@@ -214,6 +225,104 @@ void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
             return;
         }
     QItemDelegate::paint( painter, option, index );
+}
+
+//------------------------------------------------------------------------------------------
+void N3NamesDelegate::paintN3AlarmsSettings(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    if(!index.isValid()) return;
+
+    if(index.column() == static_cast<int>(N3AlarmsSettings_defs::Active))
+    {
+            QStyle::PrimitiveElement pe = QStyle::PE_IndicatorRadioButton;
+            drawPrimitive(painter, option, index, pe);
+            return;
+    }
+    QItemDelegate::paint( painter, option, index );
+}
+
+//------------------------------------------------------------------------------------------
+void N3NamesDelegate::drawPrimitive(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index, QStyle::PrimitiveElement pe) const
+{
+    if(!index.isValid()) return;
+
+    drawBackground(painter, option, index);
+    drawFocus(painter, option, option.rect);
+
+    QStyleOptionViewItem opt(option);
+    opt.rect = calcRect(option, index);
+
+    opt.state = QStyle::State_Enabled | (index.data(Qt::DisplayRole).toBool() ? QStyle::State_On : QStyle::State_Off);
+
+    if(!(index.model()->flags(index) & Qt::ItemIsEditable))
+    {
+            if(QApplication::style()->objectName() == "fusion")
+            opt.state |= QStyle::State_Sunken;
+            else
+            opt.state &= ~QStyle::State_Enabled;
+    }
+    qApp->style()->drawPrimitive(pe, &opt, painter);
+}
+
+
+//------------------------------------------------------------------------------------------
+void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+{
+    if(!index.isValid()) return;
+
+    switch(modelType(*index.model()))
+    {
+    case ModelType::N3Names:
+        setEditorDataN3Names(editor, index);
+    case ModelType::N3AlarmsSettings:
+        setEditorDataN3AlarmsSettings(editor, index);
+    default:
+        break;
+    }
+}
+
+//------------------------------------------------------------------------------------------
+void N3NamesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+    if(!index.isValid()) return;
+
+    switch(modelType(*index.model()))
+    {
+    case ModelType::N3Names:
+        setModelDataN3Names(editor, model, index);
+    case ModelType::N3AlarmsSettings:
+        setModelDataN3AlarmsSettings(editor, model, index);
+    default:
+        break;
+    }
+}
+
+//------------------------------------------------------------------------------------------
+void N3NamesDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    if(!index.isValid())
+        return;
+
+    editor->setGeometry(calcRect(option, index));
+}
+
+//------------------------------------------------------------------------------------------
+void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    if(!index.isValid()) return;
+
+    switch(modelType(*index.model()))
+    {
+    case ModelType::N3Names:
+        paintN3Names(painter, option, index);
+        return;
+    case ModelType::N3AlarmsSettings:
+        paintN3AlarmsSettings(painter, option, index);
+        return;
+    default:
+        QItemDelegate::paint( painter, option, index );
+        break;
+    }
 }
 
 //------------------------------------------------------------------------------------------
@@ -250,20 +359,42 @@ bool N3NamesDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, cons
 //------------------------------------------------------------------------------------------
 QRect N3NamesDelegate::calcRect(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    if(index.column() == static_cast<int>(N3NamesModel_defs::Name))
+    if(!index.isValid())
         return option.rect;
 
-    if(index.row() == static_cast<const N3NamesModel*>(index.model())->filledCount()
+    QStyle::SubElement se = QStyle::SE_RadioButtonIndicator;
+
+    if(modelType(*index.model()) == ModelType::N3Names)
+    {
+        if(index.column() == static_cast<int>(N3NamesModel_defs::Name))
+            return option.rect;
+
+        if(index.row() == static_cast<const N3NamesModel*>(index.model())->filledCount()
             && index.row() < static_cast<const N3NamesModel*>(index.model())->rowCount(QModelIndex())
             && index.column() == static_cast<int>(N3NamesModel_defs::Active))
-        return option.rect;
+            return option.rect;
 
-    QStyle::SubElement se = (index.column() == static_cast<int>(N3NamesModel_defs::Active)) ? QStyle::SE_RadioButtonIndicator : QStyle::SE_CheckBoxIndicator;
+        se = (index.column() == static_cast<int>(N3NamesModel_defs::Active)) ? QStyle::SE_RadioButtonIndicator : QStyle::SE_CheckBoxIndicator;
+    }
 
     QRect cr = qApp->style()->subElementRect(se, &option);
     int deltaX = (option.rect.width() - cr.width()) / 2;
     int deltaY = (option.rect.height() - cr.height()) / 2;
     return QRect(option.rect.left() + deltaX, option.rect.top() + deltaY, cr.width(), cr.height());
+}
+
+//------------------------------------------------------------------------------------------
+N3NamesDelegate::ModelType N3NamesDelegate::modelType(const QAbstractItemModel &model) const
+{
+    QVariant model_type = model.property("model_type");
+    if(model_type.isValid() && !model_type.isNull())
+    {
+        if(model_type.toString() == "N3Names")
+            return ModelType::N3Names;
+        if(model_type.toString() == "N3AlarmsSettings")
+            return ModelType::N3AlarmsSettings;
+    }
+    return ModelType::Unk;
 }
 
 //------------------------------------------------------------------------------------------

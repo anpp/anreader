@@ -1,9 +1,10 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <memory>
+#include <map>
+#include <QString>
 
-enum class dtype: uint {unk = 0, N3 = 1, Atlas = 2};
+enum class dtype: unsigned {unk = 0, N3 = 1, Atlas = 2};
 const static QString sDeviceTypes[] = {"", "N3", "Atlas"};
 
 typedef std::map<QString, QString> map_DataList;
