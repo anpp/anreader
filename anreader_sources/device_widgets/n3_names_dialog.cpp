@@ -82,7 +82,7 @@ void N3NamesDialog::initAlarms()
         ui->gbxFreeFall->setChecked(static_cast<N3AlarmsNames&>(*m_new_n3names).settings().enabledFreeFallAlarms());
         ui->gbxCanopy->setChecked(static_cast<N3AlarmsNames&>(*m_new_n3names).settings().enabledCanopyAlarms());
 
-        m_alarms_settings_model = std::make_unique<N3AlarmsSettingsModel>(static_cast<N3AlarmsNames&>(*m_new_n3names).settings());
+        m_alarms_settings_model = std::make_unique<N3AlarmsSettingsModel>(static_cast<N3AlarmsNames&>(*m_new_n3names));
         m_alarms_settings_freefall_model = std::make_unique<N3FilterAlarmsSettingsModel>(m_alarms_settings_model.get(), static_cast<uint8_t>(N3AlarmsSettings::alarm_type::FreeFall));
         m_alarms_settings_canopy_model = std::make_unique<N3FilterAlarmsSettingsModel>(m_alarms_settings_model.get(), static_cast<uint8_t>(N3AlarmsSettings::alarm_type::Canopy));
 

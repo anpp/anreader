@@ -340,15 +340,21 @@ bool N3NamesDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, cons
 
             if(rect.contains(mouseEvent->pos()) && mouseEvent->button() == Qt::MouseButton::LeftButton)
             {
-                if((index.column() == static_cast<int>(N3NamesModel_defs::Active) ||
-                    index.column() == static_cast<int>(N3NamesModel_defs::Hidden) )
+                if(modelType(*index.model()) == ModelType::N3Names)
+                {
+                    if((index.column() == static_cast<int>(N3NamesModel_defs::Active) ||
+                         index.column() == static_cast<int>(N3NamesModel_defs::Hidden) )
                         && index.row() < static_cast<const N3NamesModel*>(index.model())->filledCount())
-                    static_cast<N3NamesModel*>(model)->setData(index, !(index.model()->data(index, Qt::EditRole).toBool())  , Qt::EditRole);
-                else
-                    if((index.column() == static_cast<int>(N3NamesModel_defs::Active)
-                        && (index.row() == static_cast<const N3NamesModel*>(index.model())->filledCount())
-                        && (index.row() < static_cast<const N3NamesModel*>(index.model())->rowCount(QModelIndex()))))
-                        static_cast<N3NamesModel*>(model)->add();
+                        model->setData(index, !(index.model()->data(index, Qt::EditRole).toBool())  , Qt::EditRole);
+                    else
+                        if((index.column() == static_cast<int>(N3NamesModel_defs::Active)
+                             && (index.row() == static_cast<const N3NamesModel*>(index.model())->filledCount())
+                             && (index.row() < static_cast<const N3NamesModel*>(index.model())->rowCount(QModelIndex()))))
+                            static_cast<N3NamesModel*>(model)->add();
+                }
+
+                if(modelType(*index.model()) == ModelType::N3AlarmsSettings && index.column() == static_cast<int>(N3AlarmsSettings_defs::Active))
+                    model->setData(index, !(index.model()->data(index, Qt::EditRole).toBool())  , Qt::EditRole);
             }
         }
     }

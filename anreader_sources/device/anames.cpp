@@ -2,7 +2,7 @@
 
 
 //----------------------------------------------------------------------------------------------------------------------
-const std::vector<std::unique_ptr<QString>> &ANames::Names()
+const std::vector<std::unique_ptr<QString>> &ANames::Names() const
 {
     if(m_names->size() == 0)
     {

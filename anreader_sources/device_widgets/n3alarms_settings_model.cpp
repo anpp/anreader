@@ -1,11 +1,12 @@
 #include "n3alarms_settings_model.h"
+#include "device/n3alarms_names.h"
 #include "device/n3alarms_settings.h"
 
 #include <QFont>
 
 //------------------------------------------------------------------------------------------
-N3AlarmsSettingsModel::N3AlarmsSettingsModel(N3AlarmsSettings& data, QObject *parent)
-    : QAbstractItemModel{parent}, m_data(data)
+N3AlarmsSettingsModel::N3AlarmsSettingsModel(N3AlarmsNames& alarmsnames, QObject *parent)
+    : QAbstractItemModel{parent}, m_data(alarmsnames.settings()), m_names(alarmsnames)
 {
 
 }
@@ -67,7 +68,7 @@ Qt::ItemFlags N3AlarmsSettingsModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
 
-    flags &= ~Qt::ItemIsEditable;
+    flags |= Qt::ItemIsEditable;
 
     return flags;
 }
@@ -84,7 +85,7 @@ QVariant N3AlarmsSettingsModel::value(int row, int col, int role) const
         case N3AlarmsSettings_defs::Active:
             return m_data.active(row);
         case N3AlarmsSettings_defs::NameIndex:
-            return m_data.nameIndex(row);
+            return (static_cast<uint>(m_data.nameIndex(row)) < m_names.Names().size() ? *m_names.Names()[m_data.nameIndex(row)] : "");
             break;
         case N3AlarmsSettings_defs::AlarmAltitude1:
             return m_data.altitude(row, 0);
