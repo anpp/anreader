@@ -92,8 +92,8 @@ QVariant N3AlarmsSettingsModel::value(int row, int col, int role) const
         case N3AlarmsSettings_defs::AlarmAltitude2:
             return m_data.altitude(row, 1);
         case N3AlarmsSettings_defs::AlarmAltitude3:
-            return m_data.altitude(row, 2);
 
+            return m_data.altitude(row, 2);
         default:
             return QVariant();
         }

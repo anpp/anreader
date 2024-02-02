@@ -2,6 +2,7 @@
 #define N3ALARMSSETTINGS_H
 
 #include <QByteArray>
+//#include <QString>
 
 class N3DeviceSettings;
 
@@ -41,6 +42,8 @@ public:
 
     friend bool operator==(const N3AlarmsSettings& left, const N3AlarmsSettings& right);
     N3AlarmsSettings& operator=(const N3AlarmsSettings& right) noexcept;
+
+    QString alitudePostfix() const;
 
 };
 

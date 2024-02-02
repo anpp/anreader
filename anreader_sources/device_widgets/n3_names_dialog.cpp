@@ -99,6 +99,10 @@ void N3NamesDialog::initAlarms()
         ui->tvFreefall->resizeRowsToContents();
         ui->tvCanopy->resizeColumnsToContents();
         ui->tvCanopy->resizeRowsToContents();
+
+        ui->gbxFreeFall->setTitle(ui->gbxFreeFall->title() + " (" + (static_cast<N3AlarmsNames&>(*m_new_n3names).settings().alitudePostfix()) + ")");
+        ui->gbxCanopy->setTitle(ui->gbxCanopy->title() + " (" + (static_cast<N3AlarmsNames&>(*m_new_n3names).settings().alitudePostfix()) + ")");
+
     }
 #if QT_VERSION <= QT_VERSION_CHECK(5, 15, 0)
     if(m_n3names.type() != N3NamesType::Alarms)

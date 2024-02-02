@@ -39,7 +39,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabNames">
       <attribute name="title">
@@ -113,6 +113,14 @@
        </property>
        <item>
         <widget class="QGroupBox" name="gbxFreeFall">
+         <property name="font">
+          <font>
+           <family>Segoe UI</family>
+           <pointsize>10</pointsize>
+           <italic>false</italic>
+           <bold>false</bold>
+          </font>
+         </property>
          <property name="title">
           <string>Freefall alarms</string>
          </property>
@@ -168,6 +176,13 @@
        </item>
        <item>
         <widget class="QGroupBox" name="gbxCanopy">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <bold>false</bold>
+           <underline>false</underline>
+          </font>
+         </property>
          <property name="title">
           <string>Canopy alarms</string>
          </property>
