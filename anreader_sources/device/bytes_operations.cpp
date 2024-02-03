@@ -93,3 +93,12 @@ bool BytesOperations::checkBit(uint8_t byte, int index)
     return (byte & (1 << index)) != 0;
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+void BytesOperations::calculateCheckSum(QByteArray &bytes, size_t size, size_t first_byte)
+{
+    if(bytes.size() < size) return;
+    bytes[0] = 1;
+    for(unsigned int i = first_byte; i < size; i++)
+        bytes[0] = bytes[0] + bytes[i];
+}
+

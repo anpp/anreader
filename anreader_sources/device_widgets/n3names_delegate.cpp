@@ -169,7 +169,14 @@ void N3NamesDelegate::setModelDataN3Names(QWidget *editor, QAbstractItemModel *m
         if(nullptr != cb)
             model->setData(index, cb->isChecked() , Qt::EditRole);
     }
-
+/*
+    if(index.column() == static_cast<int>(N3NamesModel_defs::Used))
+    {
+        QCheckBox *cb = static_cast<QCheckBox*>(editor);
+        if(nullptr != cb)
+            model->setData(index, cb->isChecked() , Qt::EditRole);
+    }
+*/
     if(index.column() == static_cast<int>(N3NamesModel_defs::Name))
     {
         QLineEdit *le = static_cast<QLineEdit*>(editor);

@@ -9,10 +9,7 @@ N3Names::N3Names(N3NamesType atype) : m_type(atype)
 
 void N3Names::calculateCheckSum()
 {
-    if(m_data.size() < static_cast<int>(N3Constants::N3NamesSize)) return;
-    m_data[0] = 1;
-    for(unsigned int i = 1; i < N3Constants::N3NamesSize; i++)
-        m_data[0] = m_data[0] + m_data[i];
+    BytesOperations::calculateCheckSum(m_data, N3Constants::N3NamesSize);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -44,7 +41,7 @@ uint N3Names::count() const
 uint N3Names::filled() const
 {
     if(m_data.size() > N3NamesValues::offset)
-        return m_data[1];
+        return m_data[1] > N3NamesValues::size ? N3NamesValues::size :m_data[1];
 
     return 0;
 }

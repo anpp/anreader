@@ -8,10 +8,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 void N3SummaryInfo::calculateCheckSum()
 {
-    if(m_data.size() < static_cast<int>(N3Constants::SummarySize)) return;
-    m_data[0] = 1;
-    for(unsigned int i = 2; i < N3Constants::SummarySize; i++)
-        m_data[0] = m_data[0] + m_data[i];
+    BytesOperations::calculateCheckSum(m_data, N3Constants::SummarySize, 2);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

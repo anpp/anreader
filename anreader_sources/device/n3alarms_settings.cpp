@@ -7,10 +7,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::calculateCheckSum()
 {
-    if(m_data.size() < static_cast<int>(N3Constants::DeviceSettingsSize)) return;
-    m_data[0] = 1;
-    for(unsigned int i = 2; i < N3Constants::AlarmsSettingsSize; i++)
-        m_data[0] = m_data[0] + m_data[i];
+    BytesOperations::calculateCheckSum(m_data, N3Constants::AlarmsSettingsSize, 2);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
