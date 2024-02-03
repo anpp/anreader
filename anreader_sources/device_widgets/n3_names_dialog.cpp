@@ -79,10 +79,12 @@ void N3NamesDialog::initAlarms()
 {
     if(m_n3names.type() == N3NamesType::Alarms)
     {
-        ui->gbxFreeFall->setChecked(static_cast<N3AlarmsNames&>(*m_new_n3names).settings().enabledFreeFallAlarms());
-        ui->gbxCanopy->setChecked(static_cast<N3AlarmsNames&>(*m_new_n3names).settings().enabledCanopyAlarms());
+        N3AlarmsNames& alarms_names = static_cast<N3AlarmsNames&>(*m_new_n3names);
 
-        m_alarms_settings_model = std::make_unique<N3AlarmsSettingsModel>(static_cast<N3AlarmsNames&>(*m_new_n3names));
+        ui->gbxFreeFall->setChecked(alarms_names.settings().enabledFreeFallAlarms());
+        ui->gbxCanopy->setChecked(alarms_names.settings().enabledCanopyAlarms());
+
+        m_alarms_settings_model = std::make_unique<N3AlarmsSettingsModel>(alarms_names);
         m_alarms_settings_freefall_model = std::make_unique<N3FilterAlarmsSettingsModel>(m_alarms_settings_model.get(), static_cast<uint8_t>(N3AlarmsSettings::alarm_type::FreeFall));
         m_alarms_settings_canopy_model = std::make_unique<N3FilterAlarmsSettingsModel>(m_alarms_settings_model.get(), static_cast<uint8_t>(N3AlarmsSettings::alarm_type::Canopy));
 
@@ -100,8 +102,8 @@ void N3NamesDialog::initAlarms()
         ui->tvCanopy->resizeColumnsToContents();
         ui->tvCanopy->resizeRowsToContents();
 
-        ui->gbxFreeFall->setTitle(ui->gbxFreeFall->title() + " (" + (static_cast<N3AlarmsNames&>(*m_new_n3names).settings().alitudePostfix()) + ")");
-        ui->gbxCanopy->setTitle(ui->gbxCanopy->title() + " (" + (static_cast<N3AlarmsNames&>(*m_new_n3names).settings().alitudePostfix()) + ")");
+        ui->gbxFreeFall->setTitle(ui->gbxFreeFall->title() + " (" + tr(alarms_names.settings().alitudePostfix().toStdString().c_str()) + ")");
+        ui->gbxCanopy->setTitle(ui->gbxCanopy->title() + " (" + tr(alarms_names.settings().alitudePostfix().toStdString().c_str()) + ")");
 
     }
 #if QT_VERSION <= QT_VERSION_CHECK(5, 15, 0)

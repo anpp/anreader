@@ -1,8 +1,9 @@
 #ifndef N3ALARMSSETTINGS_H
 #define N3ALARMSSETTINGS_H
 
+#include <QObject>
 #include <QByteArray>
-//#include <QString>
+#include <QString>
 
 class N3DeviceSettings;
 
@@ -15,7 +16,9 @@ class N3AlarmsSettings
                                };    
 
     QByteArray m_data;
-    N3DeviceSettings *m_device_settings = nullptr;    
+    N3DeviceSettings *m_device_settings = nullptr;
+    const QString m_feet = QObject::tr("Feet");
+    const QString m_meters = QObject::tr("Meters");
 public:
     enum class alarm_type: uint8_t {FreeFall = 0, Canopy = 1, unk = 2};
 
@@ -43,7 +46,7 @@ public:
     friend bool operator==(const N3AlarmsSettings& left, const N3AlarmsSettings& right);
     N3AlarmsSettings& operator=(const N3AlarmsSettings& right) noexcept;
 
-    QString alitudePostfix() const;
+    const QString& alitudePostfix() const;
 
 };
 
