@@ -75,23 +75,27 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
 {
     if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2))
     {
-        uint16_t result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
+        double result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
         altitude_measure am = altitude_measure::feet;
         double koeff = (type(index) == alarm_type::FreeFall ? 25.0 : 10.0);
+        double divider = (type(index) == alarm_type::FreeFall ? 100.0 : 10.0);
         if(nullptr != m_device_settings)
             am = m_device_settings->altitudeMeasure();
 
-        if(altindex == 1 && (type(index) == alarm_type::FreeFall))
-            koeff = 100.0;
-        if(altindex != 2 && (type(index) == alarm_type::Canopy))
-            koeff = 5.0;
-
         if(altitude_measure::meters == am)
-            result = round(round(result / 2.0) / koeff) * koeff;
+        {
+            double exp;
+            result = round(result / koeff) * koeff / divider;
+            exp = modf(result, &result);
+            if(exp > 0.4)
+                result = round((result + exp) * divider) / 2;
+            else
+                result = round(result * divider) / 2;
+        }
         else
-            result = round(((((round(result / 2.0) * 1000) / 25.4) / 12) / koeff)) * koeff;
+            result = round(((((round(result / koeff) / 2.0 * 1000) / 25.4) / 12))) * koeff;
 
-        return result;
+        return (uint16_t)result;
     }
     return 0;
 }
