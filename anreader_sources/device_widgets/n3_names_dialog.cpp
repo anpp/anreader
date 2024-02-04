@@ -72,7 +72,7 @@ void N3NamesDialog::initNames()
     ui->tvNames->resizeColumnsToContents();
     ui->tvNames->resizeRowsToContents();
 
-    connect(ui->tvNames->model(), &QAbstractItemModel::dataChanged, [&] () { dataChanged();});
+    connect(ui->tvNames->model(), &QAbstractItemModel::dataChanged, [this] () { this->dataChanged();});
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -115,7 +115,7 @@ void N3NamesDialog::initAlarms()
 #endif
     connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, m_alarms_settings_freefall_model.get(), &QAbstractItemModel::dataChanged);
     connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, m_alarms_settings_canopy_model.get(), &QAbstractItemModel::dataChanged);
-    connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, [&] () { dataChanged();});
+    connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, [this] () { this->dataChanged();});
 }
 
 //--------------------------------------------------------------------------------------------------------------
