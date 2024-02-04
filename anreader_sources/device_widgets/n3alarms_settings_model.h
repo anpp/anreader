@@ -5,7 +5,6 @@
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
 
-class N3Names;
 class N3AlarmsNames;
 class N3AlarmsSettings;
 class N3FilterAlarmsSettingsModel;
@@ -15,7 +14,7 @@ enum N3AlarmsSettings_defs: int {NumColumns = 5, Active = 0, NameIndex = 1, Alar
 class N3AlarmsSettingsModel : public QAbstractItemModel
 {    
     N3AlarmsSettings& m_data;
-    const N3Names& m_names;
+    N3AlarmsNames& m_names;
 public:
     explicit N3AlarmsSettingsModel(N3AlarmsNames& alarmsnames, QObject *parent = nullptr);
 

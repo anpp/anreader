@@ -34,6 +34,21 @@ bool N3AlarmsSettingsModel::setData(const QModelIndex &index, const QVariant &va
 {
     if(!index.isValid())
         return false;
+    if(Qt::EditRole == role)
+        switch(static_cast<N3AlarmsSettings_defs>(index.column()))
+        {
+        case N3AlarmsSettings_defs::Active:
+            if(value.toBool())
+            {
+                m_data.type(index.row()) == N3AlarmsSettings::alarm_type::FreeFall ? m_data.setActiveFreeFallIndex(index.row()) : m_data.setActiveCanopyIndex(index.row());
+                m_names.setActives();
+                emit dataChanged(QModelIndex(), QModelIndex());
+                return true;
+            }
+            break;
+        default:
+            break;
+        }
 
     return false;
 }
@@ -112,15 +127,20 @@ QVariant N3FilterAlarmsSettingsModel::data(const QModelIndex &index, int role) c
         return this->sourceModel()->data(this->mapToSource(index), role);
     return false;
 }
-
-
+*/
+/*
 //------------------------------------------------------------------------------------------
 bool N3FilterAlarmsSettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if(!index.isValid()) return false;
 
     if (this->sourceModel())
-        return this->sourceModel()->setData(this->mapToSource(index), value, role);
+    {
+        bool res = this->sourceModel()->setData(this->mapToSource(index), value, role);
+        if(res)
+            emit dataChanged(QModelIndex(), QModelIndex());
+        return res;
+    }
     return false;
 }
 */

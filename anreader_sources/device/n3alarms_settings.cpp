@@ -154,6 +154,8 @@ N3AlarmsSettings& N3AlarmsSettings::operator=(const N3AlarmsSettings &right) noe
 //----------------------------------------------------------------------------------------------------------------------
 const QString &N3AlarmsSettings::alitudePostfix() const
 {
+    if(nullptr == m_device_settings)
+        return m_feet;
     return m_device_settings->altitudeMeasure() == altitude_measure::feet? m_feet: m_meters;
 }
 

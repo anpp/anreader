@@ -11,6 +11,7 @@
 #include <QToolButton>
 #include <QAction>
 #include <QApplication>
+#include <QComboBox>
 
 //------------------------------------------------------------------------------------------
 QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -100,6 +101,30 @@ QWidget *N3NamesDelegate::createEditorN3Names(QWidget *parent, const QStyleOptio
 //------------------------------------------------------------------------------------------
 QWidget *N3NamesDelegate::createEditorN3AlarmsSettings(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    Q_UNUSED(option);
+    if(!index.isValid()) return nullptr;
+
+    if(index.row() < index.model()->rowCount())
+    {
+        QRadioButton *rb = nullptr;
+        QComboBox *cmb = nullptr;
+
+        switch(static_cast<N3AlarmsSettings_defs>(index.column()))
+        {
+        case N3AlarmsSettings_defs::Active:
+            rb = new QRadioButton(parent);
+            connect(rb, &QRadioButton::toggled, this, &N3NamesDelegate::radio_toggled);
+            rb->setCheckable(true);
+            return rb;
+
+        case N3AlarmsSettings_defs::NameIndex:
+            cmb = new QComboBox(parent);
+            return cmb;
+
+        default:
+            return nullptr;
+        }
+    }
     return nullptr;
 }
 
@@ -147,7 +172,31 @@ void N3NamesDelegate::setEditorDataN3Names(QWidget *editor, const QModelIndex &i
 //------------------------------------------------------------------------------------------
 void N3NamesDelegate::setEditorDataN3AlarmsSettings(QWidget *editor, const QModelIndex &index) const
 {
+    if(!index.isValid()) return;
 
+    if(index.row() < index.model()->rowCount())
+    {
+        QRadioButton *rb = nullptr;
+        QComboBox *cmb = nullptr;
+
+        switch(static_cast<N3AlarmsSettings_defs>(index.column()))
+        {
+        case N3AlarmsSettings_defs::Active:
+            rb = static_cast<QRadioButton*>(editor);
+            if(nullptr != rb)
+                rb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
+            break;
+
+        case N3AlarmsSettings_defs::NameIndex:
+            cmb = static_cast<QComboBox*>(editor);
+            //if(nullptr != cmb)
+            //    rb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
+            break;
+
+        default:
+            break;
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------
@@ -190,6 +239,31 @@ void N3NamesDelegate::setModelDataN3Names(QWidget *editor, QAbstractItemModel *m
 //------------------------------------------------------------------------------------------
 void N3NamesDelegate::setModelDataN3AlarmsSettings(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
+    if(!index.isValid()) return;
+
+    if(index.row() < index.model()->rowCount())
+    {
+        QRadioButton *rb = nullptr;
+        QComboBox *cmb = nullptr;
+
+        switch(static_cast<N3AlarmsSettings_defs>(index.column()))
+        {
+        case N3AlarmsSettings_defs::Active:
+            rb = static_cast<QRadioButton*>(editor);
+            if(nullptr != rb)
+                model->setData(index, rb->isChecked() , Qt::EditRole);
+            break;
+
+        case N3AlarmsSettings_defs::NameIndex:
+            cmb = static_cast<QComboBox*>(editor);
+            //if(nullptr != cmb)
+            //    rb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
+            break;
+
+        default:
+            break;
+        }
+    }
 
 }
 

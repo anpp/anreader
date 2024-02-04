@@ -30,7 +30,6 @@ N3NamesDialog::N3NamesDialog(const QString& title, const N3Names& names, QWidget
     ui->tabWidget->setTabText(0, tr("List"));
     ui->tabWidget->setTabText(1, tr("Alarms settings"));
 
-    connect(ui->tvNames->model(), &QAbstractItemModel::dataChanged, [&] () { dataChanged();});
     dataChanged();
 }
 
@@ -72,6 +71,8 @@ void N3NamesDialog::initNames()
 
     ui->tvNames->resizeColumnsToContents();
     ui->tvNames->resizeRowsToContents();
+
+    connect(ui->tvNames->model(), &QAbstractItemModel::dataChanged, [&] () { dataChanged();});
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -112,6 +113,9 @@ void N3NamesDialog::initAlarms()
 #else
     ui->tabWidget->setTabVisible(1, m_n3names.type() == N3NamesType::Alarms);
 #endif
+    connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, m_alarms_settings_freefall_model.get(), &QAbstractItemModel::dataChanged);
+    connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, m_alarms_settings_canopy_model.get(), &QAbstractItemModel::dataChanged);
+    connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, [&] () { dataChanged();});
 }
 
 //--------------------------------------------------------------------------------------------------------------
