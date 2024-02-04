@@ -82,20 +82,20 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
         if(nullptr != m_device_settings)
             am = m_device_settings->altitudeMeasure();
 
-        if(altitude_measure::meters == am)
-        {
-            double exp;
-            result = round(result / koeff) * koeff / divider;
-            exp = modf(result, &result);
-            if(exp > 0.4 && type(index) == alarm_type::FreeFall)
-                result = round((result + exp) * divider / 2.0);
-            else
-                result = round(result * divider) / 2.0;
-        }
+        double exp;
+        result = round(result / koeff) * koeff / divider;
+        exp = modf(result, &result);
+        if(exp > 0.4 && type(index) == alarm_type::FreeFall)
+            result = round((result + exp) * divider / 2.0);
         else
-            result = round(((((round(result / divider) / 2.0 * 1000) / 25.4) / 12))) * divider;
+            result = round(result * divider) / 2.0;
 
-        return (uint16_t)result;
+        if(altitude_measure::meters == am)
+            return (uint16_t)result;
+        else
+            return (uint16_t)round((result / divider) * (1000 / 25.4 / 12)) * divider;
+            //return round(((((round(result / divider) / 2.0 * 1000) / 25.4) / 12))) * divider;
+
     }
     return 0;
 }
