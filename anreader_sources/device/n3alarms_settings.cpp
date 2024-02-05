@@ -86,7 +86,7 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
         if(altitude_measure::meters == am)
             return round(result / meters_step) * meters_step;
         else
-            return round(round(result * (1000 / 25.4 / 12) / feet_step - 0.1) * feet_step);
+            return round(round(result * (1000 / 25.4 / 12) / feet_step - 0.05) * feet_step);
 
     }
     return 0;

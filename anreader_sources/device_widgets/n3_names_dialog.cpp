@@ -106,6 +106,9 @@ void N3NamesDialog::initAlarms()
         ui->gbxFreeFall->setTitle(ui->gbxFreeFall->title() + " (" + tr(alarms_names.settings().alitudePostfix().toStdString().c_str()) + ")");
         ui->gbxCanopy->setTitle(ui->gbxCanopy->title() + " (" + tr(alarms_names.settings().alitudePostfix().toStdString().c_str()) + ")");
 
+        connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, m_alarms_settings_freefall_model.get(), &QAbstractItemModel::dataChanged);
+        connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, m_alarms_settings_canopy_model.get(), &QAbstractItemModel::dataChanged);
+        connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, [this] () { this->dataChanged();});
     }
 #if QT_VERSION <= QT_VERSION_CHECK(5, 15, 0)
     if(m_n3names.type() != N3NamesType::Alarms)
@@ -113,9 +116,6 @@ void N3NamesDialog::initAlarms()
 #else
     ui->tabWidget->setTabVisible(1, m_n3names.type() == N3NamesType::Alarms);
 #endif
-    connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, m_alarms_settings_freefall_model.get(), &QAbstractItemModel::dataChanged);
-    connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, m_alarms_settings_canopy_model.get(), &QAbstractItemModel::dataChanged);
-    connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, [this] () { this->dataChanged();});
 }
 
 //--------------------------------------------------------------------------------------------------------------
