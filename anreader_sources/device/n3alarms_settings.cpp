@@ -79,13 +79,14 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
         double meters_step = (type(index) == alarm_type::FreeFall ? 25.0 : 5.0);
         double feet_step = (type(index) == alarm_type::FreeFall ? 100.0 : 10.0);
+        double factor = (altitude_measure::meters == am ? 10.0 : 1.0);
 
-        result = floor(result / 10.0) * 10.0;
+        result = floor(result / factor) * factor / 2.0;
 
         if(altitude_measure::meters == am)
-            return round(result / 2.0 / meters_step) * meters_step;
+            return round(result / meters_step) * meters_step;
         else
-            return round(round(result / 2.0 * (1000 / 25.4 / 12) / feet_step) * feet_step);
+            return round(round(result * (1000 / 25.4 / 12) / feet_step - 0.1) * feet_step);
 
     }
     return 0;
