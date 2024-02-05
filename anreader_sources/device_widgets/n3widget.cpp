@@ -418,8 +418,9 @@ void N3Widget::N3Names_dialog(N3Names &names)
             default:
                 break;
             }
-            if(is_changed_current)
-                m_device->write_summary_jumps();
+            if(names.type() != N3NamesType::Alarms)
+                if(is_changed_current)
+                    m_device->write_summary_jumps();
         }
     }
 }

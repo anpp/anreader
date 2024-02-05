@@ -76,25 +76,16 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
     if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2))
     {
         double result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
-        altitude_measure am = altitude_measure::feet;
-        double koeff = (type(index) == alarm_type::FreeFall ? 25.0 : 5.0);
-        double divider = (type(index) == alarm_type::FreeFall ? 100.0 : 10.0);
-        if(nullptr != m_device_settings)
-            am = m_device_settings->altitudeMeasure();
+        altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
+        double meters_step = (type(index) == alarm_type::FreeFall ? 25.0 : 5.0);
+        double feet_step = (type(index) == alarm_type::FreeFall ? 100.0 : 10.0);
 
-        double exp;
-        result = round(result / koeff) * koeff / divider;
-        exp = modf(result, &result);
-        if(exp > 0.4 && type(index) == alarm_type::FreeFall)
-            result = round((result + exp) * divider / 2.0);
-        else
-            result = round(result * divider) / 2.0;
+        result = floor(result / 10.0) * 10.0;
 
         if(altitude_measure::meters == am)
-            return (uint16_t)result;
+            return round(result / 2.0 / meters_step) * meters_step;
         else
-            return (uint16_t)round((result / divider) * (1000 / 25.4 / 12)) * divider;
-            //return round(((((round(result / divider) / 2.0 * 1000) / 25.4) / 12))) * divider;
+            return round(round(result / 2.0 * (1000 / 25.4 / 12) / feet_step) * feet_step);
 
     }
     return 0;
