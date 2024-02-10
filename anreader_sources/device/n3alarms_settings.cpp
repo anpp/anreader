@@ -78,15 +78,17 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
         double result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
         double stp = step(index);
-        double factor = (altitude_measure::meters == am ? 10.0 : 3.0);
+        double factor = (altitude_measure::meters == am ? 10.0 : 4.0);
 
-        result = floor(result / factor) * factor / 2.0;
+        if(altitude_measure::meters == am)
+            result = floor(result / factor) * factor / 2.0;
+        else
+            result = round(result / factor) * factor / 2.0;
 
         if(altitude_measure::meters == am)
             return round(result / stp) * stp;
         else
             return round(round(result * (1000 / 25.4 / 12) / stp) * stp);
-
     }
     return 0;
 }
@@ -172,6 +174,31 @@ void N3AlarmsSettings::enableCanopyAlarms(bool enable)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
+{
+    if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2))
+    {
+        double device_altitude = value;
+        altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
+
+        if(altitude_measure::feet == am)
+        {
+            if(type(index) == alarm_type::FreeFall)
+                device_altitude = round(device_altitude / (1000 / 25.4 / 12) * 2 / step(index) * 10 + 0.5) / 10 * step(index);
+            else
+               device_altitude = round(device_altitude / (1000 / 25.4 / 12) * 2);
+        }
+        else
+            device_altitude = device_altitude * 2;
+
+        int i = static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2);
+        QByteArray bytes = BytesOperations::UInt16ToBytes(round(device_altitude));
+        m_data[i] = bytes[0];
+        m_data[i + 1] = bytes[1];
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 bool operator==(const N3AlarmsSettings& left, const N3AlarmsSettings& right)
 {
     return (left.m_data == right.m_data);
@@ -194,6 +221,17 @@ const QString &N3AlarmsSettings::alitudePostfix() const
     if(nullptr == m_device_settings)
         return m_feet;
     return m_device_settings->altitudeMeasure() == altitude_measure::feet? m_feet: m_meters;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3AlarmsSettings::init()
+{
+    for(int i = 0; i < 8; ++ i)
+    {
+        setAltitude(i, 0, altitude(i, 0));
+        setAltitude(i, 1, altitude(i, 1));
+        setAltitude(i, 2, altitude(i, 2));
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------------------

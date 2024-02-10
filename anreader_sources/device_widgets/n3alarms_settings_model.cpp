@@ -37,6 +37,9 @@ bool N3AlarmsSettingsModel::setData(const QModelIndex &index, const QVariant &va
     if(!index.isValid())
         return false;
     if(Qt::EditRole == role)
+    {
+        uint16_t altitude;
+
         switch(static_cast<N3AlarmsSettings_defs>(index.column()))
         {
         case N3AlarmsSettings_defs::Active:
@@ -48,10 +51,17 @@ bool N3AlarmsSettingsModel::setData(const QModelIndex &index, const QVariant &va
                 return true;
             }
             break;
+        case N3AlarmsSettings_defs::AlarmAltitude1:
+        case N3AlarmsSettings_defs::AlarmAltitude2:
+        case N3AlarmsSettings_defs::AlarmAltitude3:
+            altitude = (value.toUInt() / m_data.step(index.row())) * m_data.step(index.row());
+            m_data.setAltitude(index.row(), index.column() - 2, altitude);
+            emit dataChanged(QModelIndex(), QModelIndex());
+            return true;
         default:
             break;
         }
-
+    }
     return false;
 }
 

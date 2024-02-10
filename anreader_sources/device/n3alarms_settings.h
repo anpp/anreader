@@ -42,6 +42,7 @@ public:
     void setActiveCanopyIndex(int index);
     void enableFreeFallAlarms(bool enable);
     void enableCanopyAlarms(bool enable);
+    void setAltitude(int index, int altindex, uint16_t value);
 
     QByteArray& data() {return m_data; };
 
@@ -49,6 +50,7 @@ public:
     N3AlarmsSettings& operator=(const N3AlarmsSettings& right) noexcept;
 
     const QString& alitudePostfix() const;
+    void init();
     unsigned step(int index) const;
     unsigned interval(int index) const;
     unsigned max(int index) const;

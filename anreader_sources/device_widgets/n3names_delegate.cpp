@@ -269,19 +269,28 @@ void N3NamesDelegate::setModelDataN3AlarmsSettings(QWidget *editor, QAbstractIte
     {
         QRadioButton *rb = nullptr;
         QComboBox *cmb = nullptr;
+        QSpinBox *spb = nullptr;
 
         switch(static_cast<N3AlarmsSettings_defs>(index.column()))
         {
         case N3AlarmsSettings_defs::Active:
             rb = static_cast<QRadioButton*>(editor);
             if(nullptr != rb)
-                model->setData(index, rb->isChecked() , Qt::EditRole);
+                model->setData(index, rb->isChecked(), Qt::EditRole);
             break;
 
         case N3AlarmsSettings_defs::NameIndex:
             cmb = static_cast<QComboBox*>(editor);
             //if(nullptr != cmb)
             //    rb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
+            break;
+        case N3AlarmsSettings_defs::AlarmAltitude1:
+        case N3AlarmsSettings_defs::AlarmAltitude2:
+        case N3AlarmsSettings_defs::AlarmAltitude3:
+            spb = static_cast<QSpinBox*>(editor);
+            if(nullptr != spb)
+                model->setData(index, spb->value(), Qt::EditRole);
+
             break;
 
         default:
