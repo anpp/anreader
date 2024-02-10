@@ -47,6 +47,7 @@ public:
     N3AlarmsSettings& operator=(const N3AlarmsSettings& right) noexcept;
 
     const QString& alitudePostfix() const;
+    unsigned step(int index) const;
 
 };
 

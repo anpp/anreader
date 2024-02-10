@@ -77,16 +77,15 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
     {
         double result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
-        double meters_step = (type(index) == alarm_type::FreeFall ? 25.0 : 5.0);
-        double feet_step = (type(index) == alarm_type::FreeFall ? 100.0 : 10.0);
+        double stp = step(index);
         double factor = (altitude_measure::meters == am ? 10.0 : 3.0);
 
         result = floor(result / factor) * factor / 2.0;
 
         if(altitude_measure::meters == am)
-            return round(result / meters_step) * meters_step;
+            return round(result / stp) * stp;
         else
-            return round(round(result * (1000 / 25.4 / 12) / feet_step) * feet_step);
+            return round(round(result * (1000 / 25.4 / 12) / stp) * stp);
 
     }
     return 0;
@@ -157,6 +156,21 @@ const QString &N3AlarmsSettings::alitudePostfix() const
     if(nullptr == m_device_settings)
         return m_feet;
     return m_device_settings->altitudeMeasure() == altitude_measure::feet? m_feet: m_meters;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+unsigned int N3AlarmsSettings::step(int index) const
+{
+    if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10))
+    {
+        altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
+        if(altitude_measure::meters == am)
+            return (type(index) == alarm_type::FreeFall ? 25 : 5);
+        else
+            return (type(index) == alarm_type::FreeFall ? 100 : 10);
+
+    }
+    return 0;
 }
 
 
