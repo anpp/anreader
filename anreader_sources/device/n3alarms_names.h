@@ -17,6 +17,7 @@ public:
     void calculateCheckSum() override;
     void setActive(uint index, bool value = true) override;
     void setActives();
+    void setSelected();
     void init() override;
     bool isEqual(const ANames& right) const override;
 

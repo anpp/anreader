@@ -30,6 +30,7 @@ public:
     bool hidden(uint index) const;
     bool active(uint index) const;
     const N3Names& n3data() const { return m_data; };
+    bool selected(uint index) const;
 
 public slots:
     void add();

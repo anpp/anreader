@@ -10,6 +10,14 @@ void N3AlarmsNames::setActives()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void N3AlarmsNames::setSelected()
+{
+    m_map_selected_in_alarms.clear();
+    for(int i = 0; i < 8; ++i)
+        m_map_selected_in_alarms[m_settings->nameIndex(i)] = true;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 N3AlarmsNames::N3AlarmsNames(N3DeviceSettings* device_settings) : N3Names(N3NamesType::Alarms)
 {
     m_settings = std::make_unique<N3AlarmsSettings>(device_settings);
@@ -33,6 +41,7 @@ void N3AlarmsNames::init()
 {
     N3Names::init();
     setActives();
+    setSelected();
 }
 
 //----------------------------------------------------------------------------------------------------------------------

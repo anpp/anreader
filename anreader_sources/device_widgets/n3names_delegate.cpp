@@ -71,11 +71,15 @@ QWidget *N3NamesDelegate::createEditorN3Names(QWidget *parent, const QStyleOptio
                 && !static_cast<const N3NamesModel*>(index.model())->value(index.row(), static_cast<int>(N3NamesModel_defs::Active), Qt::EditRole).toBool()
                 && !static_cast<const N3NamesModel*>(index.model())->value(index.row(), static_cast<int>(N3NamesModel_defs::Used), Qt::EditRole).toBool())
             {
-                QAction *adel = le->addAction(QIcon(":/images/icons/buttons/delete.png"), QLineEdit::TrailingPosition);
-                adel->setToolTip(tr("Delete this item"));
+                //проверка если имя используется в сигналах - кнопку удалить не создавать
+                if(!static_cast<const N3NamesModel*>(index.model())->selected(index.row()))
+                {
+                    QAction *adel = le->addAction(QIcon(":/images/icons/buttons/delete.png"), QLineEdit::TrailingPosition);
+                    adel->setToolTip(tr("Delete this item"));
 
-                connect(adel, &QAction::triggered, this, &N3NamesDelegate::del);
-                connect(adel, &QAction::triggered, static_cast<const N3NamesModel*>(index.model()), &N3NamesModel::del);
+                    connect(adel, &QAction::triggered, this, &N3NamesDelegate::del);
+                    connect(adel, &QAction::triggered, static_cast<const N3NamesModel*>(index.model()), &N3NamesModel::del);
+                }
             }
             return le;
         }
@@ -357,10 +361,10 @@ void N3NamesDelegate::drawPrimitive(QPainter *painter, const QStyleOptionViewIte
 
     if(!(index.model()->flags(index) & Qt::ItemIsEditable))
     {
-            if(QApplication::style()->objectName() == "fusion")
+        if(QApplication::style()->objectName() == "fusion")
             opt.state |= QStyle::State_Sunken;
             else
-            opt.state &= ~QStyle::State_Enabled;
+        opt.state &= ~QStyle::State_Enabled;
     }
     qApp->style()->drawPrimitive(pe, &opt, painter);
 }
@@ -373,12 +377,14 @@ void N3NamesDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
 
     switch(modelType(*index.model()))
     {
-    case ModelType::N3Names:
-        setEditorDataN3Names(editor, index);
-    case ModelType::N3AlarmsSettings:
-        setEditorDataN3AlarmsSettings(editor, index);
-    default:
-        break;
+        case ModelType::N3Names:
+            setEditorDataN3Names(editor, index);
+            break;
+        case ModelType::N3AlarmsSettings:
+            setEditorDataN3AlarmsSettings(editor, index);
+            break;
+        default:
+            break;
     }
 }
 
@@ -389,12 +395,14 @@ void N3NamesDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, c
 
     switch(modelType(*index.model()))
     {
-    case ModelType::N3Names:
-        setModelDataN3Names(editor, model, index);
-    case ModelType::N3AlarmsSettings:
-        setModelDataN3AlarmsSettings(editor, model, index);
-    default:
-        break;
+        case ModelType::N3Names:
+            setModelDataN3Names(editor, model, index);
+            break;
+        case ModelType::N3AlarmsSettings:
+            setModelDataN3AlarmsSettings(editor, model, index);
+            break;
+        default:
+            break;
     }
 }
 
@@ -416,10 +424,10 @@ void N3NamesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     {
     case ModelType::N3Names:
         paintN3Names(painter, option, index);
-        return;
+        break;
     case ModelType::N3AlarmsSettings:
         paintN3AlarmsSettings(painter, option, index);
-        return;
+        break;
     default:
         QItemDelegate::paint( painter, option, index );
         break;

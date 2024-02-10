@@ -98,7 +98,7 @@ void BytesOperations::calculateCheckSum(QByteArray &bytes, size_t size, size_t f
 {
     if(bytes.size() < size) return;
     bytes[0] = 1;
-    for(unsigned int i = first_byte; i < size; i++)
+    for(unsigned i = first_byte; i < size; i++)
         bytes[0] = bytes[0] + bytes[i];
 }
 

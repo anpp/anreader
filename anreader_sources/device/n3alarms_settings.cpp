@@ -206,7 +206,6 @@ unsigned int N3AlarmsSettings::step(int index) const
             return (type(index) == alarm_type::FreeFall ? 25 : 5);
         else
             return (type(index) == alarm_type::FreeFall ? 100 : 10);
-
     }
     return 0;
 }
@@ -221,7 +220,6 @@ unsigned int N3AlarmsSettings::interval(int index) const
             return (type(index) == alarm_type::FreeFall ? 150 : 30);
         else
             return (type(index) == alarm_type::FreeFall ? 500 : 100);
-
     }
     return 0;
 }
@@ -236,7 +234,6 @@ unsigned int N3AlarmsSettings::max(int index) const
             return (type(index) == alarm_type::FreeFall ? 6100 : 6095);
         else
             return (type(index) == alarm_type::FreeFall ? 20000 : 20000);
-
     }
     return 0;
 }
@@ -251,7 +248,6 @@ unsigned int N3AlarmsSettings::min(int index) const
             return (type(index) == alarm_type::FreeFall ? 300 :30);
         else
             return (type(index) == alarm_type::FreeFall ? 1000 : 100);
-
     }
     return 0;
 }

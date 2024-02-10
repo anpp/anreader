@@ -87,6 +87,12 @@ Qt::ItemFlags N3AlarmsSettingsModel::flags(const QModelIndex &index) const
 
     flags |= Qt::ItemIsEditable;
 
+    if(index.isValid() && N3AlarmsSettings_defs::Active == index.column())
+    {
+        if(m_names.hidden(m_data.nameIndex(index.row())))
+            flags &= ~Qt::ItemIsEditable;
+    }
+
     return flags;
 }
 

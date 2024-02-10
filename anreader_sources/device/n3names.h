@@ -11,6 +11,7 @@ class N3Names : public ANames
 {
 protected:
     QMap<uint, bool> m_map_active;
+    QMap<uint, bool> m_map_selected_in_alarms;
     N3NamesType m_type = N3NamesType::Undefined;
 public:
     enum N3NamesValues: int {size = 32, length = 10, offset = 2};
@@ -38,7 +39,8 @@ public:
     friend bool operator==(const N3Names& left, const N3Names& right);
     virtual N3Names& operator=(const N3Names& right) noexcept;
     const QMap<uint, bool>& map_active() const { return m_map_active; };
-    N3NamesType type() const { return m_type; };
+    N3NamesType type() const { return m_type; }
+    bool selected(uint index) const;
 
 private:
     QString byIndex(uint index) const override;

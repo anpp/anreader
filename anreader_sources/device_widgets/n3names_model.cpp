@@ -172,6 +172,12 @@ bool N3NamesModel::active(uint index) const
 }
 
 //------------------------------------------------------------------------------------------
+bool N3NamesModel::selected(uint index) const
+{
+    return m_data.selected(index);
+}
+
+//------------------------------------------------------------------------------------------
 void N3NamesModel::add()
 {
     if(m_data.filled() < m_data.count())

@@ -146,7 +146,16 @@ N3Names &N3Names::operator=(const N3Names &right) noexcept
     m_data = right.m_data;
     m_map_active = right.m_map_active;
     m_type = right.m_type;
+    m_map_selected_in_alarms = right.m_map_selected_in_alarms;
     return *this;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+bool N3Names::selected(uint index) const
+{
+    if(m_map_selected_in_alarms.contains(index))
+        return m_map_selected_in_alarms[index];
+    return false;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
