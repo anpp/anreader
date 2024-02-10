@@ -12,6 +12,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QComboBox>
+#include <QSpinBox>
 
 //------------------------------------------------------------------------------------------
 QWidget *N3NamesDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -108,6 +109,7 @@ QWidget *N3NamesDelegate::createEditorN3AlarmsSettings(QWidget *parent, const QS
     {
         QRadioButton *rb = nullptr;
         QComboBox *cmb = nullptr;
+        QSpinBox *spb = nullptr;
 
         switch(static_cast<N3AlarmsSettings_defs>(index.column()))
         {
@@ -120,6 +122,14 @@ QWidget *N3NamesDelegate::createEditorN3AlarmsSettings(QWidget *parent, const QS
         case N3AlarmsSettings_defs::NameIndex:
             cmb = new QComboBox(parent);
             return cmb;
+
+        case N3AlarmsSettings_defs::AlarmAltitude1:
+        case N3AlarmsSettings_defs::AlarmAltitude2:
+        case N3AlarmsSettings_defs::AlarmAltitude3:
+            spb = new QSpinBox(parent);
+            spb->setSingleStep(index.model()->data(index, N3AlarmsSettings_defs::StepRole).toInt());
+            spb->setRange(index.model()->data(index, N3AlarmsSettings_defs::MinAltRole).toInt(), index.model()->data(index, N3AlarmsSettings_defs::MaxAltRole).toInt());
+            return spb;
 
         default:
             return nullptr;
@@ -178,6 +188,7 @@ void N3NamesDelegate::setEditorDataN3AlarmsSettings(QWidget *editor, const QMode
     {
         QRadioButton *rb = nullptr;
         QComboBox *cmb = nullptr;
+        QSpinBox *spb = nullptr;
 
         switch(static_cast<N3AlarmsSettings_defs>(index.column()))
         {
@@ -192,6 +203,15 @@ void N3NamesDelegate::setEditorDataN3AlarmsSettings(QWidget *editor, const QMode
             //if(nullptr != cmb)
             //    rb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
             break;
+
+        case N3AlarmsSettings_defs::AlarmAltitude1:
+        case N3AlarmsSettings_defs::AlarmAltitude2:
+        case N3AlarmsSettings_defs::AlarmAltitude3:
+            spb = static_cast<QSpinBox*>(editor);
+            if(nullptr != spb)
+                spb->setValue(index.model()->data(index, Qt::EditRole).toInt());
+            break;
+
 
         default:
             break;
@@ -463,6 +483,16 @@ QRect N3NamesDelegate::calcRect(const QStyleOptionViewItem &option, const QModel
 
         se = (index.column() == static_cast<int>(N3NamesModel_defs::Active)) ? QStyle::SE_RadioButtonIndicator : QStyle::SE_CheckBoxIndicator;
     }
+
+    if(modelType(*index.model()) == ModelType::N3AlarmsSettings &&
+        (
+            index.column() == static_cast<int>(N3AlarmsSettings_defs::NameIndex) ||
+            index.column() == static_cast<int>(N3AlarmsSettings_defs::AlarmAltitude1) ||
+            index.column() == static_cast<int>(N3AlarmsSettings_defs::AlarmAltitude2) ||
+            index.column() == static_cast<int>(N3AlarmsSettings_defs::AlarmAltitude3)
+        )
+       )
+        return option.rect;
 
     QRect cr = qApp->style()->subElementRect(se, &option);
     int deltaX = (option.rect.width() - cr.width()) / 2;

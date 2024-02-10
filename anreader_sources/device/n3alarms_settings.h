@@ -34,6 +34,8 @@ public:
     alarm_type type(int index) const;
     int8_t tone(int index, int altindex) const;
     uint16_t altitude(int index, int altindex) const;
+    uint16_t min_altitude(int index, int altindex) const;
+    uint16_t max_altitude(int index, int altindex) const;
     bool active(int index) const;
 
     void setActiveFreeFallIndex(int index);
@@ -48,6 +50,9 @@ public:
 
     const QString& alitudePostfix() const;
     unsigned step(int index) const;
+    unsigned interval(int index) const;
+    unsigned max(int index) const;
+    unsigned min(int index) const;
 
 };
 

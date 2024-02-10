@@ -16,7 +16,9 @@ QVariant N3AlarmsSettingsModel::data(const QModelIndex &index, int role) const
 {
     if(index.isValid())
     {
-        if(Qt::EditRole == role || Qt::DisplayRole == role)
+        if(Qt::EditRole == role || Qt::DisplayRole == role ||
+            N3AlarmsSettings_defs::StepRole == role || N3AlarmsSettings_defs::MinAltRole == role ||
+            N3AlarmsSettings_defs::MaxAltRole == role)
             return value(index.row(), index.column(), role);
 
         if(Qt::FontRole == role && m_data.active(index.row()))
@@ -107,8 +109,44 @@ QVariant N3AlarmsSettingsModel::value(int row, int col, int role) const
         case N3AlarmsSettings_defs::AlarmAltitude2:
             return m_data.altitude(row, 1);
         case N3AlarmsSettings_defs::AlarmAltitude3:
-
             return m_data.altitude(row, 2);
+        default:
+            return QVariant();
+        }
+
+    if(N3AlarmsSettings_defs::StepRole == role)
+        switch(col)
+        {
+        case N3AlarmsSettings_defs::AlarmAltitude1:
+        case N3AlarmsSettings_defs::AlarmAltitude2:
+        case N3AlarmsSettings_defs::AlarmAltitude3:
+            return m_data.step(row);
+        default:
+            return QVariant();
+        }
+
+    if(N3AlarmsSettings_defs::MinAltRole == role)
+        switch(col)
+        {
+        case N3AlarmsSettings_defs::AlarmAltitude1:
+            return m_data.min_altitude(row, 0);
+        case N3AlarmsSettings_defs::AlarmAltitude2:
+            return m_data.min_altitude(row, 1);
+        case N3AlarmsSettings_defs::AlarmAltitude3:
+            return m_data.min_altitude(row, 2);
+        default:
+            return QVariant();
+        }
+
+    if(N3AlarmsSettings_defs::MaxAltRole == role)
+        switch(col)
+        {
+        case N3AlarmsSettings_defs::AlarmAltitude1:
+            return m_data.max_altitude(row, 0);
+        case N3AlarmsSettings_defs::AlarmAltitude2:
+            return m_data.max_altitude(row, 1);
+        case N3AlarmsSettings_defs::AlarmAltitude3:
+            return m_data.max_altitude(row, 2);
         default:
             return QVariant();
         }

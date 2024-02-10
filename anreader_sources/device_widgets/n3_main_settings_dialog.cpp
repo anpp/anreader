@@ -1,8 +1,6 @@
 #include "n3_main_settings_dialog.h"
 #include "ui_n3_main_settings_dialog.h"
-
 #include "device/n3devicesettings.h"
-#include "common/common.h"
 
 #include <QPushButton>
 

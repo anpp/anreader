@@ -92,6 +92,44 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+uint16_t N3AlarmsSettings::min_altitude(int index, int altindex) const
+{
+    uint16_t result = 0;
+    switch(altindex)
+    {
+    case 0:
+        result = altitude(index, 1) + interval(index);
+        break;
+    case 1:
+        result = altitude(index, 2) + interval(index);
+        break;
+    case 2:
+        result = min(index);
+    }
+
+    return result;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+uint16_t N3AlarmsSettings::max_altitude(int index, int altindex) const
+{
+    uint16_t result =  0;
+    switch(altindex)
+    {
+    case 0:
+        result = max(index);
+        break;
+    case 1:
+        result = altitude(index, 0) - interval(index);
+        break;
+    case 2:
+        result = altitude(index, 1) - interval(index);
+    }
+
+    return result;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 bool N3AlarmsSettings::active(int index) const
 {
     return (activeFreeFallIndex() == index || activeCanopyIndex() == index);
@@ -168,6 +206,51 @@ unsigned int N3AlarmsSettings::step(int index) const
             return (type(index) == alarm_type::FreeFall ? 25 : 5);
         else
             return (type(index) == alarm_type::FreeFall ? 100 : 10);
+
+    }
+    return 0;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+unsigned int N3AlarmsSettings::interval(int index) const
+{
+    if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10))
+    {
+        altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
+        if(altitude_measure::meters == am)
+            return (type(index) == alarm_type::FreeFall ? 150 : 30);
+        else
+            return (type(index) == alarm_type::FreeFall ? 500 : 100);
+
+    }
+    return 0;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+unsigned int N3AlarmsSettings::max(int index) const
+{
+    if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10))
+    {
+        altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
+        if(altitude_measure::meters == am)
+            return (type(index) == alarm_type::FreeFall ? 6100 : 6095);
+        else
+            return (type(index) == alarm_type::FreeFall ? 20000 : 2000);
+
+    }
+    return 0;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+unsigned int N3AlarmsSettings::min(int index) const
+{
+    if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10))
+    {
+        altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
+        if(altitude_measure::meters == am)
+            return (type(index) == alarm_type::FreeFall ? 300 :30);
+        else
+            return (type(index) == alarm_type::FreeFall ? 1000 : 100);
 
     }
     return 0;

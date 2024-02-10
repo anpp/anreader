@@ -96,7 +96,16 @@ void N3NamesDialog::initAlarms()
         ui->tvCanopy->setModel(m_alarms_settings_canopy_model.get());
 
         ui->tvFreefall->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::Active), m_delegate.get());
+        ui->tvFreefall->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::NameIndex), m_delegate.get());
+        ui->tvFreefall->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::AlarmAltitude1), m_delegate.get());
+        ui->tvFreefall->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::AlarmAltitude2), m_delegate.get());
+        ui->tvFreefall->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::AlarmAltitude3), m_delegate.get());
+
         ui->tvCanopy->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::Active), m_delegate.get());
+        ui->tvCanopy->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::NameIndex), m_delegate.get());
+        ui->tvCanopy->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::AlarmAltitude1), m_delegate.get());
+        ui->tvCanopy->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::AlarmAltitude2), m_delegate.get());
+        ui->tvCanopy->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::AlarmAltitude3), m_delegate.get());
 
         ui->tvFreefall->resizeColumnsToContents();
         ui->tvFreefall->resizeRowsToContents();

@@ -9,7 +9,16 @@ class N3AlarmsNames;
 class N3AlarmsSettings;
 class N3FilterAlarmsSettingsModel;
 
-enum N3AlarmsSettings_defs: int {NumColumns = 5, Active = 0, NameIndex = 1, AlarmAltitude1 = 2,  AlarmAltitude2 = 3, AlarmAltitude3 = 4};
+enum N3AlarmsSettings_defs: int {NumColumns = 5,
+                                   StepRole = Qt::UserRole + 1,
+                                   MinAltRole = Qt::UserRole + 2,
+                                   MaxAltRole = Qt::UserRole + 3,
+                                   Active = 0,
+                                   NameIndex = 1,
+                                   AlarmAltitude1 = 2,
+                                   AlarmAltitude2 = 3,
+                                   AlarmAltitude3 = 4
+};
 
 class N3AlarmsSettingsModel : public QAbstractItemModel
 {    
