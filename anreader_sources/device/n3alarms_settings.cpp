@@ -235,7 +235,7 @@ unsigned int N3AlarmsSettings::max(int index) const
         if(altitude_measure::meters == am)
             return (type(index) == alarm_type::FreeFall ? 6100 : 6095);
         else
-            return (type(index) == alarm_type::FreeFall ? 20000 : 2000);
+            return (type(index) == alarm_type::FreeFall ? 20000 : 20000);
 
     }
     return 0;
