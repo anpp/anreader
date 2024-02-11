@@ -78,17 +78,21 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
         double result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
         double stp = step(index);
-        double factor = (altitude_measure::meters == am ? 10.0 : 4.0);
+        double factor = (altitude_measure::meters == am ? 10.0 : 3.0);
 
         if(altitude_measure::meters == am)
             result = floor(result / factor) * factor / 2.0;
         else
+        {
+            if(type(index) == alarm_type::FreeFall)
+                factor = 1;
             result = round(result / factor) * factor / 2.0;
+        }
 
-        if(altitude_measure::meters == am)            
+        if(altitude_measure::meters == am)
             return round(result / stp) * stp;
         else
-            return round(round(result * (1000 / 25.4 / 12) / stp) * stp);
+            return round(round(result * (1000.0 / 25.4 / 12.0) / stp) * stp);
     }
     return 0;
 }
@@ -180,10 +184,10 @@ void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
     {
         double device_altitude = value;
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
-        double stp = (type(index) == alarm_type::FreeFall ? 25 : 5);
+        double stp = (type(index) == alarm_type::FreeFall ? 10 : 3);
 
         if(altitude_measure::feet == am)
-            device_altitude = round(device_altitude / (1000 / 25.4 / 12) / stp) * stp * 2;
+            device_altitude = round(round(device_altitude / (1000.0 / 25.4 / 12.0)) / stp) * stp * 2;
         else
             device_altitude = device_altitude * 2;
 
