@@ -415,6 +415,9 @@ void N3Widget::N3Names_dialog(N3Names &names)
                 if(is_changed_data)
                     m_device->write_dropzones();
                 break;
+            case N3NamesType::Alarms:
+                m_device->write_alarms_settings();
+                break;
             default:
                 break;
             }

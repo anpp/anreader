@@ -1,4 +1,6 @@
 #include "neptune_hil.h"
+#include "n3alarms_names.h"
+#include "n3alarms_settings.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::read_details_jumps(unsigned int jump_index, unsigned int num_jumps)
@@ -93,6 +95,12 @@ void Neptune_HiL::write_airplanes()
 void Neptune_HiL::write_summary_jumps()
 {
     write_to_memory(N3Addresses::Summary, N3Constants::SummarySize, summary().data());
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void Neptune_HiL::write_alarms_settings()
+{
+    write_to_memory(N3Addresses::AlarmsSettings, N3Constants::AlarmsSettingsSize, static_cast<const N3AlarmsNames&>(alarms()).settings().data());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
