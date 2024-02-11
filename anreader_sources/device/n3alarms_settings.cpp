@@ -184,10 +184,10 @@ void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
     {
         double device_altitude = value;
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
-        double stp = (type(index) == alarm_type::FreeFall ? 10 : 3);
+        double factor = (type(index) == alarm_type::FreeFall ? 10 : 3);
 
         if(altitude_measure::feet == am)
-            device_altitude = round(round(device_altitude / (1000.0 / 25.4 / 12.0)) / stp) * stp * 2;
+            device_altitude = round(round(device_altitude / (1000.0 / 25.4 / 12.0)) / factor) * factor * 2;
         else
             device_altitude = device_altitude * 2;
 
