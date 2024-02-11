@@ -85,7 +85,7 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
         else
             result = round(result / factor) * factor / 2.0;
 
-        if(altitude_measure::meters == am)
+        if(altitude_measure::meters == am)            
             return round(result / stp) * stp;
         else
             return round(round(result * (1000 / 25.4 / 12) / stp) * stp);
@@ -180,14 +180,10 @@ void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
     {
         double device_altitude = value;
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
+        double stp = (type(index) == alarm_type::FreeFall ? 25 : 5);
 
         if(altitude_measure::feet == am)
-        {
-            if(type(index) == alarm_type::FreeFall)
-                device_altitude = round(device_altitude / (1000 / 25.4 / 12) * 2 / step(index) * 10 + 0.5) / 10 * step(index);
-            else
-               device_altitude = round(device_altitude / (1000 / 25.4 / 12) * 2);
-        }
+            device_altitude = round(device_altitude / (1000 / 25.4 / 12) / stp) * stp * 2;
         else
             device_altitude = device_altitude * 2;
 
@@ -211,7 +207,7 @@ N3AlarmsSettings& N3AlarmsSettings::operator=(const N3AlarmsSettings &right) noe
         return *this;
 
     m_data = right.m_data;
-    m_device_settings = right.m_device_settings;
+    m_device_settings = right.m_device_settings;    
     return *this;
 }
 
