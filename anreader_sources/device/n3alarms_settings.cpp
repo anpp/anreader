@@ -91,7 +91,7 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
             result = round(result / 2 / stp) * stp;
             return result;
         }
-        result = meters2feet(round(result / 2), type(index));
+        result = meters2feet(round(result / 2));
         return result;
     }
     return 0;
@@ -104,7 +104,7 @@ uint16_t N3AlarmsSettings::min_altitude(int index, int altindex) const
     switch(altindex)
     {
     case 0:
-        result = floor((altitude(index, 1) + interval(index)) / step(index)) * step(index);
+        result = altitude(index, 1) + interval(index);
         break;
     case 1:
         result = altitude(index, 2) + interval(index);
@@ -189,7 +189,7 @@ void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
         double step_ft = (type(index) == alarm_type::FreeFall ? 100 : 10);
 
         if(altitude_measure::meters == am)
-            device_altitude = meters2feet(device_altitude, type(index));
+            device_altitude = meters2feet(device_altitude);
 
         device_altitude = feet2meters(device_altitude, type(index));
         qDebug() << device_altitude;
@@ -306,7 +306,7 @@ unsigned int N3AlarmsSettings::min(int index) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-unsigned int N3AlarmsSettings::meters2feet(int value, alarm_type atype) const
+unsigned int N3AlarmsSettings::meters2feet(int value) const
 {
     return round(value * (1000.0 / 25.4 / 12.0));
 }
@@ -315,10 +315,11 @@ unsigned int N3AlarmsSettings::meters2feet(int value, alarm_type atype) const
 unsigned int N3AlarmsSettings::feet2meters(int value, alarm_type atype) const
 {
     double factor = (atype == alarm_type::FreeFall ? 100 : 10);
+    double t = (atype == alarm_type::FreeFall ? 10 : 3);
 
     double result = floor(value / factor + 0.3) * factor;
     double rest = (value - result) / 2;
-    if(rest < 10) rest = 0;
+    if(rest < t) rest = 0;
     return round(result / (1000.0 / 25.4 / 12.0) * 2) + round(rest);
 }
 
