@@ -51,10 +51,13 @@ public:
 
     const QString& alitudePostfix() const;
     void init();
+    void clear();
     unsigned step(int index) const;
     unsigned interval(int index) const;
     unsigned max(int index) const;
     unsigned min(int index) const;
+    unsigned meters2feet(int value, alarm_type atype) const;
+    unsigned feet2meters(int value, alarm_type atype) const;
 
 };
 

@@ -40,7 +40,7 @@ void N3AlarmsNames::setActive(uint index, bool value)
 void N3AlarmsNames::init()
 {
     N3Names::init();
-    m_settings->init(); //перезаписывает высоты чтоб работало сравнение при редактировании (в приборе странные значения, требуют округлений)
+    //m_settings->init(); //перезаписывает высоты чтоб работало сравнение при редактировании (в приборе странные значения, требуют округлений)
     setActives();
     setSelected();
 }
@@ -49,6 +49,13 @@ void N3AlarmsNames::init()
 bool N3AlarmsNames::isEqual(const ANames &right) const
 {
     return (N3Names::isEqual(right)) && (*m_settings == *static_cast<const N3AlarmsNames&>(right).m_settings);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3AlarmsNames::clear()
+{
+    N3Names::clear();
+    m_settings->clear();
 }
 
 //----------------------------------------------------------------------------------------------------------------------

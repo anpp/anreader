@@ -20,6 +20,7 @@ public:
     void setSelected();
     void init() override;
     bool isEqual(const ANames& right) const override;
+    void clear() override;
 
     N3AlarmsNames& operator=(const N3Names& right) noexcept override;
     N3AlarmsNames& operator=(const N3AlarmsNames& right) noexcept;
