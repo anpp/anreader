@@ -5,7 +5,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 void N3DeviceSettings::calculateCheckSum()
 {
-    BytesOperations::calculateCheckSum(m_data, N3Constants::DeviceSettingsSize, 2);
+    BytesOperations::calculateCheckSum(m_data, N3Constants::DeviceSettingsSize, 2);    
 }
 
 //----------------------------------------------------------------------------------------------------------------------

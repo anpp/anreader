@@ -3,11 +3,32 @@
 #include "n3devicesettings.h"
 #include "bytes_operations.h"
 #include <math.h>
-
+#include <QDebug>
 //----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::calculateCheckSum()
 {
     BytesOperations::calculateCheckSum(m_data, N3Constants::AlarmsSettingsSize, 2);
+/*
+    m_data[1] = 0;
+    for(int i = 0; i < 3; ++i)
+        m_data[1] = m_data[1] + m_data[static_cast<int>(as_offsets::beginArray) + (0 * 10) + static_cast<int>(as_offsets::altitudeOffset) + (i * 2)];
+    for(int i = 0; i < 3; ++i)
+        m_data[1] = m_data[1] + m_data[static_cast<int>(as_offsets::beginArray) + (4 * 10) + static_cast<int>(as_offsets::altitudeOffset) + (i * 2)];
+*/
+/*
+    if(m_data[1] % 2)
+        m_data[1] = 24;
+    else
+        m_data[1] = 25;
+*/
+
+    unsigned t = 0;
+    for(unsigned i = 2; i < N3Constants::AlarmsSettingsSize; i++)
+        t = t + m_data[i];
+
+    //t = t % 256;
+    qDebug() << t;
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -185,8 +206,6 @@ void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
     {
         double device_altitude = value;
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
-        double factor = (type(index) == alarm_type::FreeFall ? 10 : 3);
-        double step_ft = (type(index) == alarm_type::FreeFall ? 100 : 10);
 
         if(altitude_measure::meters == am)
             device_altitude = meters2feet(device_altitude);
@@ -194,16 +213,13 @@ void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
         device_altitude = feet2meters(device_altitude, type(index));
         qDebug() << device_altitude;
 
-
-        //if(altitude_measure::feet == am)
-        //device_altitude = round(round(device_altitude / (1000.0 / 25.4 / 12.0)) / factor) * factor * 2;
-        //else
-        //    device_altitude = device_altitude * 2;
-
         int i = static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2);
         QByteArray bytes = BytesOperations::UInt16ToBytes(round(device_altitude));
         m_data[i] = bytes[0];
         m_data[i + 1] = bytes[1];
+
+        //if((int)device_altitude % 127 == 0)
+        //    m_data[1] = m_data[1] | 1;
     }
 }
 
@@ -235,12 +251,15 @@ const QString &N3AlarmsSettings::alitudePostfix() const
 //----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::init()
 {
+    //m_data[1] = m_data[1] & ~1;
+    /*
     for(int i = 0; i < 8; ++ i)
     {
         setAltitude(i, 0, altitude(i, 0));
         setAltitude(i, 1, altitude(i, 1));
         setAltitude(i, 2, altitude(i, 2));
     }
+*/
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -306,21 +325,21 @@ unsigned int N3AlarmsSettings::min(int index) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-unsigned int N3AlarmsSettings::meters2feet(int value) const
+double N3AlarmsSettings::meters2feet(double value) const
 {
-    return round(value * (1000.0 / 25.4 / 12.0));
+    return value * (1000.0 / 25.4 / 12.0);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-unsigned int N3AlarmsSettings::feet2meters(int value, alarm_type atype) const
+double N3AlarmsSettings::feet2meters(double value, alarm_type atype) const
 {
-    double factor = (atype == alarm_type::FreeFall ? 100 : 10);
-    double t = (atype == alarm_type::FreeFall ? 10 : 3);
+    int factor = (atype == alarm_type::FreeFall ? 10 : 10);
 
-    double result = floor(value / factor + 0.3) * factor;
-    double rest = (value - result) / 2;
-    if(rest < t) rest = 0;
-    return round(result / (1000.0 / 25.4 / 12.0) * 2) + round(rest);
+    double result = round(value / factor) * factor;
+
+    qDebug() << value << " " << result << " ";
+
+    return round(result / (1000.0 / 25.4 / 12.0) * 2);
 }
 
 
