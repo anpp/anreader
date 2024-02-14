@@ -3,32 +3,18 @@
 #include "n3devicesettings.h"
 #include "bytes_operations.h"
 #include <math.h>
-#include <QDebug>
+
 //----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::calculateCheckSum()
 {
     BytesOperations::calculateCheckSum(m_data, N3Constants::AlarmsSettingsSize, 2);
-/*
-    m_data[1] = 0;
-    for(int i = 0; i < 3; ++i)
-        m_data[1] = m_data[1] + m_data[static_cast<int>(as_offsets::beginArray) + (0 * 10) + static_cast<int>(as_offsets::altitudeOffset) + (i * 2)];
-    for(int i = 0; i < 3; ++i)
-        m_data[1] = m_data[1] + m_data[static_cast<int>(as_offsets::beginArray) + (4 * 10) + static_cast<int>(as_offsets::altitudeOffset) + (i * 2)];
-*/
-/*
-    if(m_data[1] % 2)
-        m_data[1] = 24;
-    else
-        m_data[1] = 25;
-*/
 
-    unsigned t = 0;
+    //второй байт контрольной суммы (здесь почему-то так)
+    unsigned chksum2 = 1;
     for(unsigned i = 2; i < N3Constants::AlarmsSettingsSize; i++)
-        t = t + m_data[i];
+        chksum2 = chksum2 + (unsigned char)m_data[i];
 
-    //t = t % 256;
-    qDebug() << t;
-
+    m_data[1] = ((chksum2 >> 8) & 0xFF);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -251,15 +237,12 @@ const QString &N3AlarmsSettings::alitudePostfix() const
 //----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::init()
 {
-    //m_data[1] = m_data[1] & ~1;
-    /*
     for(int i = 0; i < 8; ++ i)
     {
         setAltitude(i, 0, altitude(i, 0));
         setAltitude(i, 1, altitude(i, 1));
         setAltitude(i, 2, altitude(i, 2));
     }
-*/
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -333,7 +316,7 @@ double N3AlarmsSettings::meters2feet(double value) const
 //----------------------------------------------------------------------------------------------------------------------
 double N3AlarmsSettings::feet2meters(double value, alarm_type atype) const
 {
-    int factor = (atype == alarm_type::FreeFall ? 10 : 10);
+    int factor = (atype == alarm_type::FreeFall ? 50 : 10);
 
     double result = round(value / factor) * factor;
 
