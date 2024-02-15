@@ -36,7 +36,7 @@ public:
     static uint8_t setHighBit(uint8_t byte, bool value);
     static uint8_t setBit(uint8_t byte, int index, bool value);
     static bool checkBit(uint8_t byte, int index);
-    static void calculateCheckSum(QByteArray& bytes, size_t size, size_t first_byte = 1);
+    static unsigned calculateCheckSum(const QByteArray& bytes, int size, int first_byte = 1);
 
 };
 

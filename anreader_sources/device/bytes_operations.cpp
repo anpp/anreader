@@ -106,11 +106,12 @@ bool BytesOperations::checkBit(uint8_t byte, int index)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void BytesOperations::calculateCheckSum(QByteArray &bytes, size_t size, size_t first_byte)
+unsigned BytesOperations::calculateCheckSum(const QByteArray &bytes, int size, int first_byte)
 {
-    if(bytes.size() < size) return;
-    bytes[0] = 1;
-    for(unsigned i = first_byte; i < size; i++)
-        bytes[0] = bytes[0] + bytes[i];
+    if(bytes.size() < size) return 0;
+    unsigned checksum = 1;
+    for(int i = first_byte; i < size; i++)
+        checksum = checksum + (unsigned char)bytes[i];
+    return checksum;
 }
 

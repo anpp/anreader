@@ -9,7 +9,8 @@ N3Names::N3Names(N3NamesType atype) : m_type(atype)
 
 void N3Names::calculateCheckSum()
 {
-    BytesOperations::calculateCheckSum(m_data, N3Constants::N3NamesSize);
+    unsigned checksum = BytesOperations::calculateCheckSum(m_data, N3Constants::N3NamesSize);
+    m_data[0] = checksum & 0xFF;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

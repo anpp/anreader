@@ -2,13 +2,12 @@
 #include "bytes_operations.h"
 #include "n3_constants.h"
 
-#include <QDebug>
-
-
 //----------------------------------------------------------------------------------------------------------------------
 void N3SummaryInfo::calculateCheckSum()
 {
-    BytesOperations::calculateCheckSum(m_data, N3Constants::SummarySize, 2);
+    unsigned checksum = BytesOperations::calculateCheckSum(m_data, N3Constants::SummarySize, 2);
+    m_data[0] = checksum & 0xFF;
+    m_data[1] = (checksum >> 8) & 0xFF; //второй байт контрольной суммы
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -105,8 +104,3 @@ void N3SummaryInfo::setWord(uint16_t value, si_offsets offset)
         m_data[static_cast<int>(offset) + 1] = bytes[1];
     }
 }
-
-
-
-
-

@@ -7,14 +7,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::calculateCheckSum()
 {
-    BytesOperations::calculateCheckSum(m_data, N3Constants::AlarmsSettingsSize, 2);
-
-    //второй байт контрольной суммы (здесь почему-то так)
-    unsigned chksum2 = 1;
-    for(unsigned i = 2; i < N3Constants::AlarmsSettingsSize; i++)
-        chksum2 = chksum2 + (unsigned char)m_data[i];
-
-    m_data[1] = ((chksum2 >> 8) & 0xFF);
+    unsigned checksum = BytesOperations::calculateCheckSum(m_data, N3Constants::AlarmsSettingsSize, 2);
+    m_data[0] = checksum & 0xFF;
+    m_data[1] = (checksum >> 8) & 0xFF; //второй байт контрольной суммы
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -203,9 +198,6 @@ void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
         QByteArray bytes = BytesOperations::UInt16ToBytes(round(device_altitude));
         m_data[i] = bytes[0];
         m_data[i + 1] = bytes[1];
-
-        //if((int)device_altitude % 127 == 0)
-        //    m_data[1] = m_data[1] | 1;
     }
 }
 

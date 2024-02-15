@@ -5,7 +5,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 void N3DeviceSettings::calculateCheckSum()
 {
-    BytesOperations::calculateCheckSum(m_data, N3Constants::DeviceSettingsSize, 2);    
+    unsigned checksum = BytesOperations::calculateCheckSum(m_data, N3Constants::DeviceSettingsSize, 2);
+    m_data[0] = checksum & 0xFF;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
