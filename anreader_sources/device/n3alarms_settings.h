@@ -57,7 +57,8 @@ public:
     unsigned max(int index) const;
     unsigned min(int index) const;
     double meters2feet(double value) const;
-    double feet2meters(double value, alarm_type atype) const;
+    int metersIncs2feet(double value, int step) const;
+    int feet2metersIncs(double value, alarm_type atype) const;
 
 };
 

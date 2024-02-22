@@ -77,23 +77,19 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
 {
     if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2))
     {
-        double result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
+        int result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
-        double stp = step(index);
-        //double factor = (altitude_measure::meters == am ? 10.0 : 3.0);
-        unsigned factor = (type(index) == alarm_type::FreeFall ? 100 : 10);
+        double stp = step(index);        
+        int factor = (type(index) == alarm_type::FreeFall ? 100 : 10);
         //return result;
-
 
         if(altitude_measure::meters == am)
         {
-            unsigned t = (unsigned)result % (unsigned)stp;
-            //result = floor(result / factor) * factor / 2.0;
-            result = result - t / 2;
-            result = round(result / 2 / stp) * stp;
+            result = round((double) (factor * (((double) result) / 2.0))) / ((double) factor);
+            result = round(result / stp) * stp;
             return result;
         }
-        result = meters2feet(round(result / 2));
+        result = metersIncs2feet(result, stp);
         return result;
     }
     return 0;
@@ -191,7 +187,7 @@ void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
         if(altitude_measure::meters == am)
             device_altitude = meters2feet(device_altitude);
 
-        device_altitude = feet2meters(device_altitude, type(index));
+        device_altitude = feet2metersIncs(device_altitude, type(index));
         qDebug() << device_altitude;
 
         int i = static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2);
@@ -306,7 +302,15 @@ double N3AlarmsSettings::meters2feet(double value) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-double N3AlarmsSettings::feet2meters(double value, alarm_type atype) const
+int N3AlarmsSettings::metersIncs2feet(double value, int step) const
+{
+    int result = round((double) (((((((double)value) / 2.0) * 1000.0) / 25.4) / 12.0) / ((double)step)));
+    return result * step;
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+int N3AlarmsSettings::feet2metersIncs(double value, alarm_type atype) const
 {
     int factor = (atype == alarm_type::FreeFall ? 50 : 10);
 
