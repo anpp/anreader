@@ -78,15 +78,13 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
     if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2))
     {
         int result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
-        //return result;
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
         double stp = step(index);        
         int factor = type(index) == alarm_type::FreeFall ? 100 : 10;
 
         if(altitude_measure::meters == am)
-        {
-            result = round((double) (factor * (((double) result) / 2.0))) / ((double) factor);
-            result = round(result / stp) * stp;
+        {            
+            result = round(result / 2.0 / stp) * stp;
             return result;
         }
         result = round(metersIncs2feet(result, factor));
@@ -286,7 +284,8 @@ unsigned int N3AlarmsSettings::min(int index) const
 //----------------------------------------------------------------------------------------------------------------------
 double N3AlarmsSettings::metersIncs2feet(double value, int step) const
 {
-    double result = round((double) (((((((double)value) / 2.0) * 1000.0) / 25.4) / 12.0) / ((double)step)) - 0.05);
+    // -0.05 чуть корректирует отображение футов (1200 - 3900, а не 4000) после сохранения метров
+    double result = round((value / 2.0 * 1000.0 / 25.4 / 12.0 / step) - 0.05);
     return result * step;
 }
 
@@ -295,8 +294,8 @@ double N3AlarmsSettings::metersIncs2feet(double value, int step) const
 int N3AlarmsSettings::feet2metersIncs(double value, alarm_type atype) const
 {
     int factor = (atype == alarm_type::FreeFall ? 25 : 5);
-    int result = round((double) (value * 2.0 * 30.48) * factor);
-    return round((double) (((double) result) / ((double) (100 * factor))));
+    double result = value * 2.0 * 30.48 * factor;
+    return round(result / (double)(100 * factor));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
