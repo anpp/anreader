@@ -183,9 +183,10 @@ void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
     {
         double device_altitude = value;
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
+        int factor = (type(index) == alarm_type::FreeFall ? 50 : 10);
 
         if(altitude_measure::meters == am)
-            device_altitude = meters2feet(device_altitude);
+            device_altitude = metersIncs2feet(device_altitude * 2.0, factor);
 
         device_altitude = feet2metersIncs(device_altitude, type(index));
         qDebug() << device_altitude;
@@ -296,15 +297,9 @@ unsigned int N3AlarmsSettings::min(int index) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-double N3AlarmsSettings::meters2feet(double value) const
+double N3AlarmsSettings::metersIncs2feet(double value, int step) const
 {
-    return value * (1000.0 / 25.4 / 12.0);
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-int N3AlarmsSettings::metersIncs2feet(double value, int step) const
-{
-    int result = round((double) (((((((double)value) / 2.0) * 1000.0) / 25.4) / 12.0) / ((double)step)));
+    double result = round((double) (((((((double)value) / 2.0) * 1000.0) / 25.4) / 12.0) / ((double)step)));
     return result * step;
 }
 
@@ -312,13 +307,12 @@ int N3AlarmsSettings::metersIncs2feet(double value, int step) const
 //----------------------------------------------------------------------------------------------------------------------
 int N3AlarmsSettings::feet2metersIncs(double value, alarm_type atype) const
 {
-    int factor = (atype == alarm_type::FreeFall ? 50 : 10);
+    int factor = (atype == alarm_type::FreeFall ? 25 : 5);
+    double result = value * 2;
+    result = round((double) (result * 30.48) * factor);
+    result = round((double) (((double) result) / ((double) (100 * factor))));
 
-    double result = round(value / factor) * factor;
-
-    qDebug() << value << " " << result << " ";
-
-    return round(result / (1000.0 / 25.4 / 12.0) * 2);
+    return result;
 }
 
 
