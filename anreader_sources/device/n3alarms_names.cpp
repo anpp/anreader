@@ -40,7 +40,6 @@ void N3AlarmsNames::setActive(uint index, bool value)
 void N3AlarmsNames::init()
 {
     N3Names::init();
-    //m_settings->init(); //перезаписывает высоты чтоб работало сравнение при редактировании (в приборе странные значения, требуют округлений)
     setActives();
     setSelected();
 }

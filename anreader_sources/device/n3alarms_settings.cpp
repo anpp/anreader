@@ -80,8 +80,7 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
         int result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
         double stp = step(index);        
-        int factor = (type(index) == alarm_type::FreeFall ? 100 : 10);
-        //return result;
+        int factor = type(index) == alarm_type::FreeFall ? 100 : 10;
 
         if(altitude_measure::meters == am)
         {
@@ -89,7 +88,7 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
             result = round(result / stp) * stp;
             return result;
         }
-        result = metersIncs2feet(result, stp);
+        result = round(metersIncs2feet(result, factor));
         return result;
     }
     return 0;
@@ -175,13 +174,14 @@ void N3AlarmsSettings::enableCanopyAlarms(bool enable)
         m_data[static_cast<int>(as_offsets::activeCanopyItem)] = BytesOperations::setHighBit(m_data[static_cast<int>(as_offsets::activeCanopyItem)], !enable);
 }
 
-#include <QDebug>
 //----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
 {
     if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2))
     {
         double device_altitude = value;
+        uint16_t device_save_altitude = BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
+
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
         int factor = (type(index) == alarm_type::FreeFall ? 50 : 10);
 
@@ -189,12 +189,9 @@ void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
             device_altitude = metersIncs2feet(device_altitude * 2.0, factor);
 
         device_altitude = feet2metersIncs(device_altitude, type(index));
-        qDebug() << device_altitude;
+        device_altitude = correct_altitude(index, altindex, device_altitude, device_save_altitude);
 
-        int i = static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2);
-        QByteArray bytes = BytesOperations::UInt16ToBytes(round(device_altitude));
-        m_data[i] = bytes[0];
-        m_data[i + 1] = bytes[1];
+        setRawAlt(index, altindex, round(device_altitude));
     }
 }
 
@@ -221,17 +218,6 @@ const QString &N3AlarmsSettings::alitudePostfix() const
     if(nullptr == m_device_settings)
         return m_feet;
     return m_device_settings->altitudeMeasure() == altitude_measure::feet? m_feet: m_meters;
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-void N3AlarmsSettings::init()
-{
-    for(int i = 0; i < 8; ++ i)
-    {
-        setAltitude(i, 0, altitude(i, 0));
-        setAltitude(i, 1, altitude(i, 1));
-        setAltitude(i, 2, altitude(i, 2));
-    }
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -310,9 +296,56 @@ int N3AlarmsSettings::feet2metersIncs(double value, alarm_type atype) const
     int factor = (atype == alarm_type::FreeFall ? 25 : 5);
     double result = value * 2;
     result = round((double) (result * 30.48) * factor);
-    result = round((double) (((double) result) / ((double) (100 * factor))));
+    return round((double) (((double) result) / ((double) (100 * factor))));
+}
 
-    return result;
+//----------------------------------------------------------------------------------------------------------------------
+uint16_t N3AlarmsSettings::correct_altitude(int index, int altindex, uint16_t altitude, uint16_t save_altitude)
+{
+    if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2))
+    {
+        uint16_t alts[3];
+        int minimum_interval = (type(index) == alarm_type::FreeFall ? 500 : 100);
+        int max_value = (type(index) == alarm_type::FreeFall ? 12192 : 2438);
+
+        alts[0] = BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (0 * 2));
+        alts[1] = BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (1 * 2));
+        alts[2] = BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (2 * 2));
+
+        alts[altindex] = altitude;
+
+        double koeff = 1000.0 / 25.4 / 12.0;
+
+        int mt = round((((alts[1] - alts[2]) / 2.0) * koeff));
+        if(mt < minimum_interval)
+            alts[1] = feet2metersIncs((alts[2] / 2.0) * koeff + minimum_interval, type(index));
+
+        mt = round((((alts[0] - alts[1]) / 2.0) * koeff));
+        if(mt < minimum_interval)
+            alts[0] = feet2metersIncs((alts[1] / 2.0) * koeff + minimum_interval, type(index));
+
+        if(alts[0] > max_value)
+            return save_altitude;
+
+        setRawAlt(index, 0, alts[0]);
+        setRawAlt(index, 1, alts[1]);
+        setRawAlt(index, 2, alts[2]);
+
+        return alts[altindex];
+    }
+    return 0;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void N3AlarmsSettings::setRawAlt(int index, int altindex, uint16_t altitude)
+{
+    if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2))
+    {
+        int i = static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2);
+        QByteArray bytes = BytesOperations::UInt16ToBytes(altitude);
+        m_data[i] = bytes[0];
+        m_data[i + 1] = bytes[1];
+    }
 }
 
 
