@@ -118,6 +118,11 @@ void N3NamesDialog::initAlarms()
         connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, m_alarms_settings_freefall_model.get(), &QAbstractItemModel::dataChanged);
         connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, m_alarms_settings_canopy_model.get(), &QAbstractItemModel::dataChanged);
         connect(m_alarms_settings_model.get(), &QAbstractItemModel::dataChanged, [this] () { this->dataChanged();});
+
+        ui->gbxFreeFall->setProperty("alarms_type", "freefall");
+        ui->gbxCanopy->setProperty("alarms_type", "canopy");
+        connect(ui->gbxFreeFall, &QGroupBox::toggled, this, &N3NamesDialog::enableAlarms);
+        connect(ui->gbxCanopy, &QGroupBox::toggled, this, &N3NamesDialog::enableAlarms);
     }
 #if QT_VERSION <= QT_VERSION_CHECK(5, 15, 0)
     if(m_n3names.type() != N3NamesType::Alarms)
@@ -141,4 +146,28 @@ void N3NamesDialog::on_buttonBox_accepted()
 {
     m_new_n3names->calculateCheckSum();
     accept();
+}
+
+//--------------------------------------------------------------------------------------------------------------
+void N3NamesDialog::enableAlarms(bool enable)
+{
+    QGroupBox *gbx = static_cast<QGroupBox*>(sender());
+    if(nullptr != gbx)
+    {
+        QVariant alarms_type = gbx->property("alarms_type");
+        if(m_n3names.type() == N3NamesType::Alarms && alarms_type.isValid() && !alarms_type.isNull())
+        {
+            N3AlarmsNames& alarms_names = static_cast<N3AlarmsNames&>(*m_new_n3names);
+            if(alarms_type.toString() == "freefall")
+            {
+                alarms_names.settings().enableFreeFallAlarms(enable);
+                dataChanged();
+            }
+            if(alarms_type.toString() == "canopy")
+            {
+                alarms_names.settings().enableCanopyAlarms(enable);
+                dataChanged();
+            }
+        }
+    }
 }

@@ -47,6 +47,7 @@ private:
 private slots:
     void dataChanged();
     void on_buttonBox_accepted();
+    void enableAlarms(bool enable);
 };
 
 #endif // N3_NAMES_DIALOG_H
