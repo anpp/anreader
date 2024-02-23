@@ -57,8 +57,8 @@ private:
     unsigned interval(int index) const;
     unsigned max(int index) const;
     unsigned min(int index) const;
-    double metersIncs2feet(double value, int step) const;
-    int feet2metersIncs(double value, alarm_type atype) const;
+    double metersIncs2feet(double value, int factor) const;
+    int feet2metersIncs(double value) const;
     uint16_t correct_altitude(int index, int altindex, uint16_t altitude, uint16_t save_altitude);
     void setRawAlt(int index, int altindex, uint16_t altitude);
 };

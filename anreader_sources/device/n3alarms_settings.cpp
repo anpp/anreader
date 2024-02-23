@@ -79,14 +79,18 @@ uint16_t N3AlarmsSettings::altitude(int index, int altindex) const
     {
         int result =  BytesOperations::getValue16(m_data, static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2));
         altitude_measure am = (nullptr != m_device_settings) ? m_device_settings->altitudeMeasure() : altitude_measure::feet;
-        double stp = step(index);        
-        int factor = type(index) == alarm_type::FreeFall ? 100 : 10;
 
         if(altitude_measure::meters == am)
-        {            
+        {
+            double stp = step(index);
+
+            if((type(index) == alarm_type::FreeFall))
+                result = floor(result / 10.0) * 10;
             result = round(result / 2.0 / stp) * stp;
             return result;
         }
+
+        int factor = (type(index) == alarm_type::FreeFall ? 100 : 10);
         result = round(metersIncs2feet(result, factor));
         return result;
     }
@@ -187,7 +191,7 @@ void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
         if(altitude_measure::meters == am)
             device_altitude = metersIncs2feet(device_altitude * 2, factor);
 
-        device_altitude = feet2metersIncs(device_altitude, type(index));
+        device_altitude = feet2metersIncs(device_altitude);
         device_altitude = correct_altitude(index, altindex, device_altitude, device_save_altitude);
 
         setRawAlt(index, altindex, round(device_altitude));
@@ -282,20 +286,19 @@ unsigned int N3AlarmsSettings::min(int index) const
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-double N3AlarmsSettings::metersIncs2feet(double value, int step) const
+double N3AlarmsSettings::metersIncs2feet(double value, int factor) const
 {
     // -0.05 чуть корректирует отображение футов (1200 - 3900, а не 4000) после сохранения метров
-    double result = round((value / 2.0 * 1000.0 / 25.4 / 12.0 / step) - 0.05);
-    return result * step;
+    double result = round((value / 2.0 * 1000.0 / 25.4 / 12.0 / factor) - 0.05);
+    return result * factor;
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
-int N3AlarmsSettings::feet2metersIncs(double value, alarm_type atype) const
+int N3AlarmsSettings::feet2metersIncs(double value) const
 {
-    int factor = (atype == alarm_type::FreeFall ? 25 : 5);
-    double result = value * 2.0 * 30.48 * factor;
-    return round(result / (double)(100 * factor));
+    double result = value * 2.0 * 30.48;
+    return round(result / 100.0);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -313,15 +316,15 @@ uint16_t N3AlarmsSettings::correct_altitude(int index, int altindex, uint16_t al
 
         alts[altindex] = altitude;
 
-        double koeff = 1000.0 / 25.4 / 12.0;
+        double koeff_meters2feet = 1000.0 / 25.4 / 12.0;
 
-        int mt = round((((alts[1] - alts[2]) / 2.0) * koeff));
+        int mt = round((((alts[1] - alts[2]) / 2.0) * koeff_meters2feet));
         if(mt < minimum_interval)
-            alts[1] = feet2metersIncs((alts[2] / 2.0) * koeff + minimum_interval, type(index));
+            alts[1] = feet2metersIncs((alts[2] / 2.0) * koeff_meters2feet + minimum_interval);
 
-        mt = round((((alts[0] - alts[1]) / 2.0) * koeff));
+        mt = round((((alts[0] - alts[1]) / 2.0) * koeff_meters2feet));
         if(mt < minimum_interval)
-            alts[0] = feet2metersIncs((alts[1] / 2.0) * koeff + minimum_interval, type(index));
+            alts[0] = feet2metersIncs((alts[1] / 2.0) * koeff_meters2feet + minimum_interval);
 
         if(alts[0] > max_value)
             return save_altitude;
