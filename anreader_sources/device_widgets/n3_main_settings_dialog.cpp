@@ -2,7 +2,12 @@
 #include "ui_n3_main_settings_dialog.h"
 #include "device/n3devicesettings.h"
 
+#if QT_VERSION <= QT_VERSION_CHECK(5, 6, 3)
+#include "common/common.h"
+#endif
+
 #include <QPushButton>
+
 
 //-------------------------------------------------------------------------------------
 N3MainSettingsDialog::N3MainSettingsDialog(const N3DeviceSettings& n3settings, QWidget *parent) :
