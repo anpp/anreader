@@ -55,7 +55,6 @@ private:
     WorkerPacketSender worker;
     int bytes_to_port = 1;
     port_settings ps;
-    bool working = false;
 
     void init();
     void delay(const unsigned long ms) const;
@@ -86,7 +85,6 @@ public slots:
     void sendPacket(QByteArray packet, const uint delayms = 0);
     void sendRatePacket(QByteArray rate);
     void sopen(QString com_port);
-    void process();
 };
 
 #endif // SERIALPORT_H

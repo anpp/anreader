@@ -42,18 +42,19 @@ void SerialPortThread::init()
 {
     qRegisterMetaType <QSerialPort::SerialPortError> ();
 
+    serial_port = std::make_unique<QSerialPort>();
+
     this->moveToThread(&thread);
+    serial_port->moveToThread(&thread);
     worker.moveToThread(&worker_thread);
 
     connect(&worker_thread, &QThread::started, &worker, &WorkerPacketSender::sendPacket);
     connect(&worker, &WorkerPacketSender::finished, &worker_thread, &QThread::quit);
     connect(&worker, &WorkerPacketSender::finished, this, &SerialPortThread::finished);
     connect(&worker, &WorkerPacketSender::sendRatePacket, this, &SerialPortThread::sendRatePacket);
-
-    connect(&thread, &QThread::started, this, &SerialPortThread::process);
+    connect(serial_port.get(), &QSerialPort::readyRead, this, &SerialPortThread::s_readyRead);
 
     start();
-    while(!serial_port) QThread::msleep(10);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -119,7 +120,6 @@ void SerialPortThread::sendPacket(QByteArray packet, const uint delayms)
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::stop()
 {
-    working = false;
     thread.quit();
     thread.wait();
     worker_thread.quit();
@@ -131,7 +131,6 @@ void SerialPortThread::start()
 {
     if(!thread.isRunning())
         thread.start(QThread::Priority::HighestPriority);
-    working = true;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -171,26 +170,10 @@ void SerialPortThread::sopen(QString com_port)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-void SerialPortThread::process()
-{
-    QEventLoop event_loop;
-    serial_port = std::make_unique<QSerialPort>();
-    connect(serial_port.get(), &QSerialPort::readyRead, this, &SerialPortThread::s_readyRead);
-
-    while(working)
-    {
-        QThread::msleep(10);
-        event_loop.processEvents();
-    }
-    emit finished();
-}
-
-//----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::s_readyRead()
 {
     QByteArray data = this->serial_port->readAll();
     emit readyData(data);
-
 }
 
 
