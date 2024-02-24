@@ -1,6 +1,7 @@
 #include "serialport.h"
 #include <QCoreApplication>
 #include <QElapsedTimer>
+#include <QEventLoop>
 
 #include "../settings.h"
 
@@ -21,20 +22,11 @@ void WorkerPacketSender::setPacket(QByteArray data)
     packet = data;
 }
 
-
-
 //=======================================================================================================
 
-//----------------------------------------------------------------------------------------------------------------------
-SerialPortThread::SerialPortThread(QObject *parent) :
-    QSerialPort (parent)
-{
-    init();
-}
 
 //----------------------------------------------------------------------------------------------------------------------
-SerialPortThread::SerialPortThread() :
-    QSerialPort (nullptr)
+SerialPortThread::SerialPortThread()
 {
     init();
 }
@@ -50,14 +42,18 @@ void SerialPortThread::init()
 {
     qRegisterMetaType <QSerialPort::SerialPortError> ();
 
+    this->moveToThread(&thread);
     worker.moveToThread(&worker_thread);
+
     connect(&worker_thread, &QThread::started, &worker, &WorkerPacketSender::sendPacket);
     connect(&worker, &WorkerPacketSender::finished, &worker_thread, &QThread::quit);
     connect(&worker, &WorkerPacketSender::finished, this, &SerialPortThread::finished);
     connect(&worker, &WorkerPacketSender::sendRatePacket, this, &SerialPortThread::sendRatePacket);
-    connect(this, &SerialPortThread::readyRead, this, &SerialPortThread::s_readyRead);
+
+    connect(&thread, &QThread::started, this, &SerialPortThread::process);
 
     start();
+    while(!serial_port) QThread::msleep(10);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -92,19 +88,13 @@ void SerialPortThread::setPortSettings()
         ps.flowControl = com_settings.flowControl;
     }
 
-    setBaudRate(ps.baudRate);
-    setDataBits(ps.dataBits);
-    setParity(ps.parity);
-    setStopBits(ps.stopBits);
-    setFlowControl(ps.flowControl);
+    serial_port->setBaudRate(ps.baudRate);
+    serial_port->setDataBits(ps.dataBits);
+    serial_port->setParity(ps.parity);
+    serial_port->setStopBits(ps.stopBits);
+    serial_port->setFlowControl(ps.flowControl);
 }
 
-
-//----------------------------------------------------------------------------------------------------------------------
-void SerialPortThread::moveToInnerThread()
-{
-    this->moveToThread(&thread);
-}
 
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::sendPacket(QByteArray packet, const uint delayms)
@@ -129,10 +119,11 @@ void SerialPortThread::sendPacket(QByteArray packet, const uint delayms)
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::stop()
 {
+    working = false;
     thread.quit();
     thread.wait();
     worker_thread.quit();
-    worker_thread.wait();
+    worker_thread.wait();    
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -140,37 +131,37 @@ void SerialPortThread::start()
 {
     if(!thread.isRunning())
         thread.start(QThread::Priority::HighestPriority);
+    working = true;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::close()
 {
     stop();
-    if(this->isOpen())
-        QSerialPort::close();
+    if(this->serial_port->isOpen())
+        serial_port->close();
 
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::sendRatePacket(QByteArray rate)
-{    
-
-    if(this->write(rate) == -1)
+{
+    if(this->serial_port->write(rate) == -1)
     {
-        emit errorSignal(QObject::tr("Failed to write the data to port") + ": " + errorString());
+        emit errorSignal(QObject::tr("Failed to write the data to port") + ": " + serial_port->errorString());
         stop();
     }
     else
-        this->flush();
+        this->serial_port->flush();
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::sopen(QString com_port)
 {
-    setPortName(com_port);
-    if (!open(QIODevice::ReadWrite)){
-        emit errorSignal(errorString() + " : " + com_port);
+    serial_port->setPortName(com_port);
+    if (!serial_port->open(QIODevice::ReadWrite)){
+        emit errorSignal(serial_port->errorString() + " : " + com_port);
         return;
     }
 
@@ -180,10 +171,26 @@ void SerialPortThread::sopen(QString com_port)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void SerialPortThread::process()
+{
+    QEventLoop event_loop;
+    serial_port = std::make_unique<QSerialPort>();
+    connect(serial_port.get(), &QSerialPort::readyRead, this, &SerialPortThread::s_readyRead);
+
+    while(working)
+    {
+        QThread::msleep(10);
+        event_loop.processEvents();
+    }
+    emit finished();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::s_readyRead()
 {
-    QByteArray data = this->readAll();
+    QByteArray data = this->serial_port->readAll();
     emit readyData(data);
+
 }
 
 

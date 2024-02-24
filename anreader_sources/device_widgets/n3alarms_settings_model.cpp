@@ -171,33 +171,7 @@ QVariant N3AlarmsSettingsModel::value(int row, int col, int role) const
 }
 
 
-/*
-//------------------------------------------------------------------------------------------
-QVariant N3FilterAlarmsSettingsModel::data(const QModelIndex &index, int role) const
-{
-    if(!index.isValid()) return QVariant();
 
-    if (this->sourceModel())
-        return this->sourceModel()->data(this->mapToSource(index), role);
-    return false;
-}
-*/
-/*
-//------------------------------------------------------------------------------------------
-bool N3FilterAlarmsSettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    if(!index.isValid()) return false;
-
-    if (this->sourceModel())
-    {
-        bool res = this->sourceModel()->setData(this->mapToSource(index), value, role);
-        if(res)
-            emit dataChanged(QModelIndex(), QModelIndex());
-        return res;
-    }
-    return false;
-}
-*/
 
 //------------------------------------------------------------------------------------------
 QVariant N3FilterAlarmsSettingsModel::headerData(int section, Qt::Orientation orientation, int role) const

@@ -34,7 +34,7 @@ public slots:
 
 
 
-class SerialPortThread : public QSerialPort
+class SerialPortThread : public QObject
 {
     Q_OBJECT
 
@@ -49,11 +49,13 @@ public:
     };
 
 private:
+    std::unique_ptr<QSerialPort> serial_port;
     QThread thread;
     QThread worker_thread;
     WorkerPacketSender worker;
     int bytes_to_port = 1;
     port_settings ps;
+    bool working = false;
 
     void init();
     void delay(const unsigned long ms) const;
@@ -62,16 +64,16 @@ private:
 
 
 public:
-    explicit SerialPortThread(QObject *parent);
     explicit SerialPortThread();
     ~SerialPortThread() override;
 
-    void moveToInnerThread();
     void stop();
     void start();
     void setBytesToPort(const int value) { bytes_to_port = value; worker.setBytesToPort(value); }
     void setDelay(const unsigned long value) { worker.setDelay(value); }
-    void close() override;
+    void close();
+
+    QSerialPort& SerialPort() const { return *serial_port; } ;
 
 signals:
     void finished();
@@ -84,7 +86,7 @@ public slots:
     void sendPacket(QByteArray packet, const uint delayms = 0);
     void sendRatePacket(QByteArray rate);
     void sopen(QString com_port);
-
+    void process();
 };
 
 #endif // SERIALPORT_H

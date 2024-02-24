@@ -120,15 +120,15 @@ void AbstractDevice::stopTimeoutTimer() const
 //----------------------------------------------------------------------------------------------------------------------
 void AbstractDevice::setupComPort()
 {
-    serialport_transition_common_disconnected = commonState->addTransition(sp.get(), &SerialPortThread::aboutToClose, disconnectedState.get());
-    serialport_transition_error_disconnected = errorState->addTransition(sp.get(), &SerialPortThread::aboutToClose, disconnectedState.get());
+    serialport_transition_common_disconnected = commonState->addTransition(&sp.get()->SerialPort(), &QSerialPort::aboutToClose, disconnectedState.get());
+    serialport_transition_error_disconnected = errorState->addTransition(&sp.get()->SerialPort(), &QSerialPort::aboutToClose, disconnectedState.get());
 
     connect(sp.get(), &SerialPortThread::errorSignal, this, &AbstractDevice::errorSignal);
     connect(this, &AbstractDevice::sopen, sp.get(), &SerialPortThread::sopen);
     connect(sp.get(), &SerialPortThread::connected, this, &AbstractDevice::connected);
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &AbstractDevice::disconnectStateSignal);
     #if QT_VERSION > QT_VERSION_CHECK(5, 6, 3)
-        connect(sp.get(), &SerialPortThread::errorOccurred, this, &AbstractDevice::slotSerialPortError); //Для XP (Qt 5.6) закомментировать
+        connect(&sp.get()->SerialPort(), &QSerialPort::errorOccurred, this, &AbstractDevice::slotSerialPortError); //Для XP (Qt 5.6) закомментировать
     #endif
 }
 
@@ -293,11 +293,10 @@ void AbstractDevice::open()
     if(!sp)
     {
         sp = std::make_unique<SerialPortThread>();
-        sp->moveToInnerThread();
         setupComPort();
     }
-    emit log("COM Port: " + m_COMPort);
     emit sopen(m_COMPort);
+    emit log("COM Port: " + m_COMPort);    
 }
 
 //----------------------------------------------------------------------------------------------------------------------

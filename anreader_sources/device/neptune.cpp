@@ -167,7 +167,7 @@ void Neptune::setupComPort()
     connect(sp.get(), &SerialPortThread::readyData, this, &Neptune::processData);
 
     connect(this, &Neptune::sendPacket, sp.get(), &SerialPortThread::sendPacket);
-    connect(&keep_alive_worker, &WorkerKeepAlive::sendPacket, sp.get(), &SerialPortThread::sendPacket);
+    connect(&keep_alive_worker, &WorkerKeepAlive::sendPacket, sp.get(), &SerialPortThread::sendPacket, Qt::DirectConnection);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
