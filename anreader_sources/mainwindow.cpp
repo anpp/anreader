@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 #include "csvparser.h"
+#include "jumpeditor_dialog/n3jumpeditor.h"
+#include "datalist_dialog/datalist_dialog.h"
+#include "settings_dialog/settings_editor.h"
 
 #include <QTextStream>
 

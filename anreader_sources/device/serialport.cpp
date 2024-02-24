@@ -1,7 +1,6 @@
 #include "serialport.h"
 #include <QCoreApplication>
 #include <QElapsedTimer>
-#include <QEventLoop>
 
 #include "../settings.h"
 
@@ -103,18 +102,9 @@ void SerialPortThread::sendPacket(QByteArray packet, const uint delayms)
     if(delayms > 0)
         delay(delayms);
 
-    if(packet.size() <= bytes_to_port)
-    {
-        sendRatePacket(packet);
-        emit finished();
-    }
-    else
-    {
-        worker_thread.wait();
-        worker.setPacket(packet);
-        worker_thread.start();
-    }
-
+    worker_thread.wait();
+    worker.setPacket(packet);
+    worker_thread.start();
 }
 
 //----------------------------------------------------------------------------------------------------------------------

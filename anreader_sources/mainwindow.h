@@ -26,16 +26,12 @@
 
 
 #include "common/common.h"
-#include "device/neptune_hil.h"
 #include "jumpstable.h"
 #include "jumpstablemodel.h"
 #include "devices_list_widget.h"
 #include "settings.h"
 #include "log_widget.h"
-#include "jumpeditor_dialog/n3jumpeditor.h"
 #include "datalists.h"
-#include "datalist_dialog/datalist_dialog.h"
-#include "settings_dialog/settings_editor.h"
 
 enum MainWindow_defs: int {BaseWidht = 1100, BaseHeight = 500, StatusStateLabelWidth = 250};
 
