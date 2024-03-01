@@ -8,6 +8,7 @@
 #include "n3_constants.h"
 
 class Neptune;
+class QMutex;
 
 struct queue_command
 {
@@ -22,12 +23,12 @@ struct queue_command
 class WorkerKeepAlive : public QObject
 {
     Q_OBJECT
-public:    
-    explicit WorkerKeepAlive() :QObject() { }
-    ~WorkerKeepAlive() {}
+public:
+    explicit WorkerKeepAlive();
+    ~WorkerKeepAlive();
     void setThread(QThread *thread) { this->thread = thread; }
     int get_n_keeps() const {return n_keeps; }
-    void receiveAck() {n_keeps--; n_keeps = n_keeps < 0 ? 0 : n_keeps; }    
+    void receiveAck();
 
 private:    
     void keepAlive();
@@ -36,6 +37,7 @@ private:
     bool working = false;
     QThread *thread = nullptr;
     int n_keeps = 0;
+    std::unique_ptr<QMutex> mutex;
 
 protected:
     friend class Neptune;

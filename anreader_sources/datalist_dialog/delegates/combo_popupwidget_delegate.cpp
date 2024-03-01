@@ -1,6 +1,4 @@
 #include "combo_popupwidget_delegate.h"
-#include "log_widget.h"
-
 
 //---------------------------------------------------------------------------------------------------------------------------
 QWidget *ComboPopupWidgetDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -43,25 +41,25 @@ void ComboPopupWidgetDelegate::updateEditorGeometry(QWidget *editor, const QStyl
 
 
 
+DDComboBox::PopupItemDelegate::PopupItemDelegate::PopupItemDelegate(int  ViewPortHeight, QWidget *parent)
+    :QStyledItemDelegate(parent),
+    m_ViewPortHeight(ViewPortHeight)
+{
+}
+
+
 //===========================================================================================================
 DDComboBox::DDComboBox(QWidget *parent, const QString& strings) : QComboBox(parent), m_widget(strings), sg(this)
 {
     m_current_text = strings;
-    QListWidgetItem * item = new QListWidgetItem(&m_view);
-
-    m_view.setItemWidget(item, &m_widget);
-    //m_widget.installEventFilter(this);
-    item->setSizeHint(QSize(m_widget.width(), m_widget.height()));
-
-    this->setModel(m_view.model());
-    this->setView(&m_view);
+    this->addItem("");
+    this->view()->setItemDelegate(new DDComboBox::PopupItemDelegate(m_widget.height(), this));
+    this->view()->setViewport(&m_widget);
     this->view()->setCornerWidget(&sg);
-    this->setMaxVisibleItems(1);
     this->setEditable(true);
-    item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
-    m_view.setSelectionMode( QAbstractItemView::NoSelection );
-    //m_view.setStyleSheet("QListWidget{selection-background-color: transparent; background-color: transparent}");
+    //this->view()->setStyleSheet("QListWidget{selection-background-color: transparent; background-color: transparent}");
 
+    m_widget.installEventFilter(this);
     connect(&m_widget, &StringListPopup::finish, this, &DDComboBox::closePopup);
 }
 
@@ -70,7 +68,6 @@ QString DDComboBox::currentText() const
 {
     return m_current_text;
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------------
 void DDComboBox::showPopup()
@@ -98,9 +95,7 @@ void DDComboBox::keyPressEvent(QKeyEvent *e)
 bool DDComboBox::eventFilter(QObject *widget, QEvent *event)
 {
     if (&m_widget == widget && event->type() == QEvent::Paint)
-    {
-        m_widget.setBackgroundRole(QPalette::ColorRole::Dark);
-    }
+        return true;
 
     return QWidget::eventFilter(widget, event);
 }

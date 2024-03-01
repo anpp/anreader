@@ -1,4 +1,5 @@
 #include "listdevicetypeswidget.h"
+#include "delegates/comboeditdelegate.h"
 
 //-----------------------------------------------------------------------------------------------------------------------------
 ListDeviceTypesWidget::ListDeviceTypesWidget(t_devicetypelist &datalist, QWidget *parent): QWidget(parent), m_model(datalist)

@@ -1,9 +1,11 @@
 #include "serialport.h"
 #include <QCoreApplication>
 #include <QElapsedTimer>
+#include <QMutex>
+#include <QMutexLocker>
 
 #include "../settings.h"
-
+#include <QDebug>
 //----------------------------------------------------------------------------------------------------------------------
 void WorkerPacketSender::sendPacket()
 {
@@ -16,6 +18,7 @@ void WorkerPacketSender::sendPacket()
     emit finished();
 }
 
+//----------------------------------------------------------------------------------------------------------------------
 void WorkerPacketSender::setPacket(QByteArray data)
 {
     packet = data;
@@ -42,6 +45,7 @@ void SerialPortThread::init()
     qRegisterMetaType <QSerialPort::SerialPortError> ();
 
     serial_port = std::make_unique<QSerialPort>();
+    mutex = std::make_unique<QMutex>(QMutex::RecursionMode::Recursive);
 
     this->moveToThread(&thread);
     serial_port->moveToThread(&thread);
@@ -95,16 +99,28 @@ void SerialPortThread::setPortSettings()
     serial_port->setFlowControl(ps.flowControl);
 }
 
-
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::sendPacket(QByteArray packet, const uint delayms)
 {
     if(delayms > 0)
         delay(delayms);
 
-    worker_thread.wait();
-    worker.setPacket(packet);
-    worker_thread.start();
+    qDebug() << packet.toHex();
+
+    QMutexLocker locker(mutex.get());
+
+    while (packet.size() > 0)
+    {
+        QThread::msleep(msDelay);
+        sendRatePacket(packet.mid(0, bytes_to_port));
+        QCoreApplication::processEvents();
+        packet = packet.mid(bytes_to_port);
+    }
+    emit finished();
+
+    //worker_thread.wait();
+    //worker.setPacket(packet);
+    //worker_thread.start();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -127,7 +143,7 @@ void SerialPortThread::start()
 void SerialPortThread::close()
 {
     stop();
-    if(this->serial_port->isOpen())
+    if(serial_port->isOpen())
         serial_port->close();
 
 }
@@ -135,15 +151,12 @@ void SerialPortThread::close()
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::sendRatePacket(QByteArray rate)
 {
-    if(this->serial_port->write(rate) == -1)
+    if(serial_port->write(rate) == -1)
     {
         emit errorSignal(QObject::tr("Failed to write the data to port") + ": " + serial_port->errorString());
         stop();
     }
-    else
-        this->serial_port->flush();
 }
-
 
 //----------------------------------------------------------------------------------------------------------------------
 void SerialPortThread::sopen(QString com_port)
@@ -163,6 +176,7 @@ void SerialPortThread::sopen(QString com_port)
 void SerialPortThread::s_readyRead()
 {
     QByteArray data = this->serial_port->readAll();
+    qDebug() << data.toHex();
     emit readyData(data);
 }
 

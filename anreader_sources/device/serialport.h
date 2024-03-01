@@ -3,7 +3,10 @@
 
 #include <QSerialPort>
 #include <QThread>
+#include <memory>
 
+class QMutex;
+class QWaitCondition;
 
 Q_DECLARE_METATYPE(QSerialPort::SerialPortError)
 
@@ -54,13 +57,14 @@ private:
     QThread worker_thread;
     WorkerPacketSender worker;
     int bytes_to_port = 1;
+    unsigned long msDelay = 50;
     port_settings ps;
+    std::unique_ptr<QMutex> mutex;
 
     void init();
     void delay(const unsigned long ms) const;
     void sendPacketToPort(const QByteArray &packet);
     void setPortSettings();
-
 
 public:
     explicit SerialPortThread();

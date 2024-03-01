@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QStringList>
-#include "common.h"
+//#include "common.h"
 #include "ui_string_list.h"
 
 

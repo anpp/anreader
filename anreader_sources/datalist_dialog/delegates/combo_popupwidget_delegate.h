@@ -7,8 +7,8 @@
 #include <QWidget>
 #include <QSizeGrip>
 #include <QKeyEvent>
+#include <QStyledItemDelegate>
 
-#include "common/common.h"
 #include "common/stringlist_popup.h"
 
 
@@ -27,23 +27,36 @@ public:
 
 };
 
-#endif // COMBOPOPUPWIDGETDELEGATE_H
 
 
 
 //===========================================================================================================
 //Device description combobox with popup widget
-class DDComboBox : public QComboBox
+class DDComboBox: public QComboBox
 {
     Q_OBJECT
 
-    QListWidget m_view;
     StringListPopup m_widget;
     QSizeGrip sg;
     QString m_current_text;
     bool m_accepted = false;
 
 public:
+
+    class PopupItemDelegate: public QStyledItemDelegate
+    {
+        int  m_ViewPortHeight;
+    public:
+        explicit PopupItemDelegate(int  ViewPortHeight, QWidget *parent = nullptr);
+        using QStyledItemDelegate::QStyledItemDelegate;
+        QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override
+        {
+            QSize s = QStyledItemDelegate::sizeHint(option, index);
+            s.setHeight(m_ViewPortHeight);
+            return s;
+        }
+    };
+
     explicit DDComboBox(QWidget *parent = nullptr, const QString& strings = "");
 
     QString currentText() const;
@@ -57,3 +70,6 @@ protected:
 public slots:
     void closePopup(bool accepted);
 };
+
+
+#endif // COMBOPOPUPWIDGETDELEGATE_H

@@ -1,8 +1,5 @@
 #include "mainwindow.h"
 #include "csvparser.h"
-#include "jumpeditor_dialog/n3jumpeditor.h"
-#include "datalist_dialog/datalist_dialog.h"
-#include "settings_dialog/settings_editor.h"
 
 #include <QTextStream>
 
@@ -682,6 +679,7 @@ void MainWindow::prepareTableAfterEdit(JumpsTable &table) const
 //----------------------------------------------------------------------------------------------------------------------
 void MainWindow::prepareTableAfterLoad(JumpsTable &table) const
 {
+    //for(int i = 0; i < 5; ++i)
     prepareTableAfterEdit(table);
     table.scrollToBottom();
 }

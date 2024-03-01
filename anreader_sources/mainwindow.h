@@ -32,6 +32,9 @@
 #include "settings.h"
 #include "log_widget.h"
 #include "datalists.h"
+#include "jumpeditor_dialog/n3jumpeditor.h"
+#include "datalist_dialog/datalist_dialog.h"
+#include "settings_dialog/settings_editor.h"
 
 enum MainWindow_defs: int {BaseWidht = 1100, BaseHeight = 500, StatusStateLabelWidth = 250};
 

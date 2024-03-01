@@ -2,6 +2,7 @@
 #include "bytes_operations.h"
 
 #include <QThread>
+#include <QMutex>
 #include <math.h>
 
 #include "jumps/n3jump.h"
@@ -29,6 +30,27 @@ const static QString N3TypeNames[] =
 };
 
 //----------------------------------------------------------------------------------------------------------------------
+WorkerKeepAlive::WorkerKeepAlive()
+{
+    mutex = std::make_unique<QMutex>(QMutex::RecursionMode::Recursive);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+WorkerKeepAlive::~WorkerKeepAlive()
+{
+
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void WorkerKeepAlive::receiveAck()
+{
+    mutex->lock();
+    n_keeps--;
+    n_keeps = n_keeps < 0 ? 0 : n_keeps;
+    mutex->unlock();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 void WorkerKeepAlive::keepAlive()
 {
     if(working)
@@ -45,7 +67,11 @@ void WorkerKeepAlive::process()
 
     while(working)
     {
-        keepAlive();
+        mutex->lock();
+        if(0 == n_keeps) //если получено подтвержение от прошлой итерации
+            keepAlive();
+        mutex->unlock();
+
         QThread::msleep(N3Constants::KeepAliveDelay);
     }
     emit finished();
@@ -73,7 +99,9 @@ void WorkerKeepAlive::start()
 //----------------------------------------------------------------------------------------------------------------------
 void WorkerKeepAlive::clear()
 {
+    mutex->lock();
     n_keeps = 0;
+    mutex->unlock();
 }
 
 
@@ -167,7 +195,7 @@ void Neptune::setupComPort()
     connect(sp.get(), &SerialPortThread::readyData, this, &Neptune::processData);
 
     connect(this, &Neptune::sendPacket, sp.get(), &SerialPortThread::sendPacket);
-    connect(&keep_alive_worker, &WorkerKeepAlive::sendPacket, sp.get(), &SerialPortThread::sendPacket, Qt::DirectConnection);
+    connect(&keep_alive_worker, &WorkerKeepAlive::sendPacket, sp.get(), &SerialPortThread::sendPacket);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

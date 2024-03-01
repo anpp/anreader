@@ -3,7 +3,7 @@
 
 #include <QItemDelegate>
 
-#include "common/common.h"
+//#include "common/common.h"
 
 class ComboEditDelegate : public QItemDelegate
 {

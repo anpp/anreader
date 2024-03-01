@@ -1,4 +1,5 @@
 #include "comboeditdelegate.h"
+#include "common/common.h"
 
 #include <QComboBox>
 
