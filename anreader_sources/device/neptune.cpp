@@ -3,7 +3,9 @@
 
 #include <QThread>
 #include <QMutex>
+#include <QMutexLocker>
 #include <math.h>
+#include <QCoreApplication>
 
 #include "jumps/n3jump.h"
 #include "n3summaryinfo.h"
@@ -39,6 +41,13 @@ WorkerKeepAlive::WorkerKeepAlive()
 WorkerKeepAlive::~WorkerKeepAlive()
 {
 
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+int WorkerKeepAlive::get_n_keeps() const
+{
+    QMutexLocker locker(mutex.get());
+    return n_keeps;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -98,12 +107,11 @@ void WorkerKeepAlive::start()
 
 //----------------------------------------------------------------------------------------------------------------------
 void WorkerKeepAlive::clear()
-{
+{    
     mutex->lock();
     n_keeps = 0;
     mutex->unlock();
 }
-
 
 
 

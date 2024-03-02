@@ -6,35 +6,8 @@
 #include <memory>
 
 class QMutex;
-class QWaitCondition;
 
 Q_DECLARE_METATYPE(QSerialPort::SerialPortError)
-
-class WorkerPacketSender : public QObject
-{
-    Q_OBJECT
-public:
-    explicit WorkerPacketSender() :QObject() { }
-    ~WorkerPacketSender() {}
-
-    void setBytesToPort(const int value) { bytes_to_port = value; }
-    void setDelay(const unsigned long value) { msDelay = value; }
-
-private:
-    QByteArray packet;
-    int bytes_to_port = 1;
-    unsigned long msDelay = 50;
-signals:
-    void finished();
-    void sendRatePacket(QByteArray rate);
-
-public slots:
-    void sendPacket();
-    void setPacket(QByteArray data);
-
-};
-
-
 
 
 class SerialPortThread : public QObject
@@ -54,8 +27,6 @@ public:
 private:
     std::unique_ptr<QSerialPort> serial_port;
     QThread thread;
-    QThread worker_thread;
-    WorkerPacketSender worker;
     int bytes_to_port = 1;
     unsigned long msDelay = 50;
     port_settings ps;
@@ -72,8 +43,8 @@ public:
 
     void stop();
     void start();
-    void setBytesToPort(const int value) { bytes_to_port = value; worker.setBytesToPort(value); }
-    void setDelay(const unsigned long value) { worker.setDelay(value); }
+    void setBytesToPort(const int value) { bytes_to_port = value; }
+    void setDelay(const unsigned long value) { msDelay = value; }
     void close();
 
     QSerialPort& SerialPort() const { return *serial_port; } ;

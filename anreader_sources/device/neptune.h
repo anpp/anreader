@@ -27,7 +27,7 @@ public:
     explicit WorkerKeepAlive();
     ~WorkerKeepAlive();
     void setThread(QThread *thread) { this->thread = thread; }
-    int get_n_keeps() const {return n_keeps; }
+    int get_n_keeps() const;
     void receiveAck();
 
 private:    

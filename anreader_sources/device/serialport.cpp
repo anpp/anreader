@@ -5,27 +5,6 @@
 #include <QMutexLocker>
 
 #include "../settings.h"
-#include <QDebug>
-//----------------------------------------------------------------------------------------------------------------------
-void WorkerPacketSender::sendPacket()
-{
-    while (packet.size() > 0)
-    {
-        QThread::msleep(msDelay);
-        emit sendRatePacket(packet.mid(0, bytes_to_port));
-        packet = packet.mid(bytes_to_port);
-    }
-    emit finished();
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-void WorkerPacketSender::setPacket(QByteArray data)
-{
-    packet = data;
-}
-
-//=======================================================================================================
-
 
 //----------------------------------------------------------------------------------------------------------------------
 SerialPortThread::SerialPortThread()
@@ -49,12 +28,7 @@ void SerialPortThread::init()
 
     this->moveToThread(&thread);
     serial_port->moveToThread(&thread);
-    worker.moveToThread(&worker_thread);
 
-    connect(&worker_thread, &QThread::started, &worker, &WorkerPacketSender::sendPacket);
-    connect(&worker, &WorkerPacketSender::finished, &worker_thread, &QThread::quit);
-    connect(&worker, &WorkerPacketSender::finished, this, &SerialPortThread::finished);
-    connect(&worker, &WorkerPacketSender::sendRatePacket, this, &SerialPortThread::sendRatePacket);
     connect(serial_port.get(), &QSerialPort::readyRead, this, &SerialPortThread::s_readyRead);
 
     start();
@@ -105,10 +79,7 @@ void SerialPortThread::sendPacket(QByteArray packet, const uint delayms)
     if(delayms > 0)
         delay(delayms);
 
-    qDebug() << packet.toHex();
-
     QMutexLocker locker(mutex.get());
-
     while (packet.size() > 0)
     {
         QThread::msleep(msDelay);
@@ -117,10 +88,6 @@ void SerialPortThread::sendPacket(QByteArray packet, const uint delayms)
         packet = packet.mid(bytes_to_port);
     }
     emit finished();
-
-    //worker_thread.wait();
-    //worker.setPacket(packet);
-    //worker_thread.start();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -128,8 +95,6 @@ void SerialPortThread::stop()
 {
     thread.quit();
     thread.wait();
-    worker_thread.quit();
-    worker_thread.wait();    
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -176,7 +141,6 @@ void SerialPortThread::sopen(QString com_port)
 void SerialPortThread::s_readyRead()
 {
     QByteArray data = this->serial_port->readAll();
-    qDebug() << data.toHex();
     emit readyData(data);
 }
 
