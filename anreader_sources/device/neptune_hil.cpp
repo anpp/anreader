@@ -104,6 +104,12 @@ void Neptune_HiL::write_alarms_settings()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void Neptune_HiL::write_alarms_names()
+{
+    write_to_memory(N3Addresses::AlarmsNames, N3Constants::N3NamesSize, alarms().data());
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 void Neptune_HiL::write_to_memory(unsigned int address, unsigned int length, QByteArray &wbytes)
 {
     if(0 == length || 0 == address)

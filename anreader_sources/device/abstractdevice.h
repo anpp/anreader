@@ -49,6 +49,7 @@ public:
     virtual void write_airplanes() = 0;
     virtual void write_summary_jumps() = 0;
     virtual void write_alarms_settings() = 0;
+    virtual void write_alarms_names() = 0;
 
     virtual int revision() const = 0;
     virtual int product_type() const = 0;

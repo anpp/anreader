@@ -394,8 +394,9 @@ void N3Widget::N3Names_dialog(N3Names &names)
     {
         if(nd->isChanged() && m_device)
         {
-            bool is_changed_current = nd->isChangedCurrentName();
             bool is_changed_data = nd->isChangedData();
+            bool is_changed_current = nd->isChangedCurrentName(); //только для самолетов и ДЗ
+            bool is_changed_alarms_settings = nd->isChangedAlarmsSettings(); // только для alarms
 
             names = nd->new_n3names();
 
@@ -416,7 +417,11 @@ void N3Widget::N3Names_dialog(N3Names &names)
                     m_device->write_dropzones();
                 break;
             case N3NamesType::Alarms:
-                m_device->write_alarms_settings();
+                if(is_changed_data)
+                    m_device->write_alarms_names();
+
+                if(is_changed_alarms_settings)
+                    m_device->write_alarms_settings();
                 break;
             default:
                 break;

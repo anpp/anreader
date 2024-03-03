@@ -5,7 +5,6 @@
 #include <QThread>
 #include <memory>
 
-class QMutex;
 
 Q_DECLARE_METATYPE(QSerialPort::SerialPortError)
 
@@ -30,7 +29,6 @@ private:
     int bytes_to_port = 1;
     unsigned long msDelay = 50;
     port_settings ps;
-    std::unique_ptr<QMutex> mutex;
 
     void init();
     void delay(const unsigned long ms) const;

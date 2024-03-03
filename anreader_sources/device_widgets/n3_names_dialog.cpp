@@ -58,6 +58,14 @@ bool N3NamesDialog::isChangedData() const
 }
 
 //--------------------------------------------------------------------------------------------------------------
+bool N3NamesDialog::isChangedAlarmsSettings() const
+{
+    if(m_n3names.type() == N3NamesType::Alarms)
+        return !(static_cast<N3AlarmsNames&>(*m_new_n3names).settings() == static_cast<const N3AlarmsNames&>(m_n3names).settings());
+    return false;
+}
+
+//--------------------------------------------------------------------------------------------------------------
 void N3NamesDialog::initNames()
 {
     m_model = std::make_unique<N3NamesModel>(*m_new_n3names);

@@ -940,7 +940,7 @@ void Neptune::slotReady()
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::slotReadyExit()
 {
-    AbstractDevice::slotReadyExit();    
+    AbstractDevice::slotReadyExit();
     keep_alive_worker.stop();
 }
 
@@ -956,6 +956,7 @@ void Neptune::slotReceiving()
 void Neptune::slotDisconnected()
 {
     AbstractDevice::slotDisconnected();
+    keep_alive_worker.stop();
     m_commands.clear();
 }
 

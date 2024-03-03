@@ -184,7 +184,7 @@ void N3NamesDelegate::setEditorDataN3Names(QWidget *editor, const QModelIndex &i
         break;
     }
 }
-#include <QDebug>
+
 //------------------------------------------------------------------------------------------
 void N3NamesDelegate::setEditorDataN3AlarmsSettings(QWidget *editor, const QModelIndex &index) const
 {
@@ -208,7 +208,6 @@ void N3NamesDelegate::setEditorDataN3AlarmsSettings(QWidget *editor, const QMode
             cmb = static_cast<QComboBox*>(editor);
             if(nullptr != cmb)
                 cmb->setCurrentText(index.model()->data(index, Qt::EditRole).toString());
-            qDebug() << index.model()->data(index, Qt::EditRole).toString();
             break;
 
         case N3AlarmsSettings_defs::AlarmAltitude1:

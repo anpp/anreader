@@ -36,6 +36,7 @@ public:
     bool isChanged() const;
     bool isChangedCurrentName() const;
     bool isChangedData() const;
+    bool isChangedAlarmsSettings() const;
     const N3Names& new_n3names() const { return *m_new_n3names; }
 
 private:

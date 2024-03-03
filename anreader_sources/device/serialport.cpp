@@ -1,11 +1,9 @@
 #include "serialport.h"
 #include <QCoreApplication>
 #include <QElapsedTimer>
-#include <QMutex>
-#include <QMutexLocker>
 
 #include "../settings.h"
-#include <QDebug>
+
 //----------------------------------------------------------------------------------------------------------------------
 SerialPortThread::SerialPortThread()
 {
@@ -24,7 +22,6 @@ void SerialPortThread::init()
     qRegisterMetaType <QSerialPort::SerialPortError> ();
 
     serial_port = std::make_unique<QSerialPort>();
-    mutex = std::make_unique<QMutex>(QMutex::RecursionMode::Recursive);
 
     this->moveToThread(&thread);
     serial_port->moveToThread(&thread);
@@ -79,8 +76,6 @@ void SerialPortThread::sendPacket(QByteArray packet, const uint delayms)
     if(delayms > 0)
         delay(delayms);
 
-    qDebug() << packet.toHex();
-    //QMutexLocker locker(mutex.get());
     while (packet.size() > 0)
     {
         QThread::msleep(msDelay);
@@ -142,7 +137,6 @@ void SerialPortThread::sopen(QString com_port)
 void SerialPortThread::s_readyRead()
 {
     QByteArray data = this->serial_port->readAll();
-    qDebug() << data.toHex();
     emit readyData(data);
 }
 
