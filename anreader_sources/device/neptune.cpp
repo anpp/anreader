@@ -2,10 +2,8 @@
 #include "bytes_operations.h"
 
 #include <QThread>
-#include <QMutex>
-#include <QMutexLocker>
+#include <QEventLoop>
 #include <math.h>
-#include <QCoreApplication>
 
 #include "jumps/n3jump.h"
 #include "n3summaryinfo.h"
@@ -34,7 +32,6 @@ const static QString N3TypeNames[] =
 //----------------------------------------------------------------------------------------------------------------------
 WorkerKeepAlive::WorkerKeepAlive()
 {
-    mutex = std::make_unique<QMutex>(QMutex::RecursionMode::Recursive);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -46,17 +43,14 @@ WorkerKeepAlive::~WorkerKeepAlive()
 //----------------------------------------------------------------------------------------------------------------------
 int WorkerKeepAlive::get_n_keeps() const
 {
-    QMutexLocker locker(mutex.get());
     return n_keeps;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void WorkerKeepAlive::receiveAck()
 {
-    mutex->lock();
     n_keeps--;
     n_keeps = n_keeps < 0 ? 0 : n_keeps;
-    mutex->unlock();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -73,15 +67,15 @@ void WorkerKeepAlive::keepAlive()
 void WorkerKeepAlive::process()
 {
     working = true;
+    QEventLoop event_loop;
 
     while(working)
     {
-        mutex->lock();
         if(0 == n_keeps) //если получено подтвержение от прошлой итерации
             keepAlive();
-        mutex->unlock();
 
         QThread::msleep(N3Constants::KeepAliveDelay);
+        event_loop.processEvents();
     }
     emit finished();
 }
@@ -91,7 +85,10 @@ void WorkerKeepAlive::stop()
 {
     working = false;
     if(thread != nullptr)
-        thread->wait();
+    {
+        if(thread->isRunning())
+            thread->wait();
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -107,12 +104,9 @@ void WorkerKeepAlive::start()
 
 //----------------------------------------------------------------------------------------------------------------------
 void WorkerKeepAlive::clear()
-{    
-    mutex->lock();
+{
     n_keeps = 0;
-    mutex->unlock();
 }
-
 
 
 //===================================================================================================================
@@ -125,6 +119,7 @@ Neptune::Neptune(QString portName, QObject *parent) : AbstractDevice(portName, p
 
     connect(&keep_alive_thread, &QThread::started, &keep_alive_worker, &WorkerKeepAlive::process);
     connect(&keep_alive_worker, &WorkerKeepAlive::finished, &keep_alive_thread, &QThread::quit, Qt::DirectConnection);
+    connect(this, &Neptune::keep_alive_receiveAck, &keep_alive_worker, &WorkerKeepAlive::receiveAck);
 
     m_summary = std::make_unique<N3SummaryInfo>();
     m_settings = std::make_unique<N3DeviceSettings>();
@@ -490,7 +485,7 @@ void Neptune::processData(QByteArray data)
         }
         else //если пришло подтверждение в состоянии Ready - это от keep_alive_worker
         {
-            keep_alive_worker.receiveAck();
+            emit keep_alive_receiveAck();
             ackBuffer.clear();
         }
         return;
@@ -502,7 +497,7 @@ void Neptune::processData(QByteArray data)
     {
         if(checkAcknowledgment(ackBuffer))
         {
-            keep_alive_worker.receiveAck();
+            keep_alive_worker.receiveAck(); // здесь не сигнал, а прямой вызов, так как поток воркера уже стоит
             ackBuffer.clear();
         }
         return;
@@ -922,10 +917,8 @@ void Neptune::finishedWriteData()
 void Neptune::slotConnected()
 {
     AbstractDevice::slotConnected();
-    keep_alive_worker.clear();
     executeCommand(N3Commands::InitCommand);
 }
-
 
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::slotReady()
@@ -947,7 +940,7 @@ void Neptune::slotReady()
 //----------------------------------------------------------------------------------------------------------------------
 void Neptune::slotReadyExit()
 {
-    AbstractDevice::slotReadyExit();
+    AbstractDevice::slotReadyExit();    
     keep_alive_worker.stop();
 }
 

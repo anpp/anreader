@@ -108,8 +108,10 @@ void N3NamesDialog::initAlarms()
         ui->tvCanopy->setItemDelegateForColumn(static_cast<int>(N3AlarmsSettings_defs::AlarmAltitude3), m_delegate.get());
 
         ui->tvFreefall->resizeColumnsToContents();
+        ui->tvFreefall->setColumnWidth(static_cast<int>(N3AlarmsSettings_defs::NameIndex), ui->tvFreefall->columnWidth(static_cast<int>(N3AlarmsSettings_defs::NameIndex))  + 50);
         ui->tvFreefall->resizeRowsToContents();
         ui->tvCanopy->resizeColumnsToContents();
+        ui->tvCanopy->setColumnWidth(static_cast<int>(N3AlarmsSettings_defs::NameIndex), ui->tvCanopy->columnWidth(static_cast<int>(N3AlarmsSettings_defs::NameIndex))  + 50);
         ui->tvCanopy->resizeRowsToContents();
 
         ui->gbxFreeFall->setTitle(ui->gbxFreeFall->title() + " (" + tr(alarms_names.settings().alitudePostfix().toStdString().c_str()) + ")");

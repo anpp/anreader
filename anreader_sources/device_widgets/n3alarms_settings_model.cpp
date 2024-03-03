@@ -18,7 +18,8 @@ QVariant N3AlarmsSettingsModel::data(const QModelIndex &index, int role) const
     {
         if(Qt::EditRole == role || Qt::DisplayRole == role ||
             N3AlarmsSettings_defs::StepRole == role || N3AlarmsSettings_defs::MinAltRole == role ||
-            N3AlarmsSettings_defs::MaxAltRole == role)
+            N3AlarmsSettings_defs::MaxAltRole == role ||
+            N3AlarmsSettings_defs::NamesRole == role)
             return value(index.row(), index.column(), role);
 
         if(Qt::FontRole == role && m_data.active(index.row()))
@@ -36,9 +37,11 @@ bool N3AlarmsSettingsModel::setData(const QModelIndex &index, const QVariant &va
 {
     if(!index.isValid())
         return false;
+
     if(Qt::EditRole == role)
     {
         uint16_t altitude;
+        QString name;
 
         switch(static_cast<N3AlarmsSettings_defs>(index.column()))
         {
@@ -49,6 +52,16 @@ bool N3AlarmsSettingsModel::setData(const QModelIndex &index, const QVariant &va
                 m_names.setActives();
                 emit dataChanged(QModelIndex(), QModelIndex());
                 return true;
+            }
+            break;
+        case N3AlarmsSettings_defs::NameIndex:
+            name = value.toString();
+            if(!name.isEmpty())
+            {
+                m_data.setNameIndex(index.row(), name.left(name.indexOf(" -")).toUShort() - 1);
+                m_names.setSelected();
+                m_names.setActives();
+                emit dataChanged(QModelIndex(), QModelIndex());
             }
             break;
         case N3AlarmsSettings_defs::AlarmAltitude1:
@@ -112,13 +125,16 @@ QVariant N3AlarmsSettingsModel::value(int row, int col, int role) const
     if(static_cast<uint>(row) >= 8)
         return QVariant();
 
+    QString index_name = "";
     if(Qt::EditRole == role || Qt::DisplayRole == role)
         switch(col)
         {
         case N3AlarmsSettings_defs::Active:
             return m_data.active(row);
         case N3AlarmsSettings_defs::NameIndex:
-            return (static_cast<uint>(m_data.nameIndex(row)) < m_names.Names().size() ? *m_names.Names()[m_data.nameIndex(row)] : "");
+            if(Qt::EditRole == role)
+                index_name = QString::number(m_data.nameIndex(row) + 1) + " - ";
+            return (static_cast<uint>(m_data.nameIndex(row)) < m_names.Names().size() ? index_name + *m_names.Names()[m_data.nameIndex(row)] : "");
             break;
         case N3AlarmsSettings_defs::AlarmAltitude1:
             return m_data.altitude(row, 0);
@@ -166,7 +182,18 @@ QVariant N3AlarmsSettingsModel::value(int row, int col, int role) const
         default:
             return QVariant();
         }
-
+    if(N3AlarmsSettings_defs::NamesRole == role && N3AlarmsSettings_defs::NameIndex == col)
+    {
+        QStringList names_list;
+        int i = 0;
+        for(const auto& name: m_names.Names())
+        {
+            if((!m_names.selected(i) && !m_names.hidden(i)) || m_data.nameIndex(row) == i)
+                names_list << QString::number(i + 1) + " - " + *name;
+            i++;
+        }
+        return names_list;
+    }
     return QVariant();
 }
 

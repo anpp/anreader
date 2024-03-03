@@ -125,6 +125,8 @@ QWidget *N3NamesDelegate::createEditorN3AlarmsSettings(QWidget *parent, const QS
 
         case N3AlarmsSettings_defs::NameIndex:
             cmb = new QComboBox(parent);
+            cmb->addItems(index.model()->data(index, N3AlarmsSettings_defs::NamesRole).toStringList());
+            connect(cmb, &QComboBox::currentTextChanged, this, &N3NamesDelegate::combo_changed);
             return cmb;
 
         case N3AlarmsSettings_defs::AlarmAltitude1:
@@ -182,7 +184,7 @@ void N3NamesDelegate::setEditorDataN3Names(QWidget *editor, const QModelIndex &i
         break;
     }
 }
-
+#include <QDebug>
 //------------------------------------------------------------------------------------------
 void N3NamesDelegate::setEditorDataN3AlarmsSettings(QWidget *editor, const QModelIndex &index) const
 {
@@ -204,8 +206,9 @@ void N3NamesDelegate::setEditorDataN3AlarmsSettings(QWidget *editor, const QMode
 
         case N3AlarmsSettings_defs::NameIndex:
             cmb = static_cast<QComboBox*>(editor);
-            //if(nullptr != cmb)
-            //    rb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
+            if(nullptr != cmb)
+                cmb->setCurrentText(index.model()->data(index, Qt::EditRole).toString());
+            qDebug() << index.model()->data(index, Qt::EditRole).toString();
             break;
 
         case N3AlarmsSettings_defs::AlarmAltitude1:
@@ -281,8 +284,8 @@ void N3NamesDelegate::setModelDataN3AlarmsSettings(QWidget *editor, QAbstractIte
 
         case N3AlarmsSettings_defs::NameIndex:
             cmb = static_cast<QComboBox*>(editor);
-            //if(nullptr != cmb)
-            //    rb->setChecked(index.model()->data(index, Qt::EditRole).toBool());
+            if(nullptr != cmb)
+                model->setData(index, cmb->currentText(), Qt::EditRole);
             break;
         case N3AlarmsSettings_defs::AlarmAltitude1:
         case N3AlarmsSettings_defs::AlarmAltitude2:
@@ -545,6 +548,14 @@ void N3NamesDelegate::check_toggled(bool value)
     Q_UNUSED(value);
 
     emit commitData(static_cast<QCheckBox*>(sender()));
+}
+
+//------------------------------------------------------------------------------------------
+void N3NamesDelegate::combo_changed(const QString &value)
+{
+    Q_UNUSED(value);
+
+    emit commitData(static_cast<QComboBox*>(sender()));
 }
 
 //------------------------------------------------------------------------------------------

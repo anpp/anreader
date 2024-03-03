@@ -37,6 +37,7 @@ private:
 private slots:
     void radio_toggled(bool value);
     void check_toggled(bool value);
+    void combo_changed(const QString& value);
     void add();
     void del();
 };

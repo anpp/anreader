@@ -178,6 +178,17 @@ void N3AlarmsSettings::enableCanopyAlarms(bool enable)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+void N3AlarmsSettings::setNameIndex(int index, int8_t name_index)
+{
+    if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10))
+    {
+        int8_t value = m_data[static_cast<int>(as_offsets::beginArray) + (index * 10)];
+        value = (name_index << 2) | (value & 0b00000011);
+        m_data[static_cast<int>(as_offsets::beginArray) + (index * 10)] = value;
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 void N3AlarmsSettings::setAltitude(int index, int altindex, uint16_t value)
 {
     if(index >= 0 && index < 8 && m_data.size() > static_cast<int>(as_offsets::beginArray) + (index * 10) + static_cast<int>(as_offsets::altitudeOffset) + (altindex * 2))

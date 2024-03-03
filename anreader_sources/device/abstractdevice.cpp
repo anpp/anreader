@@ -391,6 +391,7 @@ void AbstractDevice::slotDisconnected()
   m_jumps.clear();
   m_dropzones->clear();
   m_airplanes->clear();
+  m_alarms_names->clear();
   removeComPort();  
   sp.reset();
   emit changedState();

@@ -42,6 +42,7 @@ public:
     void setActiveCanopyIndex(int index);
     void enableFreeFallAlarms(bool enable);
     void enableCanopyAlarms(bool enable);
+    void setNameIndex(int index, int8_t name_index);
     void setAltitude(int index, int altindex, uint16_t value);
 
     QByteArray& data() {return m_data; };
