@@ -37,9 +37,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_self = this;
     this->resize(MainWindow_defs::BaseWidht, MainWindow_defs::BaseHeight);
     setWindowIcon(QIcon(":/images/icons/main/anreader.ico"));
-#ifdef Q_OS_WIN64
-    QApplication::setStyle("fusion");
-#endif
+//#ifdef Q_OS_WIN64
+//    QApplication::setStyle("fusion");
+//#endif
     initMainWindow();
     createActions();    
 
