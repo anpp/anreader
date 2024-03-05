@@ -383,7 +383,7 @@ Do you want to save your changes?</source>
     <message>
         <location filename="device_widgets/n3_main_settings_dialog.ui" line="29"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Настройки</translation>
     </message>
     <message>
         <location filename="device_widgets/n3_main_settings_dialog.ui" line="81"/>
@@ -544,7 +544,7 @@ Do you want to save your changes?</source>
     <message>
         <location filename="datalist_dialog/models/datalistmodel.cpp" line="3"/>
         <source>Used</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Исп.</translation>
     </message>
     <message>
         <location filename="datalist_dialog/models/datalistmodel.cpp" line="3"/>
@@ -761,37 +761,37 @@ Do you want to save your changes?</source>
     <message>
         <location filename="device/jumps/customjump.cpp" line="5"/>
         <source>Number</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Номер</translation>
     </message>
     <message>
         <location filename="device/jumps/customjump.cpp" line="6"/>
         <source>Date</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Дата</translation>
     </message>
     <message>
         <location filename="device/jumps/customjump.cpp" line="7"/>
         <source>DZ</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Дропзона</translation>
     </message>
     <message>
         <location filename="device/jumps/customjump.cpp" line="8"/>
         <source>Aircraft</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Самолёт</translation>
     </message>
     <message>
         <location filename="device/jumps/customjump.cpp" line="9"/>
         <source>Canopy</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Парашют</translation>
     </message>
     <message>
         <location filename="device/jumps/customjump.cpp" line="10"/>
         <source>Deleted</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Удалён</translation>
     </message>
     <message>
         <location filename="device/jumps/customjump.cpp" line="11"/>
         <source>Note</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Примечание</translation>
     </message>
     <message>
         <location filename="device/jumps/customjump.cpp" line="12"/>
@@ -953,22 +953,22 @@ Do you want to save your changes?</source>
     <message>
         <location filename="mainwindow.cpp" line="6"/>
         <source>Aircrafts</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Самолёты</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="6"/>
         <source>Dropzones</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Дропзоны</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="6"/>
         <source>Canopies</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Парашюты</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="6"/>
         <source>Jump types</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Типы прыжков</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="707"/>

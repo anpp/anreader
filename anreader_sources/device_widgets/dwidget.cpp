@@ -115,6 +115,7 @@ void DWidget::setButton(bool bconnect)
         connect(&connect_button, &QPushButton::clicked, this, &DWidget::slotClose);
 }
 
+//----------------------------------------------------------------------------------------------------------------------
 void DWidget::setIconHeight(const int icon_height)
 {
     if(m_icon_height <= 0 && wtop)

@@ -75,7 +75,8 @@ HEADERS += \
     device_widgets/choice_datetime_dialog.h
 
 TRANSLATIONS += \
-    anreader_en.ts
+    anreader_en.ts \
+    anreader_ru.ts
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
