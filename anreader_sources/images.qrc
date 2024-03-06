@@ -35,5 +35,7 @@
         <file>images/icons/buttons/airplane.png</file>
         <file>images/icons/buttons/delete.png</file>
         <file>images/icons/buttons/alarms.png</file>
+        <file>images/icons/buttons/line_chart.png</file>
+        <file>images/icons/menu/v_card.png</file>
     </qresource>
 </RCC>

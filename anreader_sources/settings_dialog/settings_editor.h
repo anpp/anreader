@@ -9,7 +9,7 @@
 #include <QDialogButtonBox>
 #include <QTabWidget>
 
-#include "common/common.h"
+//#include "common/common.h"
 #include "settings_com_port.h"
 #include "../settings.h"
 

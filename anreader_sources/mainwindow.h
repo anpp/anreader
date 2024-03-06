@@ -24,7 +24,6 @@
 #include <QTimer>
 #include <tuple>
 
-
 #include "common/common.h"
 #include "jumpstable.h"
 #include "jumpstablemodel.h"
@@ -32,9 +31,6 @@
 #include "settings.h"
 #include "log_widget.h"
 #include "datalists.h"
-#include "jumpeditor_dialog/n3jumpeditor.h"
-#include "datalist_dialog/datalist_dialog.h"
-#include "settings_dialog/settings_editor.h"
 
 enum MainWindow_defs: int {BaseWidht = 1100, BaseHeight = 500, StatusStateLabelWidth = 250};
 
@@ -124,6 +120,7 @@ private:
     QPointer<QAction> m_registryJumpTypesAct;
     QPointer<QAction> m_deviceTypesAct;
     QPointer<QAction> m_settingsAct;
+    QPointer<QAction> m_aboutAct;
     QVector<QPointer<QAction>> m_actions;
 
     QPointer<QAction> m_toggleDevices;
@@ -168,6 +165,7 @@ public slots:
     void jumptypes_list() { open_DataListDialog(datakind::jump_types, dl.jumptypes()); }
     void devicetypes_list();
     void settings_edit();
+    void about_anreader();
     void about();
     void documentWasModified();
     void enableActions(const bool enable);

@@ -11,6 +11,7 @@ CONFIG += c++14
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    aboutdialog.cpp \
     common/stringlist_popup.cpp \
     csvparser.cpp \
     datalist_dialog/datalist_dialog.cpp \
@@ -43,6 +44,7 @@ SOURCES += \
     device_widgets/choice_datetime_dialog.cpp
 
 HEADERS += \
+    aboutdialog.h \
     common/common.h \
     common/stringlist_popup.h \
     csvparser.h \
@@ -98,6 +100,7 @@ win32:{
     QMAKE_TARGET_COPYRIGHT = Andrey Ponomarenko
 }
 FORMS += \
+    aboutdialog.ui \
     common/string_list.ui \
     datalist_dialog/datalist_dialog.ui \
     device_widgets/n3_main_settings_dialog.ui \

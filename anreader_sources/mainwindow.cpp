@@ -1,5 +1,9 @@
 #include "mainwindow.h"
 #include "csvparser.h"
+#include "jumpeditor_dialog/n3jumpeditor.h"
+#include "datalist_dialog/datalist_dialog.h"
+#include "settings_dialog/settings_editor.h"
+#include "aboutdialog.h"
 
 #include <QTextStream>
 
@@ -134,6 +138,7 @@ void MainWindow::createActions()
     QMenu *registryMenu = menuBar()->addMenu(tr("&Registry"));
     QMenu *configMenu = menuBar()->addMenu(tr("&Configuration"));
     QMenu *windowsMenu = menuBar()->addMenu(tr("&Windows"));
+    QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
 
     m_newAct = new QAction(QIcon(":/images/icons/toolbar/new.png"), tr("&New"), this);
     m_actions.push_back(m_newAct);
@@ -208,6 +213,11 @@ void MainWindow::createActions()
     m_settingsAct->setToolTip(tr("Settings..."));
     connect(m_settingsAct, &QAction::triggered, this, &MainWindow::settings_edit);
 
+    m_aboutAct = new QAction(QIcon(":/images/icons/menu/v_card.png"), tr("About anreader"), this);
+    m_actions.push_back(m_aboutAct);
+    m_aboutAct->setToolTip(tr("About anreader..."));
+    connect(m_aboutAct, &QAction::triggered, this, &MainWindow::about_anreader);
+
 
     QToolBar *mainToolBar = addToolBar(tr("File"));
     mainToolBar->setIconSize(QSize(40, 40));
@@ -239,12 +249,14 @@ void MainWindow::createActions()
     configMenu->addAction(m_deviceTypesAct);
     configMenu->addAction(m_settingsAct);
 
+    helpMenu->addAction(m_aboutAct);
+
     if(m_toggleDevices)
         windowsMenu->addAction(m_toggleDevices);
     if(m_toggleLog)
         windowsMenu->addAction(m_toggleLog);
 
-        //QAction *aboutQtAct = helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
+    //QAction *aboutQtAct = helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
     //aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
 }
 
@@ -579,10 +591,15 @@ void MainWindow::devicetypes_list()
 void MainWindow::settings_edit()
 {
     std::unique_ptr<SettingsEditor> dl_settings = std::make_unique<SettingsEditor>(*settings, this);
-
     dl_settings->exec();
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+void MainWindow::about_anreader()
+{
+    std::unique_ptr<AboutDialog> about_dialog = std::make_unique<AboutDialog>(this);
+    about_dialog->exec();
+}
 
 
 //----------------------------------------------------------------------------------------------------------------------
