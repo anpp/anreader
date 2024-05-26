@@ -26,6 +26,8 @@ ANReader - кросcплатформенный GUI-клиент к высотнику-пищалке Atlas/Neptune.
 
 [macOS](https://disk.yandex.ru/d/xMjYJIbbBNyS0w)
 
+[Linux (.deb)](https://disk.yandex.ru/d/qfDiQ7n0NGiEMg)
+
 ## Скриншоты
 
 ### Windows 10
