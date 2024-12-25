@@ -6,8 +6,8 @@ QT += serialport
 
 CONFIG += c++14
 
-QMAKE_CXXFLAGS += -pie
-QMAKE_LFLAGS += -pie
+#QMAKE_CXXFLAGS += -pie
+#QMAKE_LFLAGS += -pie
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -82,6 +82,8 @@ HEADERS += \
 TRANSLATIONS += \
     anreader_en.ts \
     anreader_ru.ts
+CONFIG += lrelease
+CONFIG += embed_translations
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

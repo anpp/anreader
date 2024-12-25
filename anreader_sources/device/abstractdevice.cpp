@@ -127,9 +127,7 @@ void AbstractDevice::setupComPort()
     connect(this, &AbstractDevice::sopen, sp.get(), &SerialPortThread::sopen);
     connect(sp.get(), &SerialPortThread::connected, this, &AbstractDevice::connected);
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &AbstractDevice::disconnectStateSignal);
-    #if QT_VERSION > QT_VERSION_CHECK(5, 6, 3)
-        connect(&sp.get()->SerialPort(), &QSerialPort::errorOccurred, this, &AbstractDevice::slotSerialPortError); //Для XP (Qt 5.6) закомментировать
-    #endif
+    connect(sp.get(), &SerialPortThread::errorSignal, this, &AbstractDevice::errorSignal);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -216,74 +214,6 @@ const QDateTime &AbstractDevice::dateTime() const
     return *m_datetime_temp;
 }
 
-
-//----------------------------------------------------------------------------------------------------------------------
-void AbstractDevice::slotSerialPortError(QSerialPort::SerialPortError error)
-{
-    if(error != QSerialPort::NoError)
-    {
-        if(sp) sp->stop();
-
-        switch(error)
-        {
-        case QSerialPort::DeviceNotFoundError:
-        emit errorSignal(QObject::tr("Device not found"));
-        break;
-
-        case QSerialPort::PermissionError:
-        emit errorSignal(QObject::tr("Permission error"));
-        break;
-
-        case QSerialPort::OpenError:
-        emit errorSignal(QObject::tr("Open error"));
-        break;
-
-        case QSerialPort::NotOpenError:
-        emit errorSignal(QObject::tr("Not open error"));
-        break;
-
-        case QSerialPort::ParityError:
-        emit errorSignal(QObject::tr("Parity error"));
-        break;
-
-        case QSerialPort::FramingError:
-        emit errorSignal(QObject::tr("Framing error"));
-        break;
-
-        case QSerialPort::BreakConditionError:
-        emit errorSignal(QObject::tr("Break condition error"));
-        break;
-
-        case QSerialPort::WriteError:
-        emit errorSignal(QObject::tr("Write error"));
-        break;
-
-        case QSerialPort::ReadError:
-        emit errorSignal(QObject::tr("Read error"));
-        break;
-
-        case QSerialPort::ResourceError:
-        emit errorSignal(QObject::tr("Resource error"));
-        break;
-
-        case QSerialPort::UnsupportedOperationError:
-        emit errorSignal(QObject::tr("Unsupported operation error"));
-        break;
-
-        case QSerialPort::TimeoutError:
-        emit errorSignal(QObject::tr("Timeout error"));
-        break;
-
-        case QSerialPort::UnknownError:
-        emit errorSignal(QObject::tr("Unknown error"));
-        break;
-
-        default:
-            break;
-        }
-    }
-
-}
 
 //----------------------------------------------------------------------------------------------------------------------
 void AbstractDevice::open()

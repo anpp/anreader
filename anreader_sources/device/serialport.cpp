@@ -128,9 +128,24 @@ void SerialPortThread::sopen(QString com_port)
         return;
     }
 
+#if QT_VERSION > QT_VERSION_CHECK(5, 6, 3)
+    disconnect(serial_port.get(), &QSerialPort::errorOccurred, this, &SerialPortThread::portError);
+    connect(serial_port.get(), &QSerialPort::errorOccurred, this, &SerialPortThread::portError);
+#endif
+
     setPortSettings();
 
     emit connected();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+void SerialPortThread::portError(QSerialPort::SerialPortError spe)
+{
+    if(spe != QSerialPort::NoError)
+    {
+        stop();
+        emit errorSignal(serial_port->errorString() + " " + serial_port->portName());
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------------------

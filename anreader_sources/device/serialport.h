@@ -58,6 +58,7 @@ public slots:
     void sendPacket(QByteArray packet, const uint delayms = 0);
     void sendRatePacket(QByteArray rate);
     void sopen(QString com_port);
+    void portError(QSerialPort::SerialPortError spe);
 };
 
 #endif // SERIALPORT_H

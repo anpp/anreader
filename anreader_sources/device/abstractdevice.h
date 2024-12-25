@@ -130,7 +130,6 @@ signals:
 
 public slots:
     void connected();   
-    void slotSerialPortError(QSerialPort::SerialPortError error);
     virtual void processData(QByteArray data) = 0;
     virtual void open();
     virtual void close();
